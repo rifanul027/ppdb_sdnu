@@ -10,7 +10,7 @@
                     </div>
                     <div>
                         <h3 class="text-xl font-bold text-white">SDNU Pemanahan</h3>
-                        <p class="text-green-100 text-sm">Excellence in Islamic Education</p>
+                        <!-- <p class="text-green-100 text-sm">Excellence in Islamic Education</p> -->
                     </div>
                 </div>
                 <p class="text-green-100 text-sm leading-relaxed">
