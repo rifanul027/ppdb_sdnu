@@ -2,7 +2,7 @@
     <div class="container mx-auto px-4 lg:px-8">
         <div class="flex justify-between items-center py-4">
             <!-- Logo Section -->
-            <div class="flex items-center space-x-3">
+            <a href="/" class="flex items-center space-x-3">
                 <div class="w-12 h-12 rounded-full flex items-center justify-center">
                     <img src="/logo_sdnu.png" alt="SDNU Pemanahan Logo" class="object-contain">
                 </div>
@@ -10,7 +10,7 @@
                     <h1 class="text-xl font-bold text-nu-green">SDNU Pemanahan</h1>
                     <p class="text-xs text-gray-600 hidden sm:block">PPDB 2025/2026</p>
                 </div>
-            </div>
+            </a>
             
             <!-- Desktop Navigation -->
             <div class="hidden lg:flex items-center space-x-8">
