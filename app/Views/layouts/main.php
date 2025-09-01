@@ -87,7 +87,7 @@
     <?= view('components/navbar') ?>
     
     <!-- Main Content -->
-    <main class="min-h-screen">
+    <main>
         <?= $this->renderSection('content') ?>
     </main>
     
