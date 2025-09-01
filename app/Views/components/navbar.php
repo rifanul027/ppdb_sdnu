@@ -28,6 +28,9 @@
                 <a href="/daftar" class="bg-gradient-to-r from-nu-green to-nu-dark text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 font-medium">
                     <i class="fas fa-edit mr-2"></i>Daftar Sekarang
                 </a>
+                <a href="/login" class="nav-link text-gray-700 hover:text-nu-green font-medium transition-colors duration-300 relative">
+                    <i class="fas fa-user mr-2"></i>Login
+                </a>
             </div>
             
             <!-- Mobile Menu Button -->

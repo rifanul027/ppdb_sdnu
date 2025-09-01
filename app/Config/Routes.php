@@ -16,6 +16,7 @@ $routes->get('/syarat', 'Ppdb::syarat');
 $routes->get('/jadwal', 'Ppdb::jadwal');
 $routes->get('/biaya', 'Ppdb::biaya');
 $routes->get('/pengumuman', 'Ppdb::pengumuman');
+$routes->get('/login', 'Ppdb::login');
 
 // Other Routes
 $routes->get('/fasilitas', 'Fasilitas::index');
