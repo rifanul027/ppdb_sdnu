@@ -1,5 +1,6 @@
 <aside class="sidebar">
     <div class="sidebar-header">
+        <img src="/logo_sdnuputih.png" alt="Logo" style="max-width: 60px; margin-bottom: 10px;">
         <h2>PPDB SD NU</h2>
         <p>Admin Dashboard</p>
     </div>

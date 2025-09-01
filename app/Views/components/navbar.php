@@ -29,7 +29,7 @@
                     <i class="fas fa-edit mr-2"></i>Daftar Sekarang
                 </a>
                 <a href="/login" class="nav-link text-gray-700 hover:text-nu-green font-medium transition-colors duration-300 relative">
-                    <i class="fas fa-user mr-2"></i>Login
+                    <i class="fas fa-user mr-2"></i>
                 </a>
             </div>
             
