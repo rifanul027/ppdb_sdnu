@@ -139,20 +139,21 @@
         </div>
         
         <!-- Quick Info -->
-       <div class="bg-nu-cream rounded-2xl p-10 flex justify-center">
-         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 mx-auto justify-center">
-           <div class="text-center">
-             <i class="fas fa-users text-nu-green text-5xl mb-4"></i>
-             <h4 class="font-bold text-nu-dark text-2xl mb-3">Kuota Terbatas</h4>
-             <p class="text-base text-gray-600">Hanya 120 siswa per angkatan</p>
-           </div>
-           <div class="text-center">
-             <i class="fas fa-file-alt text-nu-green text-5xl mb-4"></i>
-             <h4 class="font-bold text-nu-dark text-2xl mb-3">Syarat</h4>
-             <p class="text-base text-gray-600">Akta Kelahiran & Foto</p>
-           </div>
-         </div>
-       </div>
+    <div class="bg-nu-cream rounded-2xl p-10 flex justify-center shadow-xl border border-nu-green/30">
+        <div class="w-full flex justify-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 justify-center text-center">
+                <div class="flex flex-col items-center">
+                    <i class="fas fa-users text-nu-green text-5xl mb-4 drop-shadow-lg"></i>
+                    <h4 class="font-bold text-nu-dark text-2xl mb-3">Kuota Terbatas</h4>
+                    <p class="text-base text-gray-600">Hanya <span class="font-semibold text-nu-green">120 siswa</span> per angkatan</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <i class="fas fa-file-alt text-nu-green text-5xl mb-4 drop-shadow-lg"></i>
+                    <h4 class="font-bold text-nu-dark text-2xl mb-3">Syarat Pendaftaran</h4>
+                    <p class="text-base text-gray-600">Akta Kelahiran, Foto, & Kartu Keluarga</p>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
