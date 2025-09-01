@@ -2,15 +2,22 @@
 <?= $this->section('content') ?>
 
 <!-- Hero Section -->
-<section class="gradient-bg text-white py-16 lg:py-24">
-    <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-12">
-            <h1 class="text-4xl lg:text-6xl font-bold mb-6">
+<section class="relative text-white py-24 lg:py-40">
+    <div class="absolute inset-0">
+        <img src="/hero.jpg" alt="SDNU Pemanahan" class="w-full h-full object-cover object-center opacity-80">
+        <div class="absolute inset-0 bg-gradient-to-b from-nu-green/70 to-nu-dark/80"></div>
+    </div>
+    <div class="container mx-auto px-4 lg:px-8 relative z-10">
+        <div class="text-center mb-16">
+            <h1 class="text-5xl lg:text-7xl font-bold mb-8">
                 PPDB <span class="text-nu-gold">SDNU Pemanahan</span>
             </h1>
-            <p class="text-xl text-green-100 max-w-3xl mx-auto">
+            <p class="text-2xl text-green-100 max-w-4xl mx-auto mb-8">
                 Lembaga pendidikan Islam terpercaya yang mengintegrasikan nilai-nilai Ahlussunnah wal Jamaah dengan pendidikan modern berkualitas
             </p>
+            <a href="/daftar" class="inline-block bg-nu-gold text-nu-dark font-bold px-8 py-4 rounded-full shadow-lg hover:bg-yellow-500 transition-all duration-300 text-xl">
+                Daftar Sekarang
+            </a>
         </div>
     </div>
 </section>
@@ -132,28 +139,23 @@
         </div>
         
         <!-- Quick Info -->
-        <div class="bg-nu-cream rounded-2xl p-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="text-center">
-                    <i class="fas fa-users text-nu-green text-3xl mb-3"></i>
-                    <h4 class="font-bold text-nu-dark mb-2">Kuota Terbatas</h4>
-                    <p class="text-sm text-gray-600">Hanya 120 siswa per angkatan</p>
-                </div>
-                <div class="text-center">
-                    <i class="fas fa-calendar-check text-nu-green text-3xl mb-3"></i>
-                    <h4 class="font-bold text-nu-dark mb-2">Tes Masuk</h4>
-                    <p class="text-sm text-gray-600">Wawancara & Tes Kemampuan Dasar</p>
-                </div>
-                <div class="text-center">
-                    <i class="fas fa-graduation-cap text-nu-green text-3xl mb-3"></i>
-                    <h4 class="font-bold text-nu-dark mb-2">Usia</h4>
-                    <p class="text-sm text-gray-600">6-7 tahun per 1 Juli 2025</p>
-                </div>
-                <div class="text-center">
-                    <i class="fas fa-file-alt text-nu-green text-3xl mb-3"></i>
-                    <h4 class="font-bold text-nu-dark mb-2">Syarat</h4>
-                    <p class="text-sm text-gray-600">Akta Kelahiran & Foto</p>
-                </div>
+        <div class="bg-nu-cream rounded-2xl p-8 flex justify-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-auto">
+            <div class="text-center">
+                <i class="fas fa-users text-nu-green text-3xl mb-3"></i>
+                <h4 class="font-bold text-nu-dark mb-2">Kuota Terbatas</h4>
+                <p class="text-sm text-gray-600">Hanya 120 siswa per angkatan</p>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-graduation-cap text-nu-green text-3xl mb-3"></i>
+                <h4 class="font-bold text-nu-dark mb-2">Usia</h4>
+                <p class="text-sm text-gray-600">6-7 tahun per 1 Juli 2025</p>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-file-alt text-nu-green text-3xl mb-3"></i>
+                <h4 class="font-bold text-nu-dark mb-2">Syarat</h4>
+                <p class="text-sm text-gray-600">Akta Kelahiran & Foto</p>
+            </div>
             </div>
         </div>
     </div>
