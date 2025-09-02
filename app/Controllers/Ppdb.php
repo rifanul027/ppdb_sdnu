@@ -65,4 +65,11 @@ class Ppdb extends BaseController
         
         return view('ppdb/login', $data);
     }
+    public function register()
+    {
+        $data = [
+            'title' => 'register PPDB- SDNU Pemanahan'
+        ];
+        return view('ppdb/register');
+    }
 }

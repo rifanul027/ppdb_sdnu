@@ -24,10 +24,10 @@
         <div>
           <label for="email" class="block text-sm font-medium mb-1">Email</label>
           <input
-            id="email"
-            type="email"
-            placeholder="nama@contoh.com"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+        id="email"
+        type="email"
+        placeholder="nama@contoh.com"
+        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
           />
         </div>
 
@@ -35,26 +35,26 @@
         <div>
           <label for="password" class="block text-sm font-medium mb-1">Password</label>
           <input
-            id="password"
-            type="password"
-            placeholder="••••••••"
-            class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+        id="password"
+        type="password"
+        placeholder="••••••••"
+        class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
           />
         </div>
 
         <!-- Ingat saya & Lupa password -->
         <div class="flex items-center justify-between text-sm">
           <label class="flex items-center space-x-2">
-            <input type="checkbox" class="rounded border-gray-300 text-teal-600 focus:ring-teal-500" />
-            <span>Ingat saya</span>
+        <input type="checkbox" class="rounded border-gray-300 text-green-800 focus:ring-green-800" />
+        <span>Ingat saya</span>
           </label>
-          <a href="#" class="text-teal-600 hover:underline">Lupa password?</a>
+          <a href="#" class="text-green-800 hover:underline">Lupa password?</a>
         </div>
 
         <!-- Tombol -->
         <button
           type="submit"
-          class="w-full bg-teal-600 text-white py-2 rounded-lg font-medium hover:bg-teal-700 transition"
+          class="w-full bg-green-800 text-white py-2 rounded-lg font-medium hover:bg-green-900 transition"
         >
           Masuk
         </button>
@@ -70,11 +70,11 @@
 
 <!-- Bagian Kanan: Gambar & Pengantar -->
 <div class="hidden md:flex w-1/2 bg-teal-600 items-center justify-center relative">
-    <img src="/hero.jpg" alt="Login Illustration" class="object-cover h-full w-full opacity-70">
-    <div class="absolute inset-0 flex flex-col items-center justify-center px-8">
-        <h2 class="text-white text-3xl font-bold mb-4 drop-shadow-lg text-center">Selamat Datang di Portal PPDB SDNU</h2>
-        <p class="text-white text-lg text-center drop-shadow-lg">Silakan login untuk melanjutkan proses pendaftaran dan mengakses informasi terbaru.</p>
-    </div>
+  <img src="/hero.jpg" alt="Login Illustration" class="object-cover h-full w-full opacity-70">
+  <div class="absolute inset-0 flex flex-col items-start justify-center px-8" style="top: 60%;">
+    <h2 class="text-white text-5xl font-bold mb-4 drop-shadow-lg text-left">Selamat Datang di Portal PPDB SDNU Pemanahan</h2>
+    <p class="text-white text-lg text-left drop-shadow-lg">Silakan login untuk melanjutkan proses pendaftaran dan mengakses informasi terbaru.</p>
+  </div>
 </div>
 
 </body>
