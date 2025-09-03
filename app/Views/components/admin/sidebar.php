@@ -35,20 +35,6 @@
         </div>
         
         <div class="nav-item">
-            <a href="/admin/settings/biaya" class="nav-link" style="padding-left: 3rem;">
-                <i class="fas fa-money-bill-wave"></i>
-                <span>Biaya Sekolah</span>
-            </a>
-        </div>
-        
-        <div class="nav-item">
-            <a href="/admin/settings/pendaftaran" class="nav-link" style="padding-left: 3rem;">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Pendaftaran Setting</span>
-            </a>
-        </div>
-        
-        <div class="nav-item">
             <a href="/admin/profile" class="nav-link">
                 <i class="fas fa-user"></i>
                 <span>Profile</span>

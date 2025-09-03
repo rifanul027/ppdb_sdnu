@@ -1,0 +1,19 @@
+# Apache Virtual Host Configuration for ppdbsdnu.test
+# Add this to your Apache httpd-vhosts.conf file
+
+<VirtualHost *:80>
+    ServerName ppdbsdnu.test
+    DocumentRoot "C:/project/ppdbsdnu/public"
+    
+    <Directory "C:/project/ppdbsdnu/public">
+        AllowOverride All
+        Require all granted
+        DirectoryIndex index.php
+    </Directory>
+    
+    ErrorLog "logs/ppdbsdnu_error.log"
+    CustomLog "logs/ppdbsdnu_access.log" common
+</VirtualHost>
+
+# Also add this line to your hosts file (C:\Windows\System32\drivers\etc\hosts):
+# 127.0.0.1 ppdbsdnu.test

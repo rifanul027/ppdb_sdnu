@@ -7,55 +7,87 @@
     <p style="color: #64748b;">Kelola informasi akun admin Anda</p>
 </div>
 
+<!-- Alert Messages -->
+<?php if (session()->getFlashdata('success')): ?>
+    <div style="background-color: #d1fae5; border: 1px solid #a7f3d0; color: #065f46; padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+        <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i>
+        <?= session()->getFlashdata('success') ?>
+    </div>
+<?php endif; ?>
+
+<?php if (session()->getFlashdata('error')): ?>
+    <div style="background-color: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+        <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i>
+        <?= session()->getFlashdata('error') ?>
+    </div>
+<?php endif; ?>
+
+<?php if (session()->getFlashdata('errors')): ?>
+    <div style="background-color: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
+        <ul style="margin: 0; padding-left: 1rem;">
+            <?php foreach (session()->getFlashdata('errors') as $error): ?>
+                <li><?= $error ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
 <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
     <!-- Profile Photo & Info -->
     <div class="content-card">
         <div class="card-body" style="text-align: center;">
             <div style="margin-bottom: 2rem;">
-                <?php if (isset($admin['foto']) && !empty($admin['foto'])): ?>
-                    <img src="<?= base_url($admin['foto']) ?>" alt="Profile Photo" 
-                         style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid #059669;">
-                <?php else: ?>
-                    <div style="width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, #059669, #10b981); display: flex; align-items: center; justify-content: center; margin: 0 auto; color: white; font-size: 3rem;">
-                        <i class="fas fa-user"></i>
-                    </div>
-                <?php endif; ?>
+                <div style="width: 120px; height: 120px; margin: 0 auto; position: relative;">
+                    <?php if (!empty($user['avatar'])): ?>
+                        <img src="/uploads/avatars/<?= $user['avatar'] ?>" alt="Profile Photo" 
+                             style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid #e5e7eb;">
+                    <?php else: ?>
+                        <div style="width: 100%; height: 100%; border-radius: 50%; background-color: #1B5E20; display: flex; align-items: center; justify-content: center; border: 4px solid #e5e7eb;">
+                            <i class="fas fa-user" style="font-size: 3rem; color: white;"></i>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <label for="fotoInput" style="position: absolute; bottom: 0; right: 0; background-color: #1B5E20; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <i class="fas fa-camera" style="font-size: 0.875rem;"></i>
+                    </label>
+                    <input type="file" id="fotoInput" accept="image/*" style="display: none;">
+                </div>
             </div>
             
             <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">
-                <?= esc($admin['nama'] ?? 'Administrator') ?>
+                <?= $user['username'] ?? 'Admin' ?>
             </h3>
             <p style="color: #64748b; margin-bottom: 1rem;">
-                <?= esc($admin['jabatan'] ?? 'Admin PPDB') ?>
+                <?= $user['email'] ?? '' ?>
             </p>
             <p style="color: #64748b; font-size: 0.875rem;">
-                <i class="fas fa-envelope"></i>
-                <?= esc($admin['email'] ?? 'admin@sdnu.ac.id') ?>
+                Role: <span style="background-color: #1B5E20; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
+                    <?= ucfirst($user['role'] ?? 'admin') ?>
+                </span>
             </p>
             
             <div style="margin-top: 2rem;">
-                <input type="file" id="fotoInput" accept="image/*" style="display: none;">
-                <label for="fotoInput" class="btn btn-primary" style="cursor: pointer;">
-                    <i class="fas fa-camera"></i>
-                    Ganti Foto
-                </label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: center;">
+                    <div style="padding: 1rem; background-color: #f8fafc; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem; font-weight: 600; color: #1B5E20;">
+                            <?= date('d') ?>
+                        </div>
+                        <div style="font-size: 0.75rem; color: #64748b;">Login Hari Ini</div>
+                    </div>
+                    <div style="padding: 1rem; background-color: #f8fafc; border-radius: 0.5rem;">
+                        <div style="font-size: 1.5rem; font-weight: 600; color: #1B5E20;">
+                            <?= date('M') ?>
+                        </div>
+                        <div style="font-size: 0.75rem; color: #64748b;">Bulan Aktif</div>
+                    </div>
+                </div>
             </div>
             
             <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: left;">
-                    <div>
-                        <div style="font-size: 0.875rem; color: #64748b;">Login Terakhir</div>
-                        <div style="font-weight: 600;">
-                            <?= date('d M Y, H:i', strtotime($admin['last_login'] ?? 'now')) ?>
-                        </div>
-                    </div>
-                    <div>
-                        <div style="font-size: 0.875rem; color: #64748b;">Member Sejak</div>
-                        <div style="font-weight: 600;">
-                            <?= date('d M Y', strtotime($admin['created_at'] ?? 'now')) ?>
-                        </div>
-                    </div>
-                </div>
+                <p style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.5rem;">Member sejak</p>
+                <p style="font-weight: 600; color: #374151;">
+                    <?= isset($user['created_at']) ? date('d F Y', strtotime($user['created_at'])) : 'Tidak diketahui' ?>
+                </p>
             </div>
         </div>
     </div>
@@ -66,43 +98,40 @@
             <h3 class="card-title">Informasi Personal</h3>
         </div>
         <div class="card-body">
-            <form method="POST" action="/admin/profile/update" id="profileForm">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <form method="POST" action="/profile/update" id="profileForm">
+                <?= csrf_field() ?>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
                     <div>
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Nama Lengkap</label>
-                        <input type="text" name="nama" value="<?= esc($admin['nama'] ?? '') ?>" 
-                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;" required>
+                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Username</label>
+                        <input type="text" name="username" value="<?= $user['username'] ?? '' ?>" 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;" 
+                               required>
                     </div>
-                    
                     <div>
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Email</label>
-                        <input type="email" name="email" value="<?= esc($admin['email'] ?? '') ?>" 
-                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;" required>
-                    </div>
-                    
-                    <div>
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Nomor Telepon</label>
-                        <input type="tel" name="telepon" value="<?= esc($admin['telepon'] ?? '') ?>" 
-                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
-                    </div>
-                    
-                    <div>
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Jabatan</label>
-                        <input type="text" name="jabatan" value="<?= esc($admin['jabatan'] ?? '') ?>" 
-                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
+                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Email</label>
+                        <input type="email" name="email" value="<?= $user['email'] ?? '' ?>" 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;" 
+                               required>
                     </div>
                 </div>
                 
-                <div style="margin-bottom: 2rem;">
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Alamat</label>
-                    <textarea name="alamat" rows="3" 
-                              style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;"><?= esc($admin['alamat'] ?? '') ?></textarea>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Role</label>
+                    <input type="text" value="<?= ucfirst($user['role'] ?? 'admin') ?>" 
+                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem; background-color: #f9fafb;" 
+                           readonly>
                 </div>
                 
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i>
-                    Simpan Perubahan
-                </button>
+                <div style="display: flex; justify-content: end; gap: 0.75rem;">
+                    <button type="button" onclick="document.getElementById('profileForm').reset()" 
+                            style="padding: 0.75rem 1.5rem; border: 1px solid #d1d5db; background-color: white; color: #374151; border-radius: 0.5rem; font-weight: 500; cursor: pointer;">
+                        Reset
+                    </button>
+                    <button type="submit" 
+                            style="padding: 0.75rem 1.5rem; background-color: #1B5E20; color: white; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer;">
+                        Simpan Perubahan
+                    </button>
+                </div>
             </form>
         </div>
     </div>
@@ -114,91 +143,50 @@
         <h3 class="card-title">Ganti Password</h3>
     </div>
     <div class="card-body">
-        <form method="POST" action="/admin/profile/change-password" id="passwordForm">
+        <form method="POST" action="/profile/change-password" id="passwordForm">
+            <?= csrf_field() ?>
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
-                <div>
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Password Lama</label>
-                    <div style="position: relative;">
-                        <input type="password" name="current_password" id="currentPassword" 
-                               style="width: 100%; padding: 0.75rem 3rem 0.75rem 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;" required>
-                        <button type="button" onclick="togglePassword('currentPassword')" 
-                                style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b;">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
+                <div style="position: relative;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Password Lama</label>
+                    <input type="password" name="current_password" id="currentPassword" 
+                           style="width: 100%; padding: 0.75rem; padding-right: 2.5rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;" 
+                           required>
+                    <button type="button" onclick="togglePassword('currentPassword')" 
+                            style="position: absolute; right: 0.75rem; top: 2.25rem; background: none; border: none; color: #6b7280; cursor: pointer;">
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
                 
-                <div>
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Password Baru</label>
-                    <div style="position: relative;">
-                        <input type="password" name="new_password" id="newPassword" 
-                               style="width: 100%; padding: 0.75rem 3rem 0.75rem 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;" required>
-                        <button type="button" onclick="togglePassword('newPassword')" 
-                                style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b;">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                    <div style="font-size: 0.875rem; color: #64748b; margin-top: 0.25rem;">
-                        Minimal 8 karakter, kombinasi huruf dan angka
-                    </div>
+                <div style="position: relative;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Password Baru</label>
+                    <input type="password" name="new_password" id="newPassword" 
+                           style="width: 100%; padding: 0.75rem; padding-right: 2.5rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;" 
+                           required>
+                    <button type="button" onclick="togglePassword('newPassword')" 
+                            style="position: absolute; right: 0.75rem; top: 2.25rem; background: none; border: none; color: #6b7280; cursor: pointer;">
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
                 
-                <div>
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Konfirmasi Password</label>
-                    <div style="position: relative;">
-                        <input type="password" name="confirm_password" id="confirmPassword" 
-                               style="width: 100%; padding: 0.75rem 3rem 0.75rem 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;" required>
-                        <button type="button" onclick="togglePassword('confirmPassword')" 
-                                style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #64748b;">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
+                <div style="position: relative;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Konfirmasi Password</label>
+                    <input type="password" name="confirm_password" id="confirmPassword" 
+                           style="width: 100%; padding: 0.75rem; padding-right: 2.5rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;" 
+                           required>
+                    <button type="button" onclick="togglePassword('confirmPassword')" 
+                            style="position: absolute; right: 0.75rem; top: 2.25rem; background: none; border: none; color: #6b7280; cursor: pointer;">
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </div>
             </div>
             
             <div style="margin-top: 2rem;">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-key"></i>
+                <button type="submit" 
+                        style="padding: 0.75rem 1.5rem; background-color: #dc2626; color: white; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer;">
                     Ganti Password
                 </button>
             </div>
         </form>
-    </div>
-</div>
-
-<!-- Activity Log -->
-<div class="content-card" style="margin-top: 2rem;">
-    <div class="card-header">
-        <h3 class="card-title">Aktivitas Terakhir</h3>
-    </div>
-    <div class="card-body">
-        <div style="max-height: 300px; overflow-y: auto;">
-            <?php if (isset($activities) && !empty($activities)): ?>
-                <?php foreach ($activities as $activity): ?>
-                    <div style="display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid #e2e8f0;">
-                        <div style="width: 40px; height: 40px; border-radius: 50%; background: #f0fdf4; display: flex; align-items: center; justify-content: center; margin-right: 1rem;">
-                            <i class="fas fa-<?= $activity['icon'] ?? 'history' ?>" style="color: #059669;"></i>
-                        </div>
-                        <div style="flex: 1;">
-                            <div style="font-weight: 500; margin-bottom: 0.25rem;">
-                                <?= esc($activity['action']) ?>
-                            </div>
-                            <div style="font-size: 0.875rem; color: #64748b;">
-                                <?= esc($activity['description']) ?>
-                            </div>
-                        </div>
-                        <div style="font-size: 0.875rem; color: #64748b;">
-                            <?= date('d/m/Y H:i', strtotime($activity['created_at'])) ?>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div style="text-align: center; padding: 2rem; color: #64748b;">
-                    <i class="fas fa-history" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                    <div>Belum ada aktivitas</div>
-                </div>
-            <?php endif; ?>
-        </div>
     </div>
 </div>
 
@@ -210,7 +198,7 @@ document.getElementById('fotoInput').addEventListener('change', function(e) {
         const formData = new FormData();
         formData.append('foto', file);
         
-        fetch('/admin/profile/upload-photo', {
+        fetch('/profile/upload-photo', {
             method: 'POST',
             body: formData,
             headers: {
@@ -220,18 +208,10 @@ document.getElementById('fotoInput').addEventListener('change', function(e) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Update photo preview
-                const img = document.querySelector('img[alt="Profile Photo"]');
-                if (img) {
-                    img.src = data.photo_url;
-                } else {
-                    // Replace icon with image
-                    const iconDiv = document.querySelector('div[style*="border-radius: 50%"]');
-                    iconDiv.innerHTML = `<img src="${data.photo_url}" alt="Profile Photo" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-                }
                 alert('Foto berhasil diupload');
+                location.reload();
             } else {
-                alert('Gagal mengupload foto: ' + data.message);
+                alert(data.message || 'Gagal mengupload foto');
             }
         })
         .catch(error => {
@@ -259,11 +239,11 @@ function togglePassword(inputId) {
 
 // Profile form validation
 document.getElementById('profileForm').addEventListener('submit', function(e) {
-    const nama = document.querySelector('input[name="nama"]').value;
+    const username = document.querySelector('input[name="username"]').value;
     const email = document.querySelector('input[name="email"]').value;
     
-    if (!nama.trim()) {
-        alert('Nama lengkap harus diisi');
+    if (!username.trim()) {
+        alert('Username harus diisi');
         e.preventDefault();
         return;
     }
@@ -315,86 +295,6 @@ document.getElementById('passwordForm').addEventListener('submit', function(e) {
         alert('Password harus mengandung kombinasi huruf dan angka');
         e.preventDefault();
         return;
-    }
-});
-
-// Real-time password validation
-document.getElementById('newPassword').addEventListener('input', function() {
-    const password = this.value;
-    let strength = 0;
-    let feedback = [];
-    
-    if (password.length >= 8) strength++;
-    else feedback.push('Minimal 8 karakter');
-    
-    if (/[a-z]/.test(password)) strength++;
-    else feedback.push('Huruf kecil');
-    
-    if (/[A-Z]/.test(password)) strength++;
-    else feedback.push('Huruf besar');
-    
-    if (/\d/.test(password)) strength++;
-    else feedback.push('Angka');
-    
-    if (/[^a-zA-Z\d]/.test(password)) strength++;
-    
-    // Update visual feedback (you can add this if needed)
-    let strengthText = '';
-    let color = '';
-    
-    switch(strength) {
-        case 0-1:
-            strengthText = 'Sangat Lemah';
-            color = '#ef4444';
-            break;
-        case 2:
-            strengthText = 'Lemah';
-            color = '#f59e0b';
-            break;
-        case 3:
-            strengthText = 'Sedang';
-            color = '#eab308';
-            break;
-        case 4:
-            strengthText = 'Kuat';
-            color = '#22c55e';
-            break;
-        case 5:
-            strengthText = 'Sangat Kuat';
-            color = '#059669';
-            break;
-    }
-});
-
-// Auto-save draft functionality
-let saveTimeout;
-document.querySelectorAll('input, textarea').forEach(input => {
-    input.addEventListener('input', function() {
-        clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(() => {
-            // Save draft to localStorage
-            const formData = new FormData(document.getElementById('profileForm'));
-            const data = Object.fromEntries(formData);
-            localStorage.setItem('profile_draft', JSON.stringify(data));
-        }, 2000);
-    });
-});
-
-// Load draft on page load
-document.addEventListener('DOMContentLoaded', function() {
-    const draft = localStorage.getItem('profile_draft');
-    if (draft) {
-        try {
-            const data = JSON.parse(draft);
-            Object.keys(data).forEach(key => {
-                const input = document.querySelector(`[name="${key}"]`);
-                if (input && input.value === '') {
-                    input.value = data[key];
-                }
-            });
-        } catch (e) {
-            console.log('No valid draft found');
-        }
     }
 });
 </script>

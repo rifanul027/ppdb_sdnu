@@ -51,8 +51,12 @@ class Ppdb extends BaseController
     
     public function pengumuman()
     {
+        $pengumumanModel = new \App\Models\PengumumanModel();
+        
         $data = [
-            'title' => 'Pengumuman PPDB - SDNU Pemanahan'
+            'title' => 'Pengumuman PPDB - SDNU Pemanahan',
+            'pengumuman' => $pengumumanModel->getActivePengumuman(),
+            'totalPengumuman' => $pengumumanModel->getTotalActivePengumuman()
         ];
         
         return view('ppdb/pengumuman', $data);

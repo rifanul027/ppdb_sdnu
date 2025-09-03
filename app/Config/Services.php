@@ -29,4 +29,19 @@ class Services extends BaseService
      *     return new \CodeIgniter\Example();
      * }
      */
+
+    /**
+     * UUID Service
+     *
+     * @param bool $getShared
+     * @return \App\Libraries\UuidService
+     */
+    public static function uuid($getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('uuid');
+        }
+
+        return new \App\Libraries\UuidService();
+    }
 }

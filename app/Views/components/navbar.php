@@ -28,9 +28,47 @@
                 <a href="/daftar" class="bg-gradient-to-r from-nu-green to-nu-dark text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 font-medium">
                     <i class="fas fa-edit mr-2"></i>Daftar Sekarang
                 </a>
-                <a href="/login" class="nav-link text-gray-700 hover:text-nu-green font-medium transition-colors duration-300 relative">
-                    <i class="fas fa-user mr-2"></i>
-                </a>
+                
+                <?php if (session()->get('logged_in')): ?>
+                    <!-- User Dropdown -->
+                    <div class="relative">
+                        <button id="user-menu-btn" class="flex items-center space-x-2 text-gray-700 hover:text-nu-green font-medium transition-colors duration-300">
+                            <div class="w-8 h-8 bg-nu-green rounded-full flex items-center justify-center">
+                                <?php if (session()->get('avatar')): ?>
+                                    <img src="/uploads/avatars/<?= session()->get('avatar') ?>" alt="Avatar" class="w-full h-full rounded-full object-cover">
+                                <?php else: ?>
+                                    <i class="fas fa-user text-white text-sm"></i>
+                                <?php endif; ?>
+                            </div>
+                            <span><?= session()->get('username') ?></span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        
+                        <div id="user-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border hidden">
+                            <div class="py-1">
+                                <div class="px-4 py-2 border-b">
+                                    <div class="text-sm font-medium text-gray-900"><?= session()->get('username') ?></div>
+                                    <div class="text-sm text-gray-500"><?= session()->get('email') ?></div>
+                                </div>
+                                <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <i class="fas fa-user mr-2"></i>Profile
+                                </a>
+                                <?php if (session()->get('role') === 'admin'): ?>
+                                    <a href="/admin/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard Admin
+                                    </a>
+                                <?php endif; ?>
+                                <a href="/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100" onclick="return confirm('Yakin ingin logout?')">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <a href="/login" class="nav-link text-gray-700 hover:text-nu-green font-medium transition-colors duration-300 relative">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </a>
+                <?php endif; ?>
             </div>
             
             <!-- Mobile Menu Button -->
@@ -54,6 +92,30 @@
                 <a href="/daftar" class="bg-gradient-to-r from-nu-green to-nu-dark text-white py-2 px-4 rounded-lg font-medium text-center">
                     <i class="fas fa-edit mr-2"></i>Daftar Sekarang
                 </a>
+                
+                <?php if (session()->get('logged_in')): ?>
+                    <div class="border-t pt-3 mt-3">
+                        <div class="px-4 py-2">
+                            <div class="text-sm font-medium text-gray-900"><?= session()->get('username') ?></div>
+                            <div class="text-sm text-gray-500"><?= session()->get('email') ?></div>
+                        </div>
+                        <a href="/profile" class="text-gray-700 hover:text-nu-green font-medium py-2 px-4 rounded-lg hover:bg-nu-cream transition-all duration-300 block">
+                            <i class="fas fa-user mr-3"></i>Profile
+                        </a>
+                        <?php if (session()->get('role') === 'admin'): ?>
+                            <a href="/admin/dashboard" class="text-gray-700 hover:text-nu-green font-medium py-2 px-4 rounded-lg hover:bg-nu-cream transition-all duration-300 block">
+                                <i class="fas fa-tachometer-alt mr-3"></i>Dashboard Admin
+                            </a>
+                        <?php endif; ?>
+                        <a href="/logout" class="text-red-600 hover:text-red-700 font-medium py-2 px-4 rounded-lg hover:bg-red-50 transition-all duration-300 block" onclick="return confirm('Yakin ingin logout?')">
+                            <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                        </a>
+                    </div>
+                <?php else: ?>
+                    <a href="/login" class="text-gray-700 hover:text-nu-green font-medium py-2 px-4 rounded-lg hover:bg-nu-cream transition-all duration-300">
+                        <i class="fas fa-sign-in-alt mr-3"></i>Login
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -100,6 +162,26 @@
             icon.classList.add('fa-times');
         }
     });
+    
+    // User dropdown menu toggle
+    const userMenuBtn = document.getElementById('user-menu-btn');
+    const userMenu = document.getElementById('user-menu');
+    
+    if (userMenuBtn && userMenu) {
+        userMenuBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userMenu.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            userMenu.classList.add('hidden');
+        });
+
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
     
     // Navbar scroll effect
     window.addEventListener('scroll', function() {

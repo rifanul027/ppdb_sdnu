@@ -11,14 +11,41 @@
       </div>
       <h1 class="text-2xl font-bold text-center mb-6">Registrasi</h1>
 
+      <!-- Alert Messages -->
+      <?php if (session()->getFlashdata('error')): ?>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <?= session()->getFlashdata('error') ?>
+        </div>
+      <?php endif; ?>
+
+      <?php if (session()->getFlashdata('success')): ?>
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          <?= session()->getFlashdata('success') ?>
+        </div>
+      <?php endif; ?>
+
+      <?php if (session()->getFlashdata('errors')): ?>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <ul>
+            <?php foreach (session()->getFlashdata('errors') as $error): ?>
+              <li><?= $error ?></li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
+      <?php endif; ?>
+
       <!-- Form -->
-      <form action="#" method="post" class="space-y-4">
+      <form action="/register" method="POST" class="space-y-4">
+        <?= csrf_field() ?>
+        
         <!-- Nama lengkap -->
         <div>
           <label class="block text-sm font-medium mb-1">Nama Lengkap</label>
           <input type="text" name="full_name"
+            value="<?= old('full_name') ?>"
             class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
-            placeholder="Nama lengkap">
+            placeholder="Nama lengkap"
+            required>
         </div>
 
         <!-- Tempat & Tanggal Lahir (side by side) -->
@@ -26,14 +53,18 @@
           <div>
             <label class="block text-sm font-medium mb-1">Tempat Lahir</label>
             <input type="text" name="birth_place"
+              value="<?= old('birth_place') ?>"
               class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
-              placeholder="Kabupaten/Kota">
+              placeholder="Kabupaten/Kota"
+              required>
           </div>
           
           <div>
             <label class="block text-sm font-medium mb-1">Tanggal Lahir</label>
             <input type="date" name="dob"
-              class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800">
+              value="<?= old('dob') ?>"
+              class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
+              required>
           </div>
         </div>
 
@@ -41,8 +72,10 @@
         <div>
           <label class="block text-sm font-medium mb-1">Email</label>
           <input type="email" name="email"
+            value="<?= old('email') ?>"
             class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
-            placeholder="contoh@email.com">
+            placeholder="contoh@email.com"
+            required>
         </div>
 
         <!-- Username & Password (side by side) -->
@@ -50,15 +83,18 @@
           <div>
             <label class="block text-sm font-medium mb-1">Username</label>
             <input type="text" name="username"
+              value="<?= old('username') ?>"
               class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
-              placeholder="username">
+              placeholder="username"
+              required>
           </div>
 
           <div>
             <label class="block text-sm font-medium mb-1">Password</label>
             <input type="password" name="password"
               class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-800"
-              placeholder="Minimal 8 karakter">
+              placeholder="Minimal 8 karakter"
+              required>
           </div>
         </div>
 
