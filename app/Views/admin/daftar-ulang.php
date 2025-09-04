@@ -98,82 +98,144 @@
     </div>
 </div>
 
-    <!-- Data Table -->
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title mb-0">Data Siswa Daftar Ulang</h5>
+<!-- Data Table -->
+<div class="content-card">
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 class="card-title">Data Siswa Daftar Ulang</h3>
+        <div style="color: #64748b; font-size: 0.875rem;">
+            Total: <?= count($siswa) ?> siswa
         </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped" id="daftarUlangTable">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Siswa</th>
-                            <th>NISN</th>
-                            <th>Tempat, Tanggal Lahir</th>
-                            <th>Orang Tua</th>
-                            <th>Status Pembayaran</th>
-                            <th>Status Wawancara</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($siswa as $index => $s): ?>
-                        <tr data-pembayaran="<?= $s['status_pembayaran'] ?>" data-wawancara="<?= $s['status_wawancara'] ?>" data-nama="<?= strtolower($s['nama']) ?>" data-nisn="<?= $s['nisn'] ?>">
-                            <td><?= $index + 1 ?></td>
-                            <td>
-                                <div class="student-info">
-                                    <strong><?= esc($s['nama']) ?></strong>
-                                    <small class="text-muted d-block"><?= $s['jenis_kelamin'] == 'L' ? 'Laki-laki' : 'Perempuan' ?></small>
+    </div>
+    <div class="card-body" style="padding: 0;">
+        <div class="table-container">
+            <table class="table" id="daftarUlangTable">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                        </th>
+                        <th>NISN</th>
+                        <th>Nama Siswa</th>
+                        <th>Tempat, Tanggal Lahir</th>
+                        <th>Orang Tua</th>
+                        <th>Status Pembayaran</th>
+                        <th>Status Wawancara</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($siswa as $index => $s): ?>
+                    <tr data-pembayaran="<?= $s['status_pembayaran'] ?>" data-wawancara="<?= $s['status_wawancara'] ?>" data-nama="<?= strtolower($s['nama']) ?>" data-nisn="<?= $s['nisn'] ?>">
+                        <td>
+                            <input type="checkbox" name="selected[]" value="<?= $s['id'] ?>" class="select-item">
+                        </td>
+                        <td>
+                            <span style="font-family: monospace; font-weight: 600; color: #059669;">
+                                <?= esc($s['nisn']) ?>
+                            </span>
+                        </td>
+                        <td>
+                            <div style="font-weight: 600;"><?= esc($s['nama']) ?></div>
+                            <div style="font-size: 0.875rem; color: #64748b;">
+                                <?= $s['jenis_kelamin'] == 'L' ? 'Laki-laki' : 'Perempuan' ?>
+                            </div>
+                        </td>
+                        <td>
+                            <div><?= esc($s['tempat_lahir']) ?></div>
+                            <div style="font-size: 0.875rem; color: #64748b;">
+                                <?= date('d/m/Y', strtotime($s['tanggal_lahir'])) ?>
+                            </div>
+                        </td>
+                        <td>
+                            <div style="font-weight: 500;"><?= esc($s['nama_ayah']) ?></div>
+                            <div style="font-size: 0.875rem; color: #64748b;">
+                                <?= esc($s['nama_ibu']) ?>
+                            </div>
+                        </td>
+                        <td>
+                            <?php if ($s['status_pembayaran'] == 'Lunas'): ?>
+                                <span class="badge badge-success">Lunas</span>
+                            <?php elseif ($s['status_pembayaran'] == 'Cicilan'): ?>
+                                <span class="badge badge-warning">Cicilan</span>
+                            <?php else: ?>
+                                <span class="badge badge-danger">Belum Bayar</span>
+                            <?php endif; ?>
+                            <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">
+                                Rp <?= number_format($s['jumlah_bayar'], 0, ',', '.') ?> / Rp <?= number_format($s['total_bayar'], 0, ',', '.') ?>
+                            </div>
+                        </td>
+                        <td>
+                            <?php if ($s['status_wawancara'] == 'Sudah Wawancara'): ?>
+                                <span class="badge badge-success">Sudah Wawancara</span>
+                                <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">
+                                    <?= date('d/m/Y', strtotime($s['tanggal_wawancara'])) ?>
                                 </div>
-                            </td>
-                            <td><?= esc($s['nisn']) ?></td>
-                            <td>
-                                <?= esc($s['tempat_lahir']) ?>,<br>
-                                <small><?= date('d/m/Y', strtotime($s['tanggal_lahir'])) ?></small>
-                            </td>
-                            <td>
-                                <strong>Ayah:</strong> <?= esc($s['nama_ayah']) ?><br>
-                                <strong>Ibu:</strong> <?= esc($s['nama_ibu']) ?>
-                            </td>
-                            <td>
-                                <?php if ($s['status_pembayaran'] == 'Lunas'): ?>
-                                    <span class="badge badge-success">Lunas</span>
-                                <?php elseif ($s['status_pembayaran'] == 'Cicilan'): ?>
-                                    <span class="badge badge-warning">Cicilan</span>
-                                <?php else: ?>
-                                    <span class="badge badge-danger">Belum Bayar</span>
-                                <?php endif; ?>
-                                <br>
-                                <small>Rp <?= number_format($s['jumlah_bayar'], 0, ',', '.') ?> / Rp <?= number_format($s['total_bayar'], 0, ',', '.') ?></small>
-                            </td>
-                            <td>
-                                <?php if ($s['status_wawancara'] == 'Sudah Wawancara'): ?>
-                                    <span class="badge badge-success">Sudah Wawancara</span>
-                                    <br>
-                                    <small><?= date('d/m/Y', strtotime($s['tanggal_wawancara'])) ?></small>
-                                <?php else: ?>
-                                    <span class="badge badge-secondary">Belum Wawancara</span>
-                                <?php endif; ?>
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <button class="btn btn-primary btn-sm" onclick="showDetailModal(<?= htmlspecialchars(json_encode($s)) ?>)" title="Lihat Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="btn btn-success btn-sm" onclick="showPembayaranModal(<?= htmlspecialchars(json_encode($s)) ?>)" title="Kelola Pembayaran">
-                                        <i class="fas fa-money-bill"></i>
-                                    </button>
-                                    <button class="btn btn-info btn-sm" onclick="showWawancaraModal(<?= htmlspecialchars(json_encode($s)) ?>)" title="Kelola Wawancara">
-                                        <i class="fas fa-comments"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                            <?php else: ?>
+                                <span class="badge badge-secondary">Belum Wawancara</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button onclick="showDetailModal(<?= htmlspecialchars(json_encode($s)) ?>)" 
+                                        class="btn btn-secondary" 
+                                        style="padding: 0.5rem; font-size: 0.75rem;"
+                                        title="Lihat Detail">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button onclick="showPembayaranModal(<?= htmlspecialchars(json_encode($s)) ?>)" 
+                                        class="btn btn-primary" 
+                                        style="padding: 0.5rem; font-size: 0.75rem;"
+                                        title="Kelola Pembayaran">
+                                    <i class="fas fa-money-bill"></i>
+                                </button>
+                                <button onclick="showWawancaraModal(<?= htmlspecialchars(json_encode($s)) ?>)" 
+                                        class="btn" 
+                                        style="padding: 0.5rem; font-size: 0.75rem; background: #3b82f6; color: white;"
+                                        title="Kelola Wawancara">
+                                    <i class="fas fa-comments"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                    <?php if (empty($siswa)): ?>
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 3rem; color: #64748b;">
+                            <i class="fas fa-redo-alt" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                            <div>Belum ada data siswa daftar ulang</div>
+                            <div style="font-size: 0.875rem; margin-top: 0.5rem;">
+                                Data siswa daftar ulang akan muncul di sini
+                            </div>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Bulk Actions -->
+<div class="content-card" style="margin-top: 1rem;">
+    <div class="card-body">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <strong>Aksi untuk item terpilih:</strong>
+                <span id="selectedCount" style="color: #64748b;">0 item dipilih</span>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button onclick="bulkUpdatePembayaran()" class="btn btn-primary" disabled id="updatePembayaranBtn">
+                    <i class="fas fa-money-bill"></i>
+                    Update Pembayaran
+                </button>
+                <button onclick="bulkUpdateWawancara()" class="btn" style="background: #3b82f6; color: white;" disabled id="updateWawancaraBtn">
+                    <i class="fas fa-comments"></i>
+                    Update Wawancara
+                </button>
+                <button onclick="exportSelected()" class="btn btn-secondary" disabled id="exportBtn">
+                    <i class="fas fa-download"></i>
+                    Export Terpilih
+                </button>
             </div>
         </div>
     </div>
@@ -366,120 +428,56 @@ Contoh:
     </div>
 </div>
 
-<style>
-.stat-card {
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-    transition: transform 0.2s;
-}
 
-.stat-card:hover {
-    transform: translateY(-2px);
-}
-
-.stat-card .card-body {
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.stat-info h3 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    color: #1f2937;
-}
-
-.stat-info p {
-    margin: 0;
-    font-size: 0.875rem;
-    color: #6b7280;
-}
-
-.stat-icon {
-    font-size: 2.5rem;
-    opacity: 0.3;
-}
-
-.badge {
-    font-size: 0.75rem;
-    padding: 0.4rem 0.8rem;
-}
-
-.badge-success {
-    background-color: #10b981;
-}
-
-.badge-warning {
-    background-color: #f59e0b;
-}
-
-.badge-danger {
-    background-color: #ef4444;
-}
-
-.badge-secondary {
-    background-color: #6b7280;
-}
-
-.student-info {
-    line-height: 1.4;
-}
-
-.btn-group .btn {
-    margin-right: 2px;
-}
-
-.btn-group .btn:last-child {
-    margin-right: 0;
-}
-
-.table th {
-    border-top: none;
-    font-weight: 600;
-    background-color: #f8fafc;
-}
-
-.modal-header {
-    background-color: #f8fafc;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.alert {
-    border: none;
-    border-radius: 10px;
-}
-
-.form-control:focus {
-    border-color: #059669;
-    box-shadow: 0 0 0 0.2rem rgba(5, 150, 105, 0.25);
-}
-
-.btn-primary {
-    background-color: #059669;
-    border-color: #059669;
-}
-
-.btn-primary:hover {
-    background-color: #047857;
-    border-color: #047857;
-}
-</style>
 
 <script>
+// Toggle select all checkboxes
+function toggleSelectAll() {
+    const selectAll = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.select-item');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+    });
+    
+    updateSelectedCount();
+}
+
+// Update selected count and enable/disable bulk action buttons
+function updateSelectedCount() {
+    const selected = document.querySelectorAll('.select-item:checked');
+    const count = selected.length;
+    
+    document.getElementById('selectedCount').textContent = `${count} item dipilih`;
+    
+    // Enable/disable bulk action buttons
+    const buttons = ['updatePembayaranBtn', 'updateWawancaraBtn', 'exportBtn'];
+    buttons.forEach(btnId => {
+        document.getElementById(btnId).disabled = count === 0;
+    });
+}
+
+// Add event listeners to checkboxes
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.select-item');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateSelectedCount);
+    });
+});
+
 // Apply filters
 function applyFilters() {
     const filterPembayaran = document.getElementById('filterPembayaran').value;
     const filterWawancara = document.getElementById('filterWawancara').value;
     const searchInput = document.getElementById('searchInput').value.toLowerCase();
     
-    const rows = document.querySelectorAll('#daftarUlangTable tbody tr');
+    const rows = document.querySelectorAll('#daftarUlangTable tbody tr:not(:last-child)');
     
     rows.forEach(row => {
         let show = true;
+        
+        // Skip if no data attributes (empty state row)
+        if (!row.dataset.pembayaran) return;
         
         // Filter pembayaran
         if (filterPembayaran && row.dataset.pembayaran !== filterPembayaran) {
@@ -502,6 +500,14 @@ function applyFilters() {
         
         row.style.display = show ? '' : 'none';
     });
+}
+
+// Reset filters
+function resetFilters() {
+    document.getElementById('filterPembayaran').value = '';
+    document.getElementById('filterWawancara').value = '';
+    document.getElementById('searchInput').value = '';
+    applyFilters();
 }
 
 // Show detail modal
@@ -569,6 +575,47 @@ document.getElementById('wawancaraForm').addEventListener('submit', function(e) 
     // In real implementation, send AJAX request to save data
 });
 
+// Bulk action functions
+function bulkUpdatePembayaran() {
+    const selected = document.querySelectorAll('.select-item:checked');
+    if (selected.length === 0) {
+        alert('Pilih minimal satu item untuk diproses');
+        return;
+    }
+    
+    if (confirm(`Update status pembayaran untuk ${selected.length} siswa?`)) {
+        const ids = Array.from(selected).map(cb => cb.value);
+        console.log('Update pembayaran for IDs:', ids);
+        alert('Fitur bulk update pembayaran akan diimplementasikan');
+    }
+}
+
+function bulkUpdateWawancara() {
+    const selected = document.querySelectorAll('.select-item:checked');
+    if (selected.length === 0) {
+        alert('Pilih minimal satu item untuk diproses');
+        return;
+    }
+    
+    if (confirm(`Update status wawancara untuk ${selected.length} siswa?`)) {
+        const ids = Array.from(selected).map(cb => cb.value);
+        console.log('Update wawancara for IDs:', ids);
+        alert('Fitur bulk update wawancara akan diimplementasikan');
+    }
+}
+
+function exportSelected() {
+    const selected = document.querySelectorAll('.select-item:checked');
+    if (selected.length === 0) {
+        alert('Pilih minimal satu item untuk diexport');
+        return;
+    }
+    
+    const ids = Array.from(selected).map(cb => cb.value);
+    console.log('Export selected IDs:', ids);
+    alert('Fitur export data terpilih akan diimplementasikan');
+}
+
 // Export data function
 function exportData() {
     alert('Fungsi export akan diimplementasikan dengan format Excel/PDF');
@@ -583,6 +630,7 @@ function refreshData() {
 document.getElementById('searchInput').addEventListener('input', applyFilters);
 document.getElementById('filterPembayaran').addEventListener('change', applyFilters);
 document.getElementById('filterWawancara').addEventListener('change', applyFilters);
+</script>
 </script>
 
 <?= $this->endsection() ?>
