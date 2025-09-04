@@ -1012,4 +1012,76 @@ class Admin extends BaseController
             ]);
         }
     }
+
+    public function daftarUlang()
+    {
+        $data = [
+            'title' => 'Daftar Ulang Siswa',
+            'pageTitle' => 'Daftar Ulang Siswa',
+            'siswa' => $this->getSiswaDaftarUlang()
+        ];
+
+        return view('admin/daftar-ulang', $data);
+    }
+
+    private function getSiswaDaftarUlang()
+    {
+        // Static data for demonstration
+        return [
+            [
+                'id' => '1',
+                'nama' => 'Ahmad Rizki',
+                'nisn' => '1234567890',
+                'tempat_lahir' => 'Jakarta',
+                'tanggal_lahir' => '2015-05-15',
+                'jenis_kelamin' => 'L',
+                'alamat' => 'Jl. Merdeka No. 123, Jakarta',
+                'nama_ayah' => 'Budi Santoso',
+                'nama_ibu' => 'Siti Nurhaliza',
+                'status_pembayaran' => 'Belum Bayar',
+                'jumlah_bayar' => 0,
+                'total_bayar' => 2500000,
+                'tanggal_bayar' => null,
+                'status_wawancara' => 'Belum Wawancara',
+                'catatan_wawancara' => '',
+                'tanggal_wawancara' => null
+            ],
+            [
+                'id' => '2',
+                'nama' => 'Sari Dewi',
+                'nisn' => '1234567891',
+                'tempat_lahir' => 'Surabaya',
+                'tanggal_lahir' => '2015-03-20',
+                'jenis_kelamin' => 'P',
+                'alamat' => 'Jl. Pahlawan No. 456, Surabaya',
+                'nama_ayah' => 'Joko Widodo',
+                'nama_ibu' => 'Ani Susanti',
+                'status_pembayaran' => 'Lunas',
+                'jumlah_bayar' => 2500000,
+                'total_bayar' => 2500000,
+                'tanggal_bayar' => '2025-08-15',
+                'status_wawancara' => 'Sudah Wawancara',
+                'catatan_wawancara' => 'Anak cerdas, komunikatif, dan siap mengikuti pembelajaran di SD NU.',
+                'tanggal_wawancara' => '2025-08-20'
+            ],
+            [
+                'id' => '3',
+                'nama' => 'Muhammad Fajar',
+                'nisn' => '1234567892',
+                'tempat_lahir' => 'Bandung',
+                'tanggal_lahir' => '2015-07-10',
+                'jenis_kelamin' => 'L',
+                'alamat' => 'Jl. Asia Afrika No. 789, Bandung',
+                'nama_ayah' => 'Agus Setiawan',
+                'nama_ibu' => 'Rina Marlina',
+                'status_pembayaran' => 'Cicilan',
+                'jumlah_bayar' => 1500000,
+                'total_bayar' => 2500000,
+                'tanggal_bayar' => '2025-08-10',
+                'status_wawancara' => 'Belum Wawancara',
+                'catatan_wawancara' => '',
+                'tanggal_wawancara' => null
+            ]
+        ];
+    }
 }

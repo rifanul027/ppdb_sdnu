@@ -19,6 +19,13 @@
                 <span>Pendaftar</span>
             </a>
         </div>
+       
+        <div class="nav-item">
+            <a href="/admin/daftar-ulang" class="nav-link">
+                <i class="fas fa-redo-alt"></i>
+                <span>Daftar Ulang</span>
+            </a>
+        </div>
         
         <div class="nav-item">
             <a href="/admin/rekap-siswa" class="nav-link">

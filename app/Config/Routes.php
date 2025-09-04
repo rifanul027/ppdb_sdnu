@@ -43,6 +43,7 @@ $routes->get('/fasilitas', 'Fasilitas::index');
 $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->get('dashboard', 'Admin::dashboard');
     $routes->get('pendaftar', 'Admin::pendaftar');
+    $routes->get('daftar-ulang', 'Admin::daftarUlang');
     $routes->get('rekap-siswa', 'Admin::rekapSiswa');
     $routes->get('settings', 'Admin::settings');
     $routes->get('settings/biaya', 'Admin::settingsBiaya');
