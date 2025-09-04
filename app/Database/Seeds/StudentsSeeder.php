@@ -8,6 +8,22 @@ class StudentsSeeder extends Seeder
 {
     public function run()
     {
+        // Ambil tahun ajaran yang aktif
+        $tahunAjaranAktif = $this->db->table('tahun_ajaran')
+                                    ->where('is_active', true)
+                                    ->get()
+                                    ->getRowArray();
+        
+        if (!$tahunAjaranAktif) {
+            // Jika tidak ada yang aktif, ambil yang pertama
+            $tahunAjaranAktif = $this->db->table('tahun_ajaran')
+                                        ->limit(1)
+                                        ->get()
+                                        ->getRowArray();
+        }
+        
+        $tahunAjaranId = $tahunAjaranAktif['id'];
+        
         $data = [
             [
                 'id' => '770e8400-e29b-41d4-a716-446655440001',
@@ -28,7 +44,7 @@ class StudentsSeeder extends Seeder
                 'ijazah_url' => 'uploads/ijazah_001.pdf',
                 'akta_url' => 'uploads/akta_001.pdf',
                 'kk_url' => 'uploads/kk_001.pdf',
-                'tahun_ajaran_id' => '63238c69-b6d3-4ce4-b8b4-1d5c7e2f3a4b',
+                'tahun_ajaran_id' => $tahunAjaranId,
                 'bukti_pembayaran_id' => '660e8400-e29b-41d4-a716-446655440001',
                 'beasiswa_id' => 'aaa8400-e29b-41d4-a716-446655440001',
                 'status' => 'siswa',
@@ -55,7 +71,7 @@ class StudentsSeeder extends Seeder
                 'ijazah_url' => 'uploads/ijazah_002.pdf',
                 'akta_url' => 'uploads/akta_002.pdf',
                 'kk_url' => 'uploads/kk_002.pdf',
-                'tahun_ajaran_id' => '63238c69-b6d3-4ce4-b8b4-1d5c7e2f3a4b',
+                'tahun_ajaran_id' => $tahunAjaranId,
                 'bukti_pembayaran_id' => '660e8400-e29b-41d4-a716-446655440002',
                 'beasiswa_id' => 'aaa8400-e29b-41d4-a716-446655440002',
                 'status' => 'calon',
@@ -82,7 +98,7 @@ class StudentsSeeder extends Seeder
                 'ijazah_url' => null,
                 'akta_url' => 'uploads/akta_003.pdf',
                 'kk_url' => 'uploads/kk_003.pdf',
-                'tahun_ajaran_id' => '63238c69-b6d3-4ce4-b8b4-1d5c7e2f3a4b',
+                'tahun_ajaran_id' => $tahunAjaranId,
                 'bukti_pembayaran_id' => null,
                 'beasiswa_id' => null,
                 'status' => 'calon',
