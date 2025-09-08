@@ -28,69 +28,215 @@ class StudentModel extends Model
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
 
-    // Validation
-    protected $validationRules = [
-        'nama_lengkap' => 'required|min_length[3]|max_length[100]',
-        'jenis_kelamin' => 'required|in_list[L,P]',
-        'tempat_lahir' => 'required|max_length[50]',
-        'tanggal_lahir' => 'required|valid_date',
-        'agama' => 'required|max_length[20]',
-        'alamat' => 'required|min_length[10]',
-        'nama_ayah' => 'required|max_length[100]',
-        'nama_ibu' => 'required|max_length[100]',
-        'status' => 'in_list[calon,siswa]'
-    ];
-
-    protected $validationMessages = [
-        'nama_lengkap' => [
-            'required' => 'Nama lengkap harus diisi',
-            'min_length' => 'Nama lengkap minimal 3 karakter',
-            'max_length' => 'Nama lengkap maksimal 100 karakter'
-        ],
-        'jenis_kelamin' => [
-            'required' => 'Jenis kelamin harus dipilih',
-            'in_list' => 'Jenis kelamin tidak valid (L/P)'
-        ],
-        'tempat_lahir' => [
-            'required' => 'Tempat lahir harus diisi',
-            'max_length' => 'Tempat lahir maksimal 50 karakter'
-        ],
-        'tanggal_lahir' => [
-            'required' => 'Tanggal lahir harus diisi',
-            'valid_date' => 'Format tanggal lahir tidak valid'
-        ]
-    ];
+    // Validation - disabled since we use frontend validation only
+    protected $validationRules = [];
+    protected $validationMessages = [];
+    protected $skipValidation = true;
 
     protected function beforeInsert(array $data)
     {
-        if (!isset($data['data']['id'])) {
-            $data['data']['id'] = service('uuid')->uuid4()->toString();
-        }
-        
-        // Auto generate no_registrasi if not provided
-        if (!isset($data['data']['no_registrasi']) || empty($data['data']['no_registrasi'])) {
-            $data['data']['no_registrasi'] = $this->generateNoRegistrasi();
-        }
-        
         return $data;
     }
 
-    private function generateNoRegistrasi()
+    public function generateNoRegistrasi()
     {
         $year = date('Y');
-        $lastNumber = $this->selectMax('no_registrasi')
-            ->where('YEAR(created_at)', $year)
-            ->get()
-            ->getRow();
+        $month = date('m');
         
-        $nextNumber = 1;
-        if ($lastNumber && $lastNumber->no_registrasi) {
-            // Extract number from last registration number
-            $lastNumPart = substr($lastNumber->no_registrasi, -4);
-            $nextNumber = intval($lastNumPart) + 1;
+        // Get last registration number for current year-month
+        $lastStudent = $this->where('no_registrasi LIKE', 'REG' . $year . $month . '%')
+            ->orderBy('no_registrasi', 'DESC')
+            ->first();
+        
+        if ($lastStudent) {
+            $lastNumber = (int) substr($lastStudent['no_registrasi'], -4);
+            $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+        } else {
+            $newNumber = '0001';
         }
         
-        return 'PPDB-' . $year . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+        return 'REG' . $year . $month . $newNumber;
+    }
+
+    public function createStudent($formData, $tahunAjaranId)
+    {
+        // Generate student ID and registration number
+        $studentId = generate_uuid();
+        $noRegistrasi = $this->generateNoRegistrasi();
+        
+        log_message('info', 'Starting registration process - Student ID: ' . $studentId . ', No Registrasi: ' . $noRegistrasi);
+        
+        // Create upload directory
+        $uploadPath = WRITEPATH . 'uploads/' . $studentId;
+        log_message('info', 'Creating upload directory: ' . $uploadPath);
+        
+        if (!is_dir($uploadPath)) {
+            if (!mkdir($uploadPath, 0755, true)) {
+                log_message('error', 'Failed to create upload directory: ' . $uploadPath);
+                throw new \Exception('Gagal membuat direktori upload. Silakan hubungi administrator.');
+            }
+        }
+        
+        log_message('info', 'Upload directory ready: ' . $uploadPath);
+        
+        // Handle file uploads
+        $aktaFile = $formData['files']['akta'];
+        $kkFile = $formData['files']['kk'];
+        $ijazahFile = $formData['files']['ijazah'];
+        
+        $aktaUrl = null;
+        $kkUrl = null;
+        $ijazahUrl = null;
+        
+        // Validate and upload akta kelahiran
+        if ($aktaFile->isValid() && !$aktaFile->hasMoved()) {
+            if ($aktaFile->getSize() > 5 * 1024 * 1024) { // 5MB limit
+                throw new \Exception('Ukuran file akta kelahiran maksimal 5MB.');
+            }
+            
+            $aktaName = 'akta_' . $studentId . '.' . $aktaFile->getExtension();
+            if (!$aktaFile->move($uploadPath, $aktaName)) {
+                throw new \Exception('Gagal mengupload akta kelahiran.');
+            }
+            $aktaUrl = 'writable/uploads/' . $studentId . '/' . $aktaName;
+        } else {
+            throw new \Exception('File akta kelahiran tidak valid atau tidak dapat diupload.');
+        }
+        
+        // Validate and upload kartu keluarga
+        if ($kkFile->isValid() && !$kkFile->hasMoved()) {
+            if ($kkFile->getSize() > 5 * 1024 * 1024) { // 5MB limit
+                throw new \Exception('Ukuran file kartu keluarga maksimal 5MB.');
+            }
+            
+            $kkName = 'kk_' . $studentId . '.' . $kkFile->getExtension();
+            if (!$kkFile->move($uploadPath, $kkName)) {
+                throw new \Exception('Gagal mengupload kartu keluarga.');
+            }
+            $kkUrl = 'writable/uploads/' . $studentId . '/' . $kkName;
+        } else {
+            throw new \Exception('File kartu keluarga tidak valid atau tidak dapat diupload.');
+        }
+        
+        // Upload ijazah (optional)
+        if ($ijazahFile && $ijazahFile->isValid() && !$ijazahFile->hasMoved()) {
+            if ($ijazahFile->getSize() > 5 * 1024 * 1024) { // 5MB limit
+                throw new \Exception('Ukuran file ijazah maksimal 5MB.');
+            }
+            
+            $ijazahName = 'ijazah_' . $studentId . '.' . $ijazahFile->getExtension();
+            if ($ijazahFile->move($uploadPath, $ijazahName)) {
+                $ijazahUrl = 'writable/uploads/' . $studentId . '/' . $ijazahName;
+            }
+        }
+        
+        // Prepare data for insertion
+        $studentData = [
+            'id' => $studentId,
+            'no_registrasi' => $noRegistrasi,
+            'nama_lengkap' => $formData['post']['nama_lengkap'],
+            'agama' => $formData['post']['agama'],
+            'tempat_lahir' => $formData['post']['tempat_lahir'],
+            'tanggal_lahir' => $formData['post']['tanggal_lahir'],
+            'jenis_kelamin' => $formData['post']['jenis_kelamin'],
+            'nama_ayah' => $formData['post']['nama_ayah'],
+            'nama_ibu' => $formData['post']['nama_ibu'],
+            'alamat' => $formData['post']['alamat'],
+            'domisili' => $formData['post']['domisili'],
+            'nomor_telepon' => $formData['post']['nomor_telepon'],
+            'asal_tk_ra' => $formData['post']['asal_tk_ra'] ?: null,
+            'akta_url' => $aktaUrl,
+            'kk_url' => $kkUrl,
+            'ijazah_url' => $ijazahUrl,
+            'tahun_ajaran_id' => $tahunAjaranId,
+            'status' => 'calon',
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        
+        log_message('info', 'Student data prepared: ' . json_encode($studentData));
+        
+        // Insert student data
+        log_message('info', 'Attempting to insert student data');
+        
+        if ($this->insert($studentData)) {
+            log_message('info', 'Student data inserted successfully');
+            return $studentId;
+        } else {
+            // Clean up uploaded files if database insertion fails
+            if (isset($uploadPath) && is_dir($uploadPath)) {
+                $this->deleteDirectory($uploadPath);
+            }
+            
+            // Get database errors if any
+            $dbError = $this->errors();
+            log_message('error', 'Failed to insert student data. DB Errors: ' . json_encode($dbError));
+            $errorMessage = !empty($dbError) ? implode(', ', $dbError) : 'Gagal menyimpan data pendaftaran.';
+            throw new \Exception($errorMessage);
+        }
+    }
+
+    public function updateStudentProfile($studentId, $formData)
+    {
+        // Prepare update data
+        $updateData = [
+            'nisn' => $formData['nisn'] ?: null,
+            'nama_lengkap' => $formData['nama_lengkap'],
+            'agama' => $formData['agama'],
+            'tempat_lahir' => $formData['tempat_lahir'],
+            'tanggal_lahir' => $formData['tanggal_lahir'],
+            'jenis_kelamin' => $formData['jenis_kelamin'],
+            'nama_ayah' => $formData['nama_ayah'],
+            'nama_ibu' => $formData['nama_ibu'],
+            'alamat' => $formData['alamat'],
+            'domisili' => $formData['domisili'],
+            'nomor_telepon' => $formData['nomor_telepon'],
+            'asal_tk_ra' => $formData['asal_tk_ra'] ?: null,
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        
+        // Update student data
+        if ($this->update($studentId, $updateData)) {
+            return true;
+        } else {
+            throw new \Exception('Gagal memperbarui data profil.');
+        }
+    }
+
+    public function deleteStudentData($studentId)
+    {
+        // Get student data first to clean up files
+        $student = $this->find($studentId);
+        if (!$student) {
+            throw new \Exception('Data siswa tidak ditemukan.');
+        }
+        
+        // Delete student record (soft delete)
+        if ($this->delete($studentId)) {
+            // Clean up uploaded files
+            $uploadPath = WRITEPATH . 'uploads/' . $studentId;
+            if (is_dir($uploadPath)) {
+                $this->deleteDirectory($uploadPath);
+            }
+            
+            return true;
+        } else {
+            throw new \Exception('Gagal menghapus data siswa.');
+        }
+    }
+
+    private function deleteDirectory($dir)
+    {
+        if (!is_dir($dir)) {
+            return false;
+        }
+        
+        $files = array_diff(scandir($dir), ['.', '..']);
+        foreach ($files as $file) {
+            $filePath = $dir . DIRECTORY_SEPARATOR . $file;
+            is_dir($filePath) ? $this->deleteDirectory($filePath) : unlink($filePath);
+        }
+        
+        return rmdir($dir);
     }
 
     // Get students with relationships
@@ -206,5 +352,66 @@ class StudentModel extends Model
             'labels' => $months,
             'data' => $data
         ];
+    }
+
+    /**
+     * Get student by registration number
+     */
+    public function getByRegistrationNumber($noRegistrasi)
+    {
+        return $this->where('no_registrasi', $noRegistrasi)->first();
+    }
+
+    /**
+     * Check if NISN is already used by another student
+     */
+    public function isNisnExists($nisn, $excludeId = null)
+    {
+        $builder = $this->where('nisn', $nisn);
+        
+        if ($excludeId) {
+            $builder->where('id !=', $excludeId);
+        }
+        
+        return $builder->first() !== null;
+    }
+
+    /**
+     * Update student status
+     */
+    public function updateStatus($studentId, $status, $acceptedAt = null)
+    {
+        $updateData = [
+            'status' => $status,
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+        
+        if ($status === 'diterima' && $acceptedAt) {
+            $updateData['accepted_at'] = $acceptedAt;
+        }
+        
+        return $this->update($studentId, $updateData);
+    }
+
+    /**
+     * Count students by status
+     */
+    public function countByStatus($status)
+    {
+        return $this->where('status', $status)
+                   ->where('deleted_at', null)
+                   ->countAllResults();
+    }
+
+    /**
+     * Get recent students by created_at
+     */
+    public function getRecentStudents($limit = 5)
+    {
+        return $this->select('id, no_registrasi, nama_lengkap, jenis_kelamin, created_at, status')
+                   ->where('deleted_at', null)
+                   ->orderBy('created_at', 'DESC')
+                   ->limit($limit)
+                   ->findAll();
     }
 }

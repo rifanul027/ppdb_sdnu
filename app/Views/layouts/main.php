@@ -7,16 +7,12 @@
     <meta name="description" content="Penerimaan Peserta Didik Baru (PPDB) SD Nahdlatul Ulama Pemanahan - Santri Aswaja, Mandiri, Unggul, Berwawasan Global, Berkarakter Lokal">
     <meta name="keywords" content="PPDB, SD Nahdlatul Ulama, Pemanahan, Pleret, Bantul, Pendaftaran Online">
     
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Custom Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -56,7 +52,6 @@
     </script>
     </script>
     
-    <!-- Custom Styles -->
     <style>
         .gradient-bg {
             background: linear-gradient(135deg, #fef7ed 0%, #dcfce7 50%, #f0fdf4 100%);
@@ -124,7 +119,6 @@
     
 </head>
 <body class="font-inter gradient-bg min-h-screen">
-    <!-- Loading Spinner -->
     <div id="loading" class="fixed inset-0 bg-gradient-to-br from-nu-cream via-white to-nu-light z-50 flex items-center justify-center">
         <div class="text-center">
             <div class="relative">
@@ -137,18 +131,14 @@
         </div>
     </div>
 
-    <!-- Navbar -->
     <?= view('components/navbar') ?>
     
-    <!-- Main Content -->
     <main>
         <?= $this->renderSection('content') ?>
     </main>
     
-    <!-- Footer -->
     <?= view('components/footer') ?>
     
-    <!-- WhatsApp Float Button -->
     <a href="https://wa.me/6282223008689?text=Assalamu'alaikum, saya ingin bertanya tentang PPDB SDNU Pemanahan" 
        target="_blank" 
        class="fixed bottom-6 right-6 bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-full shadow-2xl hover:from-green-600 hover:to-green-700 transition-all duration-300 z-40 animate-float group">
@@ -158,7 +148,6 @@
         </span>
     </a>
     
-    <!-- Scroll to Top Button -->
     <button id="scrollTop" 
             class="fixed bottom-20 right-6 bg-gradient-to-r from-nu-green to-nu-dark text-white p-3 rounded-full shadow-2xl hover:from-nu-dark hover:to-nu-green transition-all duration-300 z-40 opacity-0 transform translate-y-4 group">
         <i class="fas fa-arrow-up group-hover:scale-110 transition-transform duration-300"></i>
@@ -167,7 +156,6 @@
         </span>
     </button>
 
-    <!-- Preline UI JS -->
     <script src="https://preline.co/assets/js/hs-ui.bundle.js"></script>
 
     <script>
@@ -292,5 +280,8 @@
             animateElements.forEach(el => observer.observe(el));
         });
     </script>
+    
+    <?= $this->include('components/toast') ?>
+    
 </body>
 </html>

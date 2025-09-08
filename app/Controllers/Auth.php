@@ -63,6 +63,7 @@ class Auth extends BaseController
             'email' => $user['email'],
             'role' => $user['role'],
             'avatar' => $user['avatar'],
+            'student_id' => $user['student_id'],
             'logged_in' => true
         ];
 
@@ -180,7 +181,7 @@ class Auth extends BaseController
 
         $role = $this->session->get('role');
         if ($role === 'admin') {
-            return view('admin/profile', $data);
+            return view('admin/settings/profile', $data);
         } else {
             return view('user/profile', $data);
         }

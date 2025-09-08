@@ -24,10 +24,22 @@
                     <i class="fas fa-bullhorn mr-2"></i>Pengumuman
                 </a>
                 
-                <!-- CTA Button -->
-                <a href="/daftar" class="bg-gradient-to-r from-nu-green to-nu-dark text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 font-medium">
-                    <i class="fas fa-edit mr-2"></i>Daftar Sekarang
-                </a>
+                    <!-- CTA Button -->
+                    <?php if (session()->get('logged_in')): ?>
+                        <?php if (session()->get('student_id')): ?>
+                            <a href="/student-profile" class="bg-gradient-to-r from-nu-green to-nu-dark text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 font-medium">
+                                <i class="fas fa-user mr-2"></i>Profile Siswa
+                            </a>
+                        <?php else: ?>
+                            <a href="/daftar" class="bg-gradient-to-r from-nu-green to-nu-dark text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 font-medium">
+                                <i class="fas fa-edit mr-2"></i>Daftar Sekarang
+                            </a>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <a href="/daftar" class="bg-gradient-to-r from-nu-green to-nu-dark text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 font-medium">
+                            <i class="fas fa-edit mr-2"></i>Daftar Sekarang
+                        </a>
+                    <?php endif; ?>
                 
                 <?php if (session()->get('logged_in')): ?>
                     <!-- User Dropdown -->
@@ -89,9 +101,21 @@
                 <a href="/pengumuman" class="text-gray-700 hover:text-nu-green font-medium py-2 px-4 rounded-lg hover:bg-nu-cream transition-all duration-300">
                     <i class="fas fa-bullhorn mr-3"></i>Pengumuman
                 </a>
-                <a href="/daftar" class="bg-gradient-to-r from-nu-green to-nu-dark text-white py-2 px-4 rounded-lg font-medium text-center">
-                    <i class="fas fa-edit mr-2"></i>Daftar Sekarang
-                </a>
+                    <?php if (session()->get('logged_in')): ?>
+                        <?php if (session()->get('student_id')): ?>
+                            <a href="/student-profile" class="bg-gradient-to-r from-nu-green to-nu-dark text-white py-2 px-4 rounded-lg font-medium text-center">
+                                <i class="fas fa-user mr-2"></i>Profile Siswa
+                            </a>
+                        <?php else: ?>
+                            <a href="/daftar" class="bg-gradient-to-r from-nu-green to-nu-dark text-white py-2 px-4 rounded-lg font-medium text-center">
+                                <i class="fas fa-edit mr-2"></i>Daftar Sekarang
+                            </a>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <a href="/daftar" class="bg-gradient-to-r from-nu-green to-nu-dark text-white py-2 px-4 rounded-lg font-medium text-center">
+                            <i class="fas fa-edit mr-2"></i>Daftar Sekarang
+                        </a>
+                    <?php endif; ?>
                 
                 <?php if (session()->get('logged_in')): ?>
                     <div class="border-t pt-3 mt-3">
