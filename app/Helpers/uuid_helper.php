@@ -16,3 +16,10 @@ if (!function_exists('generateUUID')) {
         );
     }
 }
+
+if (!function_exists('generate_uuid')) {
+    function generate_uuid()
+    {
+        return generateUUID();
+    }
+}
