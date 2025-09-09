@@ -340,6 +340,13 @@ class Ppdb extends BaseController
         return view('ppdb/pengumuman', $data);
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * Delete student data (for admin use)
+     * This method can be called from admin controller
+     */
+>>>>>>> 2df1363906f95592d9f2a6db43b526effe6576bd
     public function deleteStudent($studentId = null)
     {
         // Check if user is admin or has permission

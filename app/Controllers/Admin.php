@@ -308,6 +308,7 @@ class Admin extends BaseController
             'activities' => $this->getAdminActivities()
         ];
 
+<<<<<<< HEAD
         return view('admin/profile', $data);
     }
 
@@ -428,6 +429,9 @@ class Admin extends BaseController
         } else {
             return "Pendaftaran sedang dibuka (sampai " . date('d M Y', strtotime($tanggalTutup)) . ")";
         }
+=======
+        return view('admin/settings/profile', $data);
+>>>>>>> 2df1363906f95592d9f2a6db43b526effe6576bd
     }
 
     // =========================================
@@ -583,10 +587,6 @@ class Admin extends BaseController
         }
     }
 
-    // =========================================
-    // API Methods for Beasiswa
-    // =========================================
-
     public function getBeasiswa()
     {
         $beasiswaModel = new \App\Models\BeasiswaModel();
@@ -722,6 +722,7 @@ class Admin extends BaseController
         }
     }
 
+<<<<<<< HEAD
     public function daftarUlang()
     {
         $data = [
@@ -793,4 +794,6 @@ class Admin extends BaseController
             ]
         ];
     }
+=======
+>>>>>>> 2df1363906f95592d9f2a6db43b526effe6576bd
 }
