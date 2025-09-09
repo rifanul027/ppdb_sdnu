@@ -120,13 +120,8 @@
 </head>
 <body class="font-inter gradient-bg min-h-screen">
     <div id="loading" class="fixed inset-0 bg-gradient-to-br from-nu-cream via-white to-nu-light z-50 flex items-center justify-center">
-        <div class="text-center">
-            <div class="relative">
-                <div class="animate-spin rounded-full h-16 w-16 border-4 border-nu-light border-t-nu-green"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <i class="fas fa-graduation-cap text-nu-green text-xl"></i>
-                </div>
-            </div>
+        <div class="flex flex-col items-center justify-center h-full text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-4 border-nu-light border-t-nu-green"></div>
             <p class="text-nu-dark font-semibold mt-4 animate-pulse">Memuat PPDB SDNU...</p>
         </div>
     </div>

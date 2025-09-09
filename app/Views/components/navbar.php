@@ -8,7 +8,9 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-nu-green">SDNU Pemanahan</h1>
-                    <p class="text-xs text-gray-600 hidden sm:block">PPDB 2025/2026</p>
+                    <p class="text-xs text-gray-600 hidden sm:block">
+                        PPDB <?= date('Y') ?>/<?= date('Y') + 1 ?>
+                    </p>
                 </div>
             </a>
             

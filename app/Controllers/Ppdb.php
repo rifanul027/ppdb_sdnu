@@ -334,17 +334,12 @@ class Ppdb extends BaseController
         
         $data = [
             'title' => 'Pengumuman PPDB - SDNU Pemanahan',
-            'pengumuman' => $pengumumanModel->getActivePengumuman(),
-            'totalPengumuman' => $pengumumanModel->getTotalActivePengumuman()
+            'pengumuman' => $pengumumanModel->getLatestPengumuman(),
         ];
         
         return view('ppdb/pengumuman', $data);
     }
 
-    /**
-     * Delete student data (for admin use)
-     * This method can be called from admin controller
-     */
     public function deleteStudent($studentId = null)
     {
         // Check if user is admin or has permission

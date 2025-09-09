@@ -6,17 +6,15 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
-$routes->get('/about', 'About::index');
-$routes->get('/contact', 'Contact::index');
 
 // PPDB Routes
 $routes->get('/ppdb', 'Ppdb::index');
+$routes->get('/pengumuman', 'Ppdb::index');
 $routes->get('/daftar', 'Ppdb::daftar');
 $routes->post('/daftar', 'Ppdb::prosesDaftar');
 $routes->get('/student-profile', 'Ppdb::studentProfile');
 $routes->match(['GET', 'POST'], '/edit-profile', 'Ppdb::editProfile');
 $routes->post('/upload-payment', 'Ppdb::uploadPayment');
-$routes->get('/pengumuman', 'Ppdb::pengumuman');
 
 // Auth Routes (Guest only)
 $routes->group('', ['filter' => 'guest'], function($routes) {
@@ -48,11 +46,18 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->post('pendaftar/delete/(:segment)', 'AdminPendaftar::delete/$1');
     $routes->post('pendaftar/validate/(:segment)', 'AdminPendaftar::validateStudent/$1');
     $routes->get('pendaftar/tambah', 'AdminPendaftar::tambah');
+    // pengumuman management
     $routes->post('pendaftar/store', 'AdminPendaftar::store');
     // daftar ulang management
     $routes->get('daftar-ulang', 'AdminDaftarUlang::index');
     $routes->get('daftar-ulang/detail/(:segment)', 'AdminDaftarUlang::detail/$1');
     $routes->post('daftar-ulang/konfirmasi-pembayaran', 'AdminDaftarUlang::konfirmasiPembayaran');
+    $routes->get('pengumuman', 'AdminPengumuman::index');
+    $routes->post('pengumuman/create', 'AdminPengumuman::create');
+    $routes->get('pengumuman/detail/(:segment)', 'AdminPengumuman::detail/$1');
+    $routes->post('pengumuman/update/(:segment)', 'AdminPengumuman::update/$1');
+    $routes->post('pengumuman/toggle-active/(:segment)', 'AdminPengumuman::toggleActive/$1');
+    $routes->post('pengumuman/delete/(:segment)', 'AdminPengumuman::delete/$1');
     // rekap siswa management
     $routes->get('rekap-siswa', 'Admin::rekapSiswa');
     // settings and profile

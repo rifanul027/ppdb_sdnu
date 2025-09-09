@@ -15,13 +15,13 @@
     <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
       <div class="max-w-2xl text-center mx-auto">
         <p class="inline-block text-sm font-semibold text-nu-green bg-nu-cream px-4 py-2 rounded-full border border-nu-green/20">
-          PPDB 2025/2026
+          PPDB <?= date('Y') ?>/<?= date('Y') + 1 ?>
         </p>
 
         <!-- Title -->
         <div class="mt-6 max-w-2xl">
           <h1 class="block font-bold text-nu-dark text-4xl md:text-5xl lg:text-6xl">
-            Info <span class="text-nu-green">PPDB 2025/2026</span>
+            Info <span class="text-nu-green">PPDB <?= date('Y') ?>/<?= date('Y') + 1 ?></span>
           </h1>
         </div>
         <!-- End Title -->
@@ -47,195 +47,6 @@
   </div>
 </div>
 <!-- End Hero -->
-
-<!-- Stats -->
-<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto bg-gray-50">
-  <!-- Grid -->
-  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-    <!-- Card -->
-    <div class="flex flex-col bg-white border border-nu-green/20 shadow-lg rounded-xl hover:shadow-xl transition-all duration-300">
-      <div class="p-6 text-center">
-        <div class="w-12 h-12 bg-nu-green/10 rounded-full flex items-center justify-center mx-auto mb-3">
-          <i class="fas fa-users text-nu-green text-xl"></i>
-        </div>
-        <div class="flex items-center justify-center gap-x-2">
-          <h3 class="text-3xl font-bold text-nu-dark">120</h3>
-        </div>
-        <p class="text-sm font-medium text-gray-600 mt-2">Kuota Siswa</p>
-      </div>
-    </div>
-    <!-- End Card -->
-
-    <!-- Card -->
-    <div class="flex flex-col bg-white border border-nu-green/20 shadow-lg rounded-xl hover:shadow-xl transition-all duration-300">
-      <div class="p-6 text-center">
-        <div class="w-12 h-12 bg-nu-green/10 rounded-full flex items-center justify-center mx-auto mb-3">
-          <i class="fas fa-layer-group text-nu-green text-xl"></i>
-        </div>
-        <div class="flex items-center justify-center gap-x-2">
-          <h3 class="text-3xl font-bold text-nu-dark">3</h3>
-        </div>
-        <p class="text-sm font-medium text-gray-600 mt-2">Gelombang</p>
-      </div>
-    </div>
-    <!-- End Card -->
-
-    <!-- Card -->
-    <div class="flex flex-col bg-white border border-nu-green/20 shadow-lg rounded-xl hover:shadow-xl transition-all duration-300">
-      <div class="p-6 text-center">
-        <div class="w-12 h-12 bg-nu-green/10 rounded-full flex items-center justify-center mx-auto mb-3">
-          <i class="fas fa-child text-nu-green text-xl"></i>
-        </div>
-        <div class="flex items-center justify-center gap-x-2">
-          <h3 class="text-3xl font-bold text-nu-dark">6-7</h3>
-        </div>
-        <p class="text-sm font-medium text-gray-600 mt-2">Usia (Tahun)</p>
-      </div>
-    </div>
-    <!-- End Card -->
-
-    <!-- Card -->
-    <div class="flex flex-col bg-white border border-nu-green/20 shadow-lg rounded-xl hover:shadow-xl transition-all duration-300">
-      <div class="p-6 text-center">
-        <div class="w-12 h-12 bg-nu-green/10 rounded-full flex items-center justify-center mx-auto mb-3">
-          <i class="fas fa-laptop text-nu-green text-xl"></i>
-        </div>
-        <div class="flex items-center justify-center gap-x-2">
-          <h3 class="text-2xl font-bold text-nu-dark">100%</h3>
-        </div>
-        <p class="text-sm font-medium text-gray-600 mt-2">Online</p>
-      </div>
-    </div>
-    <!-- End Card -->
-  </div>
-  <!-- End Grid -->
-</div>
-<!-- End Stats -->
-
-<!-- Pricing -->
-<div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto bg-white">
-  <!-- Title -->
-  <div class="max-w-2xl mx-auto text-center mb-10 lg:mb-14">
-    <h2 class="text-3xl font-bold md:text-4xl md:leading-tight text-nu-dark">
-      Jadwal <span class="text-nu-green">Pendaftaran</span>
-    </h2>
-    <p class="mt-4 text-lg text-gray-600">Pendaftaran dibuka dalam 3 gelombang dengan benefit yang berbeda</p>
-  </div>
-  <!-- End Title -->
-
-  <!-- Grid -->
-  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:items-stretch">
-    <!-- Card -->
-    <div class="flex flex-col border-2 border-gray-200 text-center rounded-2xl p-8 hover:border-gray-300 transition-all duration-300 bg-gray-50">
-      <div class="mb-4">
-        <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs uppercase font-semibold bg-gray-400 text-white">Segera</span>
-      </div>
-      <h4 class="font-bold text-xl text-nu-dark mb-2">Gelombang 2</h4>
-      <div class="text-center mb-4">
-        <span class="text-2xl font-bold text-nu-dark">1 April - 30 Juni 2025</span>
-      </div>
-      <p class="text-sm text-gray-600 mb-6">Biaya Pendaftaran: Rp 270.000 (Diskon 10%)</p>
-
-      <ul class="space-y-3 text-sm mb-8 flex-grow">
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-check-circle text-nu-green mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-700">Diskon biaya pendaftaran 10%</span>
-        </li>
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-check-circle text-nu-green mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-700">Gratis tas sekolah</span>
-        </li>
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-check-circle text-nu-green mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-700">Potongan biaya seragam 50%</span>
-        </li>
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-check-circle text-nu-green mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-700">Program persiapan gratis</span>
-        </li>
-      </ul>
-
-      <button class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border-2 border-gray-400 bg-gray-100 text-gray-500 cursor-not-allowed" disabled>
-        Pendaftaran Belum Dibuka
-      </button>
-    </div>
-    <!-- End Card -->
-
-    <!-- Card -->
-    <div class="flex flex-col border-2 border-nu-green text-center shadow-xl rounded-2xl p-8 bg-white transform hover:scale-105 transition-all duration-300">
-      <div class="mb-4">
-        <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs uppercase font-semibold bg-nu-green text-white">Terbuka</span>
-      </div>
-      <h4 class="font-bold text-xl text-nu-dark mb-2">Gelombang 1</h4>
-      <div class="text-center mb-4">
-        <span class="text-2xl font-bold text-nu-green">1 Januari - 31 Maret 2025</span>
-      </div>
-      <p class="text-sm text-gray-600 mb-6">Biaya Pendaftaran: Rp 200.000 (Diskon 20%)</p>
-
-      <ul class="space-y-3 text-sm mb-8 flex-grow">
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-check-circle text-nu-green mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-700">Diskon biaya pendaftaran 20%</span>
-        </li>
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-check-circle text-nu-green mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-700">Gratis seragam lengkap</span>
-        </li>
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-check-circle text-nu-green mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-700">Prioritas pemilihan kelas</span>
-        </li>
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-check-circle text-nu-green mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-700">Bebas biaya tes masuk</span>
-        </li>
-      </ul>
-
-      <a class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gradient-to-r from-nu-green to-nu-dark text-white hover:from-nu-dark hover:to-nu-green focus:outline-none focus:ring-2 focus:ring-nu-green focus:ring-offset-2 transition-all duration-300 shadow-lg hover:shadow-xl" href="/daftar?gelombang=1">
-        Daftar Gelombang 1
-      </a>
-    </div>
-    <!-- End Card -->
-
-    <!-- Card -->
-    <div class="flex flex-col border-2 border-gray-200 text-center rounded-2xl p-8 hover:border-gray-300 transition-all duration-300 bg-gray-50">
-      <div class="mb-4">
-        <span class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-full text-xs uppercase font-semibold bg-gray-400 text-white">Segera</span>
-      </div>
-      <h4 class="font-bold text-xl text-nu-dark mb-2">Gelombang 3</h4>
-      <div class="text-center mb-4">
-        <span class="text-2xl font-bold text-nu-dark">1 Juli - 31 Juli 2025</span>
-      </div>
-      <p class="text-sm text-gray-600 mb-6">Biaya Pendaftaran: Rp 350.000 (Harga Normal)</p>
-
-      <ul class="space-y-3 text-sm mb-8 flex-grow">
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-check-circle text-gray-400 mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-600">Benefit standar</span>
-        </li>
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-check-circle text-gray-400 mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-600">Tanpa potongan harga</span>
-        </li>
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-check-circle text-gray-400 mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-600">Sisa kuota terbatas</span>
-        </li>
-        <li class="flex items-start space-x-2">
-          <i class="fas fa-exclamation-triangle text-orange-400 mt-0.5 flex-shrink-0"></i>
-          <span class="text-gray-600">Tergantung ketersediaan</span>
-        </li>
-      </ul>
-
-      <button class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border-2 border-gray-400 bg-gray-100 text-gray-500 cursor-not-allowed" disabled>
-        Pendaftaran Belum Dibuka
-      </button>
-    </div>
-    <!-- End Card -->
-  </div>
-  <!-- End Grid -->
-</div>
-<!-- End Pricing -->
 
 <!-- Features -->
 <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto bg-gray-50">
@@ -376,6 +187,118 @@
   </div>
   <!-- End Grid -->
 
+  <!-- FAQ Section -->
+  <div class="mt-16">
+    <!-- Title -->
+    <div class="max-w-2xl mx-auto text-center mb-10 lg:mb-14">
+      <h2 class="text-3xl font-bold md:text-4xl md:leading-tight text-nu-dark">
+        Pertanyaan <span class="text-nu-green">Umum</span>
+      </h2>
+      <p class="mt-4 text-lg text-gray-600">Jawaban untuk pertanyaan yang sering diajukan tentang PPDB SDNU Pemanahan</p>
+    </div>
+    <!-- End Title -->
+
+    <div class="max-w-4xl mx-auto">
+      <div class="divide-y divide-gray-200">
+        <!-- FAQ Item -->
+        <div class="py-6">
+          <details class="group">
+            <summary class="flex items-center justify-between cursor-pointer list-none focus-visible:outline-none focus-visible:ring focus-visible:ring-nu-green focus-visible:ring-opacity-50 rounded-lg p-4 hover:bg-nu-green/5 transition-colors duration-200">
+              <h3 class="text-lg font-semibold text-nu-dark group-open:text-nu-green transition-colors duration-200">
+                Kapan jadwal pendaftaran PPDB SDNU Pemanahan?
+              </h3>
+              <svg class="ml-4 h-5 w-5 text-nu-green group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </summary>
+            <div class="mt-4 px-4">
+              <p class="text-gray-600 leading-relaxed">
+                Pendaftaran PPDB SDNU Pemanahan dibuka mulai bulan Januari hingga Maret <?= date('Y') + 1 ?>. Pengumuman hasil seleksi akan diumumkan pada bulan April <?= date('Y') + 1 ?>.
+              </p>
+            </div>
+          </details>
+        </div>
+
+        <!-- FAQ Item -->
+        <div class="py-6">
+          <details class="group">
+            <summary class="flex items-center justify-between cursor-pointer list-none focus-visible:outline-none focus-visible:ring focus-visible:ring-nu-green focus-visible:ring-opacity-50 rounded-lg p-4 hover:bg-nu-green/5 transition-colors duration-200">
+              <h3 class="text-lg font-semibold text-nu-dark group-open:text-nu-green transition-colors duration-200">
+                Berapa biaya pendaftaran dan SPP bulanan?
+              </h3>
+              <svg class="ml-4 h-5 w-5 text-nu-green group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </summary>
+            <div class="mt-4 px-4">
+              <p class="text-gray-600 leading-relaxed">
+                Biaya pendaftaran sebesar Rp 150.000. SPP bulanan untuk siswa baru tahun ajaran <?= date('Y') ?>/<?= date('Y') + 1 ?> sebesar Rp 200.000 per bulan. Tersedia program beasiswa untuk siswa berprestasi dan kurang mampu.
+              </p>
+            </div>
+          </details>
+        </div>
+
+        <!-- FAQ Item -->
+        <div class="py-6">
+          <details class="group">
+            <summary class="flex items-center justify-between cursor-pointer list-none focus-visible:outline-none focus-visible:ring focus-visible:ring-nu-green focus-visible:ring-opacity-50 rounded-lg p-4 hover:bg-nu-green/5 transition-colors duration-200">
+              <h3 class="text-lg font-semibold text-nu-dark group-open:text-nu-green transition-colors duration-200">
+                Apakah ada tes seleksi masuk?
+              </h3>
+              <svg class="ml-4 h-5 w-5 text-nu-green group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </summary>
+            <div class="mt-4 px-4">
+              <p class="text-gray-600 leading-relaxed">
+                Tidak ada tes seleksi akademik. Seleksi dilakukan berdasarkan kelengkapan berkas, usia sesuai ketentuan, dan ketersediaan kuota. Prioritas diberikan kepada siswa yang mendaftar lebih awal.
+              </p>
+            </div>
+          </details>
+        </div>
+
+        <!-- FAQ Item -->
+        <div class="py-6">
+          <details class="group">
+            <summary class="flex items-center justify-between cursor-pointer list-none focus-visible:outline-none focus-visible:ring focus-visible:ring-nu-green focus-visible:ring-opacity-50 rounded-lg p-4 hover:bg-nu-green/5 transition-colors duration-200">
+              <h3 class="text-lg font-semibold text-nu-dark group-open:text-nu-green transition-colors duration-200">
+                Fasilitas apa saja yang tersedia di SDNU Pemanahan?
+              </h3>
+              <svg class="ml-4 h-5 w-5 text-nu-green group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </summary>
+            <div class="mt-4 px-4">
+              <p class="text-gray-600 leading-relaxed">
+                SDNU Pemanahan memiliki fasilitas lengkap termasuk ruang kelas ber-AC, perpustakaan, laboratorium komputer, ruang UKS, mushola, kantin sehat, dan area bermain yang aman untuk siswa.
+              </p>
+            </div>
+          </details>
+        </div>
+
+        <!-- FAQ Item -->
+        <div class="py-6">
+          <details class="group">
+            <summary class="flex items-center justify-between cursor-pointer list-none focus-visible:outline-none focus-visible:ring focus-visible:ring-nu-green focus-visible:ring-opacity-50 rounded-lg p-4 hover:bg-nu-green/5 transition-colors duration-200">
+              <h3 class="text-lg font-semibold text-nu-dark group-open:text-nu-green transition-colors duration-200">
+                Bagaimana cara menghubungi sekolah untuk informasi lebih lanjut?
+              </h3>
+              <svg class="ml-4 h-5 w-5 text-nu-green group-open:rotate-180 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </summary>
+            <div class="mt-4 px-4">
+              <p class="text-gray-600 leading-relaxed">
+                Anda dapat menghubungi kami melalui WhatsApp di nomor 082223008689, datang langsung ke sekolah di Jl. Raya Pemanahan, atau melalui website resmi sekolah. Tim kami siap membantu dari Senin-Jumat pukul 07.00-15.00 WIB.
+              </p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End FAQ Section -->
+
   <!-- CTA Section -->
   <div class="mt-12 text-center">
     <div class="bg-gradient-to-r from-nu-green/5 to-nu-gold/5 rounded-2xl p-8 border border-nu-green/20">
@@ -396,5 +319,7 @@
   <!-- End CTA Section -->
 </div>
 <!-- End Features -->
+
+
 
 <?= $this->endSection() ?>

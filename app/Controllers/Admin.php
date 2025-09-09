@@ -308,7 +308,126 @@ class Admin extends BaseController
             'activities' => $this->getAdminActivities()
         ];
 
-        return view('admin/settings/profile', $data);
+        return view('admin/profile', $data);
+    }
+
+
+
+    private function getSettings()
+    {
+        // Mock data - replace with actual database query
+        return [
+            'nama_sekolah' => 'SD Nahdlatul Ulama',
+            'alamat_sekolah' => 'Jl. Pendidikan No. 123, Jakarta',
+            'telepon' => '021-1234567',
+            'email' => 'info@sdnu.ac.id',
+            'website' => 'https://sdnu.ac.id',
+            'logo' => '',
+            'deskripsi' => 'SD Nahdlatul Ulama adalah sekolah yang mengutamakan pendidikan karakter dan akhlak mulia.',
+            'tahun_ajaran_aktif' => '2025/2026',
+            'max_kuota' => 150,
+            'auto_approve' => 0,
+            'timezone' => 'Asia/Jakarta',
+            'format_no_reg' => 'PPDB-{YYYY}-{NNNN}',
+            'email_notification' => 1
+        ];
+    }
+
+    private function getBiayaSettings()
+    {
+        // Mock data - replace with actual database query
+        return [
+            'biaya_formulir' => 50000,
+            'uang_pangkal' => 2000000,
+            'biaya_seragam' => 500000,
+            'biaya_buku' => 300000,
+            'spp_kelas_1' => 200000,
+            'spp_kelas_2' => 220000,
+            'spp_kelas_3' => 240000,
+            'spp_kelas_4' => 260000,
+            'spp_kelas_5' => 280000,
+            'spp_kelas_6' => 300000
+        ];
+    }
+
+    private function getBiayaTambahan()
+    {
+        // Mock data - replace with actual database query
+        return [
+            ['nama' => 'Ekstrakurikuler', 'jumlah' => 100000],
+            ['nama' => 'Study Tour', 'jumlah' => 300000]
+        ];
+    }
+
+    private function getPendaftaranSettings()
+    {
+        // Mock data - replace with actual database query
+        return [
+            'tanggal_buka' => '2025-01-01',
+            'tanggal_tutup' => '2025-06-30',
+            'jam_buka' => '08:00',
+            'jam_tutup' => '16:00',
+            'hari_libur' => ['minggu'],
+            'min_umur' => 6,
+            'max_umur' => 7,
+            'persyaratan' => 'Fotokopi akte kelahiran, Fotokopi KK, Pas foto 3x4'
+        ];
+    }
+
+    private function getAdminProfile()
+    {
+        // Mock data - replace with actual database query
+        return [
+            'nama' => 'Administrator',
+            'email' => 'admin@sdnu.ac.id',
+            'telepon' => '081234567890',
+            'jabatan' => 'Admin PPDB',
+            'alamat' => 'Jakarta',
+            'foto' => '',
+            'last_login' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s', strtotime('-6 months'))
+        ];
+    }
+
+    private function getAdminActivities()
+    {
+        // Mock data - replace with actual database query
+        return [
+            [
+                'action' => 'Login ke sistem',
+                'description' => 'Berhasil login ke dashboard admin',
+                'icon' => 'sign-in-alt',
+                'created_at' => date('Y-m-d H:i:s', strtotime('-1 hour'))
+            ],
+            [
+                'action' => 'Update pengaturan',
+                'description' => 'Mengubah pengaturan biaya sekolah',
+                'icon' => 'cogs',
+                'created_at' => date('Y-m-d H:i:s', strtotime('-2 hours'))
+            ],
+            [
+                'action' => 'Verifikasi pendaftar',
+                'description' => 'Menerima 5 pendaftar baru',
+                'icon' => 'check-circle',
+                'created_at' => date('Y-m-d H:i:s', strtotime('-3 hours'))
+            ]
+        ];
+    }
+
+    private function getStatusPendaftaran()
+    {
+        $settings = $this->getPendaftaranSettings();
+        $sekarang = date('Y-m-d');
+        $tanggalBuka = $settings['tanggal_buka'] ?? '2025-01-01';
+        $tanggalTutup = $settings['tanggal_tutup'] ?? '2025-06-30';
+        
+        if ($sekarang < $tanggalBuka) {
+            return "Pendaftaran belum dibuka (akan dibuka pada " . date('d M Y', strtotime($tanggalBuka)) . ")";
+        } elseif ($sekarang > $tanggalTutup) {
+            return "Pendaftaran sudah ditutup (ditutup pada " . date('d M Y', strtotime($tanggalTutup)) . ")";
+        } else {
+            return "Pendaftaran sedang dibuka (sampai " . date('d M Y', strtotime($tanggalTutup)) . ")";
+        }
     }
 
     // =========================================
@@ -464,6 +583,10 @@ class Admin extends BaseController
         }
     }
 
+    // =========================================
+    // API Methods for Beasiswa
+    // =========================================
+
     public function getBeasiswa()
     {
         $beasiswaModel = new \App\Models\BeasiswaModel();
@@ -599,4 +722,75 @@ class Admin extends BaseController
         }
     }
 
+    public function daftarUlang()
+    {
+        $data = [
+            'title' => 'Daftar Ulang Siswa',
+            'pageTitle' => 'Daftar Ulang Siswa',
+            'siswa' => $this->getSiswaDaftarUlang()
+        ];
+
+        return view('admin/daftar-ulang/daftar-ulang', $data);
+    }
+
+    private function getSiswaDaftarUlang()
+    {
+        // Static data for demonstration
+        return [
+            [
+                'id' => '1',
+                'nama' => 'Ahmad Rizki',
+                'nisn' => '1234567890',
+                'tempat_lahir' => 'Jakarta',
+                'tanggal_lahir' => '2015-05-15',
+                'jenis_kelamin' => 'L',
+                'alamat' => 'Jl. Merdeka No. 123, Jakarta',
+                'nama_ayah' => 'Budi Santoso',
+                'nama_ibu' => 'Siti Nurhaliza',
+                'status_pembayaran' => 'Belum Bayar',
+                'jumlah_bayar' => 0,
+                'total_bayar' => 2500000,
+                'tanggal_bayar' => null,
+                'status_wawancara' => 'Belum Wawancara',
+                'catatan_wawancara' => '',
+                'tanggal_wawancara' => null
+            ],
+            [
+                'id' => '2',
+                'nama' => 'Sari Dewi',
+                'nisn' => '1234567891',
+                'tempat_lahir' => 'Surabaya',
+                'tanggal_lahir' => '2015-03-20',
+                'jenis_kelamin' => 'P',
+                'alamat' => 'Jl. Pahlawan No. 456, Surabaya',
+                'nama_ayah' => 'Joko Widodo',
+                'nama_ibu' => 'Ani Susanti',
+                'status_pembayaran' => 'Lunas',
+                'jumlah_bayar' => 2500000,
+                'total_bayar' => 2500000,
+                'tanggal_bayar' => '2025-08-15',
+                'status_wawancara' => 'Sudah Wawancara',
+                'catatan_wawancara' => 'Anak cerdas, komunikatif, dan siap mengikuti pembelajaran di SD NU.',
+                'tanggal_wawancara' => '2025-08-20'
+            ],
+            [
+                'id' => '3',
+                'nama' => 'Muhammad Fajar',
+                'nisn' => '1234567892',
+                'tempat_lahir' => 'Bandung',
+                'tanggal_lahir' => '2015-07-10',
+                'jenis_kelamin' => 'L',
+                'alamat' => 'Jl. Asia Afrika No. 789, Bandung',
+                'nama_ayah' => 'Agus Setiawan',
+                'nama_ibu' => 'Rina Marlina',
+                'status_pembayaran' => 'Cicilan',
+                'jumlah_bayar' => 1500000,
+                'total_bayar' => 2500000,
+                'tanggal_bayar' => '2025-08-10',
+                'status_wawancara' => 'Belum Wawancara',
+                'catatan_wawancara' => '',
+                'tanggal_wawancara' => null
+            ]
+        ];
+    }
 }
