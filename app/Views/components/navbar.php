@@ -22,7 +22,7 @@
                 <a href="/ppdb" class="nav-link text-gray-700 hover:text-nu-green font-medium transition-colors duration-300 relative">
                     <i class="fas fa-user-plus mr-2"></i>Info PPDB
                 </a>
-                <a href="/pengumuman" class="nav-link text-gray-700 hover:text-nu-green font-medium transition-colors duration-300 relative">
+                <a href="/ppdb/pengumuman" class="nav-link text-gray-700 hover:text-nu-green font-medium transition-colors duration-300 relative">
                     <i class="fas fa-bullhorn mr-2"></i>Pengumuman
                 </a>
                 
@@ -100,7 +100,7 @@
                 <a href="/ppdb" class="text-gray-700 hover:text-nu-green font-medium py-2 px-4 rounded-lg hover:bg-nu-cream transition-all duration-300">
                     <i class="fas fa-user-plus mr-3"></i>Info PPDB
                 </a>
-                <a href="/pengumuman" class="text-gray-700 hover:text-nu-green font-medium py-2 px-4 rounded-lg hover:bg-nu-cream transition-all duration-300">
+                <a href="/ppdb/pengumuman" class="text-gray-700 hover:text-nu-green font-medium py-2 px-4 rounded-lg hover:bg-nu-cream transition-all duration-300">
                     <i class="fas fa-bullhorn mr-3"></i>Pengumuman
                 </a>
                     <?php if (session()->get('logged_in')): ?>

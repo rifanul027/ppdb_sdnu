@@ -25,7 +25,7 @@
           <p><a class="inline-flex gap-x-2 text-green-100 hover:text-gray-200 focus:outline-none focus:text-gray-200 dark:text-neutral-400 dark:hover:text-neutral-200 dark:focus:text-neutral-200" href="/daftar"><i class="fas fa-chevron-right"></i>Daftar Online</a></p>
           <p><a class="inline-flex gap-x-2 text-green-100 hover:text-gray-200 focus:outline-none focus:text-gray-200 dark:text-neutral-400 dark:hover:text-neutral-200 dark:focus:text-neutral-200" href="/syarat"><i class="fas fa-chevron-right"></i>Syarat Pendaftaran</a></p>
           <p><a class="inline-flex gap-x-2 text-green-100 hover:text-gray-200 focus:outline-none focus:text-gray-200 dark:text-neutral-400 dark:hover:text-neutral-200 dark:focus:text-neutral-200" href="/biaya"><i class="fas fa-chevron-right"></i>Biaya Pendidikan</a></p>
-          <p><a class="inline-flex gap-x-2 text-green-100 hover:text-gray-200 focus:outline-none focus:text-gray-200 dark:text-neutral-400 dark:hover:text-neutral-200 dark:focus:text-neutral-200" href="/pengumuman"><i class="fas fa-chevron-right"></i>Pengumuman</a></p>
+          <p><a class="inline-flex gap-x-2 text-green-100 hover:text-gray-200 focus:outline-none focus:text-gray-200 dark:text-neutral-400 dark:hover:text-neutral-200 dark:focus:text-neutral-200" href="/ppdb/pengumuman"><i class="fas fa-chevron-right"></i>Pengumuman</a></p>
         </div>
       </div>
       <!-- End Col -->

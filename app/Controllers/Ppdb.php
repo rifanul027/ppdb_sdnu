@@ -332,21 +332,57 @@ class Ppdb extends BaseController
     {
         $pengumumanModel = new \App\Models\PengumumanModel();
         
+        // Get active pengumuman
+        $pengumumanList = $pengumumanModel->getActivePengumuman();
+        
+        // Process each pengumuman to handle images
+        foreach ($pengumumanList as &$pengumuman) {
+            if (!empty($pengumuman['image_url'])) {
+                // Check if it's already a full URL or needs to be converted from file path
+                if (!filter_var($pengumuman['image_url'], FILTER_VALIDATE_URL)) {
+                    // If it's a file path, convert to URL
+                    if (file_exists(ROOTPATH . 'public/' . $pengumuman['image_url'])) {
+                        $pengumuman['image_url'] = base_url($pengumuman['image_url']);
+                    } else {
+                        // File doesn't exist, use mockup
+                        $pengumuman['image_url'] = $this->generateMockupImage($pengumuman['nama']);
+                    }
+                }
+            } else {
+                // No image specified, use mockup
+                $pengumuman['image_url'] = $this->generateMockupImage($pengumuman['nama']);
+            }
+            
+            // Add a flag to indicate if this is a mockup
+            $pengumuman['is_mockup'] = strpos($pengumuman['image_url'], 'via.placeholder.com') !== false;
+        }
+        
         $data = [
             'title' => 'Pengumuman PPDB - SDNU Pemanahan',
-            'pengumuman' => $pengumumanModel->getLatestPengumuman(),
+            'pengumuman' => $pengumumanList,
         ];
         
         return view('ppdb/pengumuman', $data);
     }
+    
+    /**
+     * Generate mockup image URL for pengumuman
+     */
+    private function generateMockupImage($title)
+    {
+        // Create a clean title for the mockup
+        $cleanTitle = urlencode(substr($title, 0, 50));
+        
+        // Use placeholder.com service with SDNU colors
+        $mockupUrl = "https://via.placeholder.com/400x250/48BB78/FFFFFF?text=" . $cleanTitle;
+        
+        return $mockupUrl;
+    }
 
-<<<<<<< HEAD
-=======
     /**
      * Delete student data (for admin use)
      * This method can be called from admin controller
      */
->>>>>>> 2df1363906f95592d9f2a6db43b526effe6576bd
     public function deleteStudent($studentId = null)
     {
         // Check if user is admin or has permission
