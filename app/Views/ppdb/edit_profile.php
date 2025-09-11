@@ -163,7 +163,7 @@
                     <i class="fas fa-save"></i>
                     Simpan Perubahan
                 </button>
-                <a href="/student-profile" class="inline-flex justify-center items-center gap-x-3 text-center bg-gray-500 hover:bg-gray-600 border border-transparent text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8">
+                <a href="/profile-siswa" class="inline-flex justify-center items-center gap-x-3 text-center bg-gray-500 hover:bg-gray-600 border border-transparent text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8">
                     <i class="fas fa-times"></i>
                     Batal
                 </a>

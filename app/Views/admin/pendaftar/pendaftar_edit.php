@@ -2,16 +2,18 @@
 
 <?= $this->section('content') ?>
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-    <div>
-        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">Edit Pendaftar</h2>
-        <p style="color: #64748b;">Edit data calon siswa</p>
-    </div>
-    <div>
-        <a href="/admin/pendaftar" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i>
-            Kembali
-        </a>
+<div class="page-header">
+    <div class="page-header-content">
+        <div>
+            <h2 class="page-title">Edit Pendaftar</h2>
+            <p class="page-subtitle">Edit data calon siswa</p>
+        </div>
+        <div class="page-actions">
+            <a href="/admin/pendaftar" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                <span class="btn-text">Kembali</span>
+            </a>
+        </div>
     </div>
 </div>
 
@@ -28,17 +30,16 @@
             </h3>
         </div>
         <div class="card-body">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Nama Lengkap <span style="color: #ef4444;">*</span></label>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Nama Lengkap <span class="required">*</span></label>
                     <input type="text" name="nama_lengkap" value="<?= esc($student['nama_lengkap']) ?>" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" 
-                           required>
+                           class="form-input" required>
                 </div>
                 
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Tahun Ajaran <span style="color: #ef4444;">*</span></label>
-                    <select name="tahun_ajaran_id" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" required>
+                <div class="form-group">
+                    <label class="form-label">Tahun Ajaran <span class="required">*</span></label>
+                    <select name="tahun_ajaran_id" class="form-input" required>
                         <option value="">Pilih Tahun Ajaran</option>
                         <?php if (!empty($tahunAjaranList)): ?>
                             <?php foreach ($tahunAjaranList as $tahun): ?>
@@ -168,9 +169,143 @@
         </a>
         <button type="submit" class="btn btn-primary">
             <i class="fas fa-save"></i>
-            Simpan Perubahan
+            <span class="btn-text">Simpan Perubahan</span>
         </button>
     </div>
 </form>
+
+<style>
+/* Page Header Responsive */
+.page-header {
+    margin-bottom: 2rem;
+}
+
+.page-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.page-subtitle {
+    color: #64748b;
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+.page-actions {
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+/* Form Responsive */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.required {
+    color: #ef4444;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.btn-text {
+    margin-left: 0.5rem;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .page-header-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .page-actions {
+        justify-content: center;
+    }
+
+    .btn-text {
+        display: none;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .form-input {
+        padding: 0.625rem;
+        font-size: 1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .card-header {
+        padding: 1rem 1rem 0;
+    }
+}
+
+/* Extra Small Mobile */
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.25rem;
+    }
+
+    .btn {
+        padding: 0.625rem 1rem;
+        justify-content: center;
+    }
+
+    .form-input {
+        padding: 0.5rem;
+    }
+
+    .content-card {
+        margin-bottom: 1rem;
+    }
+}
+</style>
 
 <?= $this->endSection() ?>

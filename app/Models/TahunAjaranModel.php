@@ -17,9 +17,6 @@ class TahunAjaranModel extends Model
         'tahun_mulai',
         'tahun_selesai',
         'is_active',
-        'tanggal_mulai_pendaftaran',
-        'tanggal_selesai_pendaftaran',
-        'kuota_maksimal',
         'deskripsi'
     ];
 
@@ -35,10 +32,7 @@ class TahunAjaranModel extends Model
         'nama' => 'required|min_length[3]|max_length[100]',
         'tahun_mulai' => 'required|integer|min_length[4]|max_length[4]',
         'tahun_selesai' => 'required|integer|min_length[4]|max_length[4]',
-        'is_active' => 'in_list[0,1]',
-        'tanggal_mulai_pendaftaran' => 'required|valid_date',
-        'tanggal_selesai_pendaftaran' => 'required|valid_date',
-        'kuota_maksimal' => 'required|integer|greater_than[0]'
+        'is_active' => 'in_list[0,1]'
     ];
 
     protected $validationMessages = [
@@ -58,19 +52,6 @@ class TahunAjaranModel extends Model
             'integer' => 'Tahun selesai harus berupa angka',
             'min_length' => 'Tahun selesai harus 4 digit',
             'max_length' => 'Tahun selesai harus 4 digit'
-        ],
-        'tanggal_mulai_pendaftaran' => [
-            'required' => 'Tanggal mulai pendaftaran harus diisi',
-            'valid_date' => 'Format tanggal mulai pendaftaran tidak valid'
-        ],
-        'tanggal_selesai_pendaftaran' => [
-            'required' => 'Tanggal selesai pendaftaran harus diisi',
-            'valid_date' => 'Format tanggal selesai pendaftaran tidak valid'
-        ],
-        'kuota_maksimal' => [
-            'required' => 'Kuota maksimal harus diisi',
-            'integer' => 'Kuota maksimal harus berupa angka',
-            'greater_than' => 'Kuota maksimal harus lebih dari 0'
         ]
     ];
 
@@ -97,6 +78,17 @@ class TahunAjaranModel extends Model
     public function getActive()
     {
         return $this->where('is_active', 1)->first();
+    }
+
+    /**
+     * Get current tahun ajaran based on current year
+     */
+    public function getCurrentTahunAjaran()
+    {
+        $currentYear = date('Y');
+        return $this->where('tahun_mulai', $currentYear)
+            ->where('deleted_at IS NULL')
+            ->first();
     }
 
     /**

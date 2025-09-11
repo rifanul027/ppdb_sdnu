@@ -134,15 +134,6 @@
     
     <?= view('components/footer') ?>
     
-    <a href="https://wa.me/6282223008689?text=Assalamu'alaikum, saya ingin bertanya tentang PPDB SDNU Pemanahan" 
-       target="_blank" 
-       class="fixed bottom-6 right-6 bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-full shadow-2xl hover:from-green-600 hover:to-green-700 transition-all duration-300 z-40 animate-float group">
-        <i class="fab fa-whatsapp text-2xl group-hover:scale-110 transition-transform duration-300"></i>
-        <span class="absolute -top-12 right-0 bg-gray-800 text-white text-xs rounded-lg px-3 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-            Chat WhatsApp
-        </span>
-    </a>
-    
     <button id="scrollTop" 
             class="fixed bottom-20 right-6 bg-gradient-to-r from-nu-green to-nu-dark text-white p-3 rounded-full shadow-2xl hover:from-nu-dark hover:to-nu-green transition-all duration-300 z-40 opacity-0 transform translate-y-4 group">
         <i class="fas fa-arrow-up group-hover:scale-110 transition-transform duration-300"></i>

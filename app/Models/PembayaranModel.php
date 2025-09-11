@@ -17,6 +17,7 @@ class PembayaranModel extends Model
         'nama',
         'metode',
         'bukti_url',
+        'accepted_at',
         'created_at',
         'updated_at'
     ];
@@ -46,12 +47,44 @@ class PembayaranModel extends Model
     protected $afterDelete = [];
 
     /**
+     * Generate sequential payment ID based on current date
+     * Format: PAY{YYYYMMDD}{NNNN}
+     * Example: PAY202509120001, PAY202509120002, etc.
+     */
+    private function generatePaymentId()
+    {
+        $datePrefix = 'PAY' . date('Ymd');
+        
+        // Get the highest sequence number for today
+        $lastPayment = $this->db->table($this->table)
+            ->select('id')
+            ->where('id LIKE', $datePrefix . '%')
+            ->orderBy('id', 'DESC')
+            ->limit(1)
+            ->get()
+            ->getRow();
+        
+        if ($lastPayment) {
+            // Extract the last 4 digits and increment
+            $lastSequence = (int) substr($lastPayment->id, -4);
+            $nextSequence = $lastSequence + 1;
+        } else {
+            // First payment of the day
+            $nextSequence = 1;
+        }
+        
+        // Format with leading zeros (4 digits)
+        $sequenceNumber = str_pad($nextSequence, 4, '0', STR_PAD_LEFT);
+        
+        return $datePrefix . $sequenceNumber;
+    }
+
+    /**
      * Create payment with file upload
      */
     public function createPayment($studentId, $formData, $buktiFile = null)
     {
-        helper('uuid');
-        $paymentId = generate_uuid();
+        $paymentId = $this->generatePaymentId();
         
         // Handle file upload if exists
         $buktiUrl = null;

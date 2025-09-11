@@ -2,191 +2,152 @@
 
 <?= $this->section('content') ?>
 
-<!-- Include Tailwind CSS dan Preline -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/preline@2.0.3/dist/preline.min.js"></script>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;"><?= $pageTitle ?></h2>
+        <p style="color: #64748b;">Rekap data siswa yang sudah diterima dan pembayaran lunas</p>
+    </div>
+    <div style="display: flex; gap: 1rem;">
+        <button class="btn btn-secondary" onclick="exportPdf()">
+            <i class="fas fa-file-pdf"></i>
+            Export PDF
+        </button>
+        <button class="btn btn-success" onclick="exportExcel()">
+            <i class="fas fa-file-excel"></i>
+            Export Excel
+        </button>
+        <button class="btn btn-primary" onclick="refreshData()">
+            <i class="fas fa-sync"></i>
+            Refresh
+        </button>
+    </div>
+</div>
 
-<div class="max-w-7xl mx-auto p-6">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-8">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900">Rekap Siswa</h1>
-            <p class="text-gray-600 mt-1">Kelola dan pantau data siswa yang terdaftar</p>
-        </div>
-        <div class="flex gap-3">
-            <button onclick="exportPdf()" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 2H7a2 2 0 00-2 2v15a2 2 0 002 2z"></path>
-                </svg>
-                Export PDF
-            </button>
-            <button onclick="exportExcel()" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                Export Excel
-            </button>
+<!-- Statistics Cards -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;" id="statsContainer">
+    <div class="content-card">
+        <div class="card-body" style="text-align: center;">
+            <div style="font-size: 2rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem;" id="totalSiswa">
+                0
+            </div>
+            <div style="color: #64748b; font-size: 0.875rem;">Total Siswa</div>
         </div>
     </div>
-
-    <!-- Filter Card -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">Filter Data</h3>
-        </div>
-        <div class="p-6">
-            <form id="filterForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Tahun Ajaran</label>
-                    <select name="tahun_ajaran" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">Semua Tahun Ajaran</option>
-                        <option value="2024/2025">2024/2025</option>
-                        <option value="2025/2026">2025/2026</option>
-                        <option value="2026/2027">2026/2027</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                    <select name="status" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="">Semua Status</option>
-                        <option value="calon">Calon Siswa</option>
-                        <option value="siswa">Siswa</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Dari</label>
-                    <input type="date" name="tanggal_dari" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Sampai</label>
-                    <input type="date" name="tanggal_sampai" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                </div>
-                
-                <div class="md:col-span-2 lg:col-span-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Pencarian</label>
-                    <div class="relative">
-                        <input type="text" name="search" placeholder="Cari nama, no registrasi, atau nama orang tua..." 
-                               class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 pl-10">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="md:col-span-2 lg:col-span-4 flex gap-3">
-                    <button type="submit" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
-                        </svg>
-                        Filter
-                    </button>
-                    <button type="button" onclick="resetFilter()" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                        Reset
-                    </button>
-                </div>
-            </form>
+    <div class="content-card">
+        <div class="card-body" style="text-align: center;">
+            <div style="font-size: 2rem; font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;" id="lakiLaki">
+                0
+            </div>
+            <div style="color: #64748b; font-size: 0.875rem;">Laki-laki</div>
         </div>
     </div>
-
-    <!-- Data Table Card -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <div class="flex items-center justify-between">
-                <h3 class="text-lg font-medium text-gray-900">Data Siswa</h3>
-                <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-600">Showing</span>
-                    <select id="perPageSelect" class="rounded border-gray-300 text-sm focus:border-blue-500 focus:ring-blue-500">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <span class="text-sm text-gray-600">entries</span>
-                </div>
+    <div class="content-card">
+        <div class="card-body" style="text-align: center;">
+            <div style="font-size: 2rem; font-weight: 700; color: #ec4899; margin-bottom: 0.5rem;" id="perempuan">
+                0
             </div>
+            <div style="color: #64748b; font-size: 0.875rem;">Perempuan</div>
         </div>
-        
-        <!-- Loading State -->
-        <div id="loadingState" class="p-8 text-center hidden">
-            <div class="inline-flex items-center">
-                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                <span class="text-gray-600">Memuat data...</span>
+    </div>
+    <div class="content-card">
+        <div class="card-body" style="text-align: center;">
+            <div style="font-size: 2rem; font-weight: 700; color: #f59e0b; margin-bottom: 0.5rem;" id="denganBeasiswa">
+                0
             </div>
-        </div>
-
-        <!-- Table Container -->
-        <div id="tableContainer" class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No.</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Registrasi</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lengkap</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Kelamin</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tempat, Tanggal Lahir</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orang Tua</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
-                    <!-- Data will be loaded here via AJAX -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination -->
-        <div id="paginationContainer" class="px-6 py-4 border-t border-gray-200">
-            <!-- Pagination will be loaded here -->
+            <div style="color: #64748b; font-size: 0.875rem;">Dengan Beasiswa</div>
         </div>
     </div>
 </div>
 
-<!-- Edit Status Modal -->
-<div id="editStatusModal" class="hs-overlay hidden w-full h-full fixed top-0 left-0 z-[60] overflow-x-hidden overflow-y-auto">
-    <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
-        <div class="bg-white border border-gray-200 rounded-xl shadow-sm">
-            <div class="p-4 overflow-y-auto">
-                <div class="flex justify-between items-center pb-3">
-                    <h3 class="font-bold text-gray-800">Edit Status Siswa</h3>
-                    <button type="button" class="hs-dropdown-toggle inline-flex flex-shrink-0 justify-center items-center h-8 w-8 rounded-md text-gray-500 hover:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-white transition-all text-sm" data-hs-overlay="#editStatusModal">
-                        <span class="sr-only">Close</span>
-                        <svg class="w-3.5 h-3.5" width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="m2.5 1.5 3 3m0-3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                        </svg>
-                    </button>
-                </div>
-                <form id="editStatusForm">
-                    <input type="hidden" id="editStudentId" name="student_id">
-                    <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                        <select id="editStatus" name="status" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                            <option value="calon">Calon Siswa</option>
-                            <option value="siswa">Siswa</option>
-                        </select>
-                    </div>
-                    <div class="flex justify-end gap-2">
-                        <button type="button" class="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm" data-hs-overlay="#editStatusModal">
-                            Batal
-                        </button>
-                        <button type="submit" class="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm">
-                            Simpan
-                        </button>
-                    </div>
-                </form>
+<!-- Filter Section -->
+<div class="content-card" style="margin-bottom: 2rem;">
+    <div class="card-body">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;">
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Tahun Ajaran</label>
+                <select id="filterTahunAjaran" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
+                    <option value="">Semua Tahun Ajaran</option>
+                    <?php foreach ($tahunAjaran as $tahun): ?>
+                        <option value="<?= $tahun['id'] ?>" 
+                                <?= ($defaultTahunAjaran && $defaultTahunAjaran['id'] === $tahun['id']) ? 'selected' : '' ?>>
+                            <?= $tahun['nama'] ?> (<?= $tahun['tahun_mulai'] ?>/<?= $tahun['tahun_selesai'] ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <div>
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Pencarian</label>
+                <input type="text" id="searchInput" placeholder="Cari nama siswa, NISN, atau nama orang tua..." 
+                       style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
+            </div>
+            
+            <div style="display: flex; gap: 0.5rem;">
+                <button onclick="applyFilters()" class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                    Filter
+                </button>
+                <button onclick="resetFilters()" class="btn btn-secondary">
+                    <i class="fas fa-times"></i>
+                    Reset
+                </button>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- Data Table -->
+<div class="content-card">
+    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 class="card-title">Data Rekap Siswa</h3>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="color: #64748b; font-size: 0.875rem;" id="totalInfo">
+                Total: 0 siswa
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 0.875rem; color: #64748b;">Per halaman:</span>
+                <select id="perPageSelect" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem;">
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="card-body" style="padding: 0;">
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden" style="padding: 3rem; text-align: center; color: #64748b;">
+            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+            <div>Memuat data...</div>
+        </div>
+
+        <div class="table-container" id="tableContainer">
+            <table class="table" id="rekapSiswaTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>No. Registrasi</th>
+                        <th>NISN</th>
+                        <th>Nama Lengkap</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Tempat, Tanggal Lahir</th>
+                        <th>Orang Tua</th>
+                        <th>Tahun Ajaran</th>
+                        <th>Beasiswa</th>
+                        <th>Tgl Diterima</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Data will be loaded here via AJAX -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Pagination -->
+    <div class="card-footer" style="padding: 1rem;" id="paginationContainer">
+        <!-- Pagination will be loaded here -->
     </div>
 </div>
 
@@ -197,13 +158,32 @@ let currentFilters = {};
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', function() {
+    // Set default filter if available
+    <?php if ($defaultTahunAjaran): ?>
+    currentFilters.tahun_ajaran_id = '<?= $defaultTahunAjaran['id'] ?>';
+    <?php endif; ?>
+    
     loadStudents();
+    loadSummaryStats();
     
     // Setup event listeners
-    document.getElementById('filterForm').addEventListener('submit', handleFilter);
     document.getElementById('perPageSelect').addEventListener('change', handlePerPageChange);
-    document.getElementById('editStatusForm').addEventListener('submit', handleEditStatus);
+    document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 500));
+    document.getElementById('filterTahunAjaran').addEventListener('change', applyFilters);
 });
+
+// Debounce function
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
 // Load students data
 async function loadStudents() {
@@ -216,7 +196,7 @@ async function loadStudents() {
             ...currentFilters
         });
         
-        const response = await fetch(`/admin/students-data?${params}`, {
+        const response = await fetch(`<?= base_url('admin/rekap-siswa/data') ?>?${params}`, {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -228,15 +208,54 @@ async function loadStudents() {
         if (result.success) {
             renderTable(result.data);
             renderPagination(result.pagination);
+            updateTotalInfo(result.pagination.total);
         } else {
+            // Show error and render empty state
             showError(result.message || 'Gagal memuat data');
+            renderTable([]); // Render empty table
+            renderPagination({ page: 1, total_pages: 1, total: 0, per_page: currentPerPage }); // Empty pagination
+            updateTotalInfo(0); // Update total info to 0
         }
     } catch (error) {
         showError('Terjadi kesalahan saat memuat data');
         console.error('Error loading students:', error);
+        // Reset UI to empty state on error
+        renderTable([]);
+        renderPagination({ page: 1, total_pages: 1, total: 0, per_page: currentPerPage });
+        updateTotalInfo(0);
     } finally {
         showLoading(false);
     }
+}
+
+// Load summary statistics
+async function loadSummaryStats() {
+    try {
+        const params = new URLSearchParams(currentFilters);
+        
+        const response = await fetch(`<?= base_url('admin/rekap-siswa/summary') ?>?${params}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            updateStatsDisplay(result.data);
+        }
+    } catch (error) {
+        console.error('Error loading summary stats:', error);
+    }
+}
+
+// Update statistics display
+function updateStatsDisplay(stats) {
+    document.getElementById('totalSiswa').textContent = stats.total_siswa;
+    document.getElementById('lakiLaki').textContent = stats.laki_laki;
+    document.getElementById('perempuan').textContent = stats.perempuan;
+    document.getElementById('denganBeasiswa').textContent = stats.dengan_beasiswa;
 }
 
 // Render table
@@ -246,13 +265,11 @@ function renderTable(students) {
     if (students.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="8" class="px-6 py-8 text-center text-gray-500">
-                    <div class="flex flex-col items-center">
-                        <svg class="w-12 h-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <p class="text-lg font-medium">Tidak ada data siswa</p>
-                        <p class="text-sm">Coba ubah filter atau tambah data siswa baru</p>
+                <td colspan="10" style="text-align: center; padding: 3rem; color: #64748b;">
+                    <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <div>Tidak ada data siswa yang ditemukan</div>
+                    <div style="font-size: 0.875rem; margin-top: 0.5rem;">
+                        Coba ubah filter atau kriteria pencarian
                     </div>
                 </td>
             </tr>
@@ -263,59 +280,58 @@ function renderTable(students) {
     const startNumber = (currentPage - 1) * currentPerPage;
     
     tbody.innerHTML = students.map((student, index) => `
-        <tr class="hover:bg-gray-50">
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${startNumber + index + 1}</td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <span class="text-sm font-medium text-green-600 font-mono">${student.no_registrasi}</span>
+        <tr>
+            <td style="font-weight: 600; color: #64748b;">${startNumber + index + 1}</td>
+            <td>
+                <span style="font-family: monospace; font-weight: 600; color: #059669;">
+                    ${escapeHtml(student.no_registrasi)}
+                </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm font-medium text-gray-900">${student.nama_lengkap}</div>
+            <td>
+                <span style="font-family: monospace; font-weight: 600; color: #3b82f6;">
+                    ${escapeHtml(student.nisn || '-')}
+                </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${student.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}</td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900">${student.tempat_lahir}</div>
-                <div class="text-sm text-gray-500">${student.tanggal_lahir_formatted}</div>
+            <td>
+                <div style="font-weight: 600;">${escapeHtml(student.nama_lengkap)}</div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <div class="text-sm text-gray-900">${student.nama_ayah}</div>
-                <div class="text-sm text-gray-500">${student.nama_ibu}</div>
+            <td>
+                <span class="badge ${student.jenis_kelamin === 'L' ? 'badge-primary' : 'badge-secondary'}">
+                    ${student.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
+                </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                ${getStatusBadge(student.status)}
+            <td>
+                <div>${escapeHtml(student.tempat_lahir)}</div>
+                <div style="font-size: 0.875rem; color: #64748b;">
+                    ${student.tanggal_lahir_formatted}
+                </div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                <div class="flex gap-2">
-                    <button onclick="editStatus('${student.id}', '${student.status}')" 
-                            class="text-blue-600 hover:text-blue-900" title="Edit Status">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                        </svg>
-                    </button>
-                    <button onclick="deleteStudent('${student.id}', '${student.nama_lengkap}')" 
-                            class="text-red-600 hover:text-red-900" title="Hapus">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                        </svg>
-                    </button>
+            <td>
+                <div style="font-weight: 500;">${escapeHtml(student.nama_ayah)}</div>
+                <div style="font-size: 0.875rem; color: #64748b;">
+                    ${escapeHtml(student.nama_ibu)}
+                </div>
+            </td>
+            <td>
+                <div style="font-weight: 500;">${escapeHtml(student.tahun_ajaran_nama || '-')}</div>
+                <div style="font-size: 0.875rem; color: #64748b;">
+                    ${student.tahun_mulai}/${student.tahun_selesai}
+                </div>
+            </td>
+            <td>
+                ${student.beasiswa_nama ? 
+                    `<span class="badge badge-warning">${escapeHtml(student.beasiswa_nama)}</span>` : 
+                    '<span style="color: #64748b; font-size: 0.875rem;">-</span>'
+                }
+            </td>
+            <td>
+                <div style="font-size: 0.875rem; font-weight: 500;">${student.accepted_at_formatted}</div>
+                <div style="font-size: 0.75rem; color: #64748b;">
+                    Bayar: ${student.pembayaran_accepted_formatted}
                 </div>
             </td>
         </tr>
     `).join('');
-}
-
-// Get status badge HTML
-function getStatusBadge(status) {
-    const badges = {
-        'calon': 'bg-yellow-100 text-yellow-800',
-        'siswa': 'bg-green-100 text-green-800'
-    };
-    
-    const className = badges[status] || 'bg-gray-100 text-gray-800';
-    const statusText = status === 'calon' ? 'Calon Siswa' : 'Siswa';
-    
-    return `<span class="inline-flex px-2 py-1 text-xs font-medium rounded-full ${className}">
-        ${statusText}
-    </span>`;
 }
 
 // Render pagination
@@ -324,10 +340,8 @@ function renderPagination(pagination) {
     
     if (pagination.total_pages <= 1) {
         container.innerHTML = `
-            <div class="flex items-center justify-between">
-                <div class="text-sm text-gray-700">
-                    Menampilkan ${pagination.total} data
-                </div>
+            <div style="text-align: center; color: #64748b; font-size: 0.875rem;">
+                Menampilkan ${pagination.total} data
             </div>
         `;
         return;
@@ -337,19 +351,19 @@ function renderPagination(pagination) {
     const endItem = Math.min(pagination.page * pagination.per_page, pagination.total);
     
     let paginationHTML = `
-        <div class="flex items-center justify-between">
-            <div class="text-sm text-gray-700">
+        <div style="display: flex; justify-content: between; align-items: center;">
+            <div style="color: #64748b; font-size: 0.875rem;">
                 Menampilkan ${startItem} sampai ${endItem} dari ${pagination.total} data
             </div>
-            <div class="flex gap-1">
+            <div style="display: flex; gap: 0.25rem;">
     `;
     
     // Previous button
     if (pagination.page > 1) {
         paginationHTML += `
             <button onclick="changePage(${pagination.page - 1})" 
-                    class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50">
-                Previous
+                    class="btn btn-sm btn-secondary">
+                <i class="fas fa-chevron-left"></i>
             </button>
         `;
     }
@@ -359,7 +373,7 @@ function renderPagination(pagination) {
         const isActive = i === pagination.page;
         paginationHTML += `
             <button onclick="changePage(${i})" 
-                    class="px-3 py-2 text-sm font-medium ${isActive ? 'text-blue-600 bg-blue-50 border-blue-500' : 'text-gray-500 bg-white border-gray-300'} border hover:bg-gray-50">
+                    class="btn btn-sm ${isActive ? 'btn-primary' : 'btn-secondary'}">
                 ${i}
             </button>
         `;
@@ -369,8 +383,8 @@ function renderPagination(pagination) {
     if (pagination.page < pagination.total_pages) {
         paginationHTML += `
             <button onclick="changePage(${pagination.page + 1})" 
-                    class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50">
-                Next
+                    class="btn btn-sm btn-secondary">
+                <i class="fas fa-chevron-right"></i>
             </button>
         `;
     }
@@ -383,29 +397,26 @@ function renderPagination(pagination) {
     container.innerHTML = paginationHTML;
 }
 
-// Handle filter form
-function handleFilter(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target);
+// Apply filters
+function applyFilters() {
     currentFilters = {};
     
-    for (let [key, value] of formData.entries()) {
-        if (value.trim()) {
-            currentFilters[key] = value.trim();
-        }
-    }
+    const tahunAjaran = document.getElementById('filterTahunAjaran').value;
+    const search = document.getElementById('searchInput').value.trim();
+    
+    if (tahunAjaran) currentFilters.tahun_ajaran_id = tahunAjaran;
+    if (search) currentFilters.search = search;
     
     currentPage = 1; // Reset to first page
     loadStudents();
+    loadSummaryStats();
 }
 
-// Reset filter
-function resetFilter() {
-    document.getElementById('filterForm').reset();
-    currentFilters = {};
-    currentPage = 1;
-    loadStudents();
+// Reset filters
+function resetFilters() {
+    document.getElementById('filterTahunAjaran').value = '<?= $defaultTahunAjaran ? $defaultTahunAjaran['id'] : '' ?>';
+    document.getElementById('searchInput').value = '';
+    applyFilters();
 }
 
 // Handle per page change
@@ -428,109 +439,52 @@ function showLoading(show) {
     
     if (show) {
         loadingState.classList.remove('hidden');
-        tableContainer.classList.add('opacity-50');
+        tableContainer.classList.add('hidden');
     } else {
         loadingState.classList.add('hidden');
-        tableContainer.classList.remove('opacity-50');
+        tableContainer.classList.remove('hidden');
     }
+}
+
+// Update total info
+function updateTotalInfo(total) {
+    document.getElementById('totalInfo').textContent = `Total: ${total} siswa`;
 }
 
 // Show error message
 function showError(message) {
-    // Simple alert for now - you can implement a better notification system
     alert('Error: ' + message);
 }
 
-// Edit status
-function editStatus(studentId, currentStatus) {
-    document.getElementById('editStudentId').value = studentId;
-    document.getElementById('editStatus').value = currentStatus;
-    
-    // Open modal using Preline
-    HSOverlay.open(document.getElementById('editStatusModal'));
-}
-
-// Handle edit status form
-async function handleEditStatus(e) {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target);
-    const studentId = formData.get('student_id');
-    
-    try {
-        const response = await fetch(`/admin/student/${studentId}/status`, {
-            method: 'POST',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                status: formData.get('status')
-            })
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            // Close modal
-            HSOverlay.close(document.getElementById('editStatusModal'));
-            
-            // Reload data
-            loadStudents();
-            
-            // Show success message
-            alert('Status berhasil diupdate');
-        } else {
-            showError(result.message || 'Gagal mengupdate status');
-        }
-    } catch (error) {
-        showError('Terjadi kesalahan saat mengupdate status');
-        console.error('Error updating status:', error);
-    }
-}
-
-// Delete student
-async function deleteStudent(studentId, studentName) {
-    if (!confirm(`Apakah Anda yakin ingin menghapus data siswa "${studentName}"?`)) {
-        return;
-    }
-    
-    try {
-        const response = await fetch(`/admin/student/${studentId}/delete`, {
-            method: 'DELETE',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-            // Reload data
-            loadStudents();
-            
-            // Show success message
-            alert('Data siswa berhasil dihapus');
-        } else {
-            showError(result.message || 'Gagal menghapus data siswa');
-        }
-    } catch (error) {
-        showError('Terjadi kesalahan saat menghapus data');
-        console.error('Error deleting student:', error);
-    }
+// Escape HTML
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
 // Export Excel
 function exportExcel() {
     const params = new URLSearchParams(currentFilters);
-    window.open(`/admin/export-excel?${params}`, '_blank');
+    window.open(`<?= base_url('admin/rekap-siswa/export-excel') ?>?${params}`, '_blank');
 }
 
 // Export PDF
 function exportPdf() {
     const params = new URLSearchParams(currentFilters);
-    window.open(`/admin/export-pdf?${params}`, '_blank');
+    window.open(`<?= base_url('admin/rekap-siswa/export-pdf') ?>?${params}`, '_blank');
+}
+
+// Refresh data
+function refreshData() {
+    loadStudents();
+    loadSummaryStats();
 }
 </script>
 
-<?= $this->endSection() ?>
+<?= $this->endsection() ?>

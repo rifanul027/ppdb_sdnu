@@ -19,7 +19,7 @@
       <!-- End Col -->
 
       <div class="col-span-1">
-        <h4 class="font-semibold text-gray-100">PPDB 2025/2026</h4>
+        <h4 class="font-semibold text-gray-100">PPDB <?= date('Y') ?>/<?= date('Y') + 1 ?></h4>
 
         <div class="mt-3 grid space-y-3">
           <p><a class="inline-flex gap-x-2 text-green-100 hover:text-gray-200 focus:outline-none focus:text-gray-200 dark:text-neutral-400 dark:hover:text-neutral-200 dark:focus:text-neutral-200" href="/daftar"><i class="fas fa-chevron-right"></i>Daftar Online</a></p>

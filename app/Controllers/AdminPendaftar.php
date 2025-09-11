@@ -12,13 +12,15 @@ class AdminPendaftar extends BaseController
     protected $studentModel;
     protected $userModel;
     protected $tahunAjaranModel;
+    protected $db;
 
     public function __construct()
     {
-        helper(['url', 'form']);
+        helper(['url', 'form', 'whatsapp']);
         $this->studentModel = new StudentModel();
         $this->userModel = new UserModel();
         $this->tahunAjaranModel = new TahunAjaranModel();
+        $this->db = \Config\Database::connect();
     }
 
     public function index()
@@ -190,45 +192,173 @@ class AdminPendaftar extends BaseController
 
     public function store()
     {
-        // Generate no registrasi
-        $year = date('Y');
-        $lastNumber = $this->studentModel
-            ->where('no_registrasi LIKE', $year . '%')
-            ->orderBy('no_registrasi', 'DESC')
-            ->first();
-
-        if ($lastNumber) {
-            $lastNum = (int) substr($lastNumber['no_registrasi'], -4);
-            $newNumber = str_pad($lastNum + 1, 4, '0', STR_PAD_LEFT);
-        } else {
-            $newNumber = '0001';
-        }
-
-        $noRegistrasi = $year . $newNumber;
-
-        $data = [
-            'no_registrasi' => $noRegistrasi,
-            'nama_lengkap' => $this->request->getPost('nama_lengkap'),
-            'tahun_ajaran_id' => $this->request->getPost('tahun_ajaran_id'),
-            'agama' => $this->request->getPost('agama'),
-            'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
-            'tempat_lahir' => $this->request->getPost('tempat_lahir'),
-            'tanggal_lahir' => $this->request->getPost('tanggal_lahir'),
-            'nama_ayah' => $this->request->getPost('nama_ayah'),
-            'nama_ibu' => $this->request->getPost('nama_ibu'),
-            'alamat' => $this->request->getPost('alamat'),
-            'domisili' => $this->request->getPost('domisili'),
-            'nomor_telepon' => $this->request->getPost('nomor_telepon'),
-            'asal_tk_ra' => $this->request->getPost('asal_tk_ra'),
-            'status' => 'calon',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
+        // Validation rules
+        $validationRules = [
+            'nama_lengkap' => 'required|min_length[3]|max_length[100]',
+            'tahun_ajaran_id' => 'required',
+            'agama' => 'required',
+            'jenis_kelamin' => 'required|in_list[L,P]',
+            'tempat_lahir' => 'required|min_length[3]|max_length[50]',
+            'tanggal_lahir' => 'required|valid_date',
+            'nama_ayah' => 'required|min_length[3]|max_length[100]',
+            'nama_ibu' => 'required|min_length[3]|max_length[100]',
+            'alamat' => 'required|min_length[10]',
+            'domisili' => 'required|min_length[10]',
+            'nomor_telepon' => 'required|min_length[10]|max_length[20]',
+            'username' => 'required|min_length[3]|max_length[50]|is_unique[users.username]',
+            'email' => 'required|valid_email|is_unique[users.email]',
+            'password' => 'required|min_length[8]',
+            'akta' => 'uploaded[akta]|max_size[akta,5120]|ext_in[akta,pdf,jpg,jpeg,png]',
+            'kk' => 'uploaded[kk]|max_size[kk,5120]|ext_in[kk,pdf,jpg,jpeg,png]',
+            'ijazah' => 'permit_empty|max_size[ijazah,5120]|ext_in[ijazah,pdf,jpg,jpeg,png]'
         ];
 
-        if ($this->studentModel->insert($data)) {
-            return redirect()->to('/admin/pendaftar/pendaftar')->with('success', 'Data pendaftar berhasil ditambahkan');
-        } else {
-            return redirect()->back()->with('error', 'Gagal menambahkan data pendaftar');
+        if (!$this->validate($validationRules)) {
+            return redirect()->back()->withInput()->with('validation', $this->validator);
+        }
+
+        // Start transaction
+        $this->db->transStart();
+
+        try {
+            // Generate UUID for student
+            helper('uuid');
+            $studentId = generateUUID();
+
+            // Generate no registrasi
+            $year = date('Y');
+            $lastNumber = $this->studentModel
+                ->where('no_registrasi LIKE', $year . '%')
+                ->orderBy('no_registrasi', 'DESC')
+                ->first();
+
+            if ($lastNumber) {
+                $lastNum = (int) substr($lastNumber['no_registrasi'], -4);
+                $newNumber = str_pad($lastNum + 1, 4, '0', STR_PAD_LEFT);
+            } else {
+                $newNumber = '0001';
+            }
+
+            $noRegistrasi = $year . $newNumber;
+
+            // Handle file uploads
+            $aktaFile = $this->request->getFile('akta');
+            $kkFile = $this->request->getFile('kk');
+            $ijazahFile = $this->request->getFile('ijazah');
+
+            $aktaUrl = null;
+            $kkUrl = null;
+            $ijazahUrl = null;
+
+            // Upload akta file
+            if ($aktaFile && $aktaFile->isValid() && !$aktaFile->hasMoved()) {
+                $aktaNewName = 'akta_' . $studentId . '.' . $aktaFile->getExtension();
+                if ($aktaFile->move(WRITEPATH . 'uploads', $aktaNewName)) {
+                    $aktaUrl = 'uploads/' . $aktaNewName;
+                }
+            }
+
+            // Upload kk file
+            if ($kkFile && $kkFile->isValid() && !$kkFile->hasMoved()) {
+                $kkNewName = 'kk_' . $studentId . '.' . $kkFile->getExtension();
+                if ($kkFile->move(WRITEPATH . 'uploads', $kkNewName)) {
+                    $kkUrl = 'uploads/' . $kkNewName;
+                }
+            }
+
+            // Upload ijazah file (optional)
+            if ($ijazahFile && $ijazahFile->isValid() && !$ijazahFile->hasMoved()) {
+                $ijazahNewName = 'ijazah_' . $studentId . '.' . $ijazahFile->getExtension();
+                if ($ijazahFile->move(WRITEPATH . 'uploads', $ijazahNewName)) {
+                    $ijazahUrl = 'uploads/' . $ijazahNewName;
+                }
+            }
+
+            // Prepare student data
+            $studentData = [
+                'id' => $studentId,
+                'no_registrasi' => $noRegistrasi,
+                'nama_lengkap' => $this->request->getPost('nama_lengkap'),
+                'tahun_ajaran_id' => $this->request->getPost('tahun_ajaran_id'),
+                'agama' => $this->request->getPost('agama'),
+                'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
+                'tempat_lahir' => $this->request->getPost('tempat_lahir'),
+                'tanggal_lahir' => $this->request->getPost('tanggal_lahir'),
+                'nama_ayah' => $this->request->getPost('nama_ayah'),
+                'nama_ibu' => $this->request->getPost('nama_ibu'),
+                'alamat' => $this->request->getPost('alamat'),
+                'domisili' => $this->request->getPost('domisili'),
+                'nomor_telepon' => $this->request->getPost('nomor_telepon'),
+                'asal_tk_ra' => $this->request->getPost('asal_tk_ra'),
+                'akta_url' => $aktaUrl,
+                'kk_url' => $kkUrl,
+                'ijazah_url' => $ijazahUrl,
+                'status' => 'calon',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+
+            // Insert student
+            if (!$this->studentModel->insert($studentData)) {
+                throw new \Exception('Gagal menyimpan data siswa');
+            }
+
+            // Prepare user data
+            $plainPassword = $this->request->getPost('password');
+            $userData = [
+                'username' => $this->request->getPost('username'),
+                'email' => $this->request->getPost('email'),
+                'password' => $plainPassword, // Will be hashed automatically by model
+                'role' => 'siswa',
+                'student_id' => $studentId
+            ];
+
+            // Insert user
+            if (!$this->userModel->insert($userData)) {
+                throw new \Exception('Gagal membuat akun user');
+            }
+
+            // Get tahun ajaran name
+            $tahunAjaran = $this->tahunAjaranModel->find($this->request->getPost('tahun_ajaran_id'));
+
+            // Prepare success data for modal
+            $successData = [
+                'no_registrasi' => $noRegistrasi,
+                'nama_lengkap' => $this->request->getPost('nama_lengkap'),
+                'tahun_ajaran' => $tahunAjaran['nama'] ?? 'N/A',
+                'username' => $this->request->getPost('username'),
+                'email' => $this->request->getPost('email'),
+                'password' => $plainPassword
+            ];
+
+            // Complete transaction
+            $this->db->transComplete();
+
+            if ($this->db->transStatus() === false) {
+                throw new \Exception('Transaksi database gagal');
+            }
+
+            // Set success data in session for modal
+            session()->setFlashdata('success_data', $successData);
+            
+            return redirect()->to('/admin/pendaftar/tambah');
+
+        } catch (\Exception $e) {
+            // Rollback transaction
+            $this->db->transRollback();
+            
+            // Clean up uploaded files if any
+            if ($aktaUrl && file_exists(WRITEPATH . $aktaUrl)) {
+                unlink(WRITEPATH . $aktaUrl);
+            }
+            if ($kkUrl && file_exists(WRITEPATH . $kkUrl)) {
+                unlink(WRITEPATH . $kkUrl);
+            }
+            if ($ijazahUrl && file_exists(WRITEPATH . $ijazahUrl)) {
+                unlink(WRITEPATH . $ijazahUrl);
+            }
+
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
     }
 

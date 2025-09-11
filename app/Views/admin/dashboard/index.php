@@ -35,9 +35,39 @@
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+<div class="dashboard-grid">
+    <!-- Quick Actions -->
+    <div class="content-card quick-actions-card">
+        <div class="card-header">
+            <h3 class="card-title">Quick Actions</h3>
+        </div>
+        <div class="card-body">
+            <div class="quick-actions-grid">
+                <a href="/admin/pengaturan" class="btn btn-primary">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+                
+                <a href="/admin/pendaftar" class="btn btn-secondary">
+                    <i class="fas fa-users"></i>
+                    Lihat Pendaftar
+                </a>
+                
+                <a href="/admin/daftar-ulang" class="btn btn-secondary">
+                    <i class="fas fa-clipboard-list"></i>
+                    Lihat Daftar Ulang
+                </a>
+                
+                <a href="/admin/siswa" class="btn btn-secondary">
+                    <i class="fas fa-graduation-cap"></i>
+                    Lihat Siswa
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Recent Applications -->
-    <div class="content-card">
+    <div class="content-card recent-applications-card">
         <div class="card-header">
             <h3 class="card-title">Pendaftar Terbaru</h3>
         </div>
@@ -87,36 +117,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- Quick Actions -->
-    <div class="content-card">
-        <div class="card-header">
-            <h3 class="card-title">Quick Actions</h3>
-        </div>
-        <div class="card-body">
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <a href="/admin/settings" class="btn btn-primary">
-                    <i class="fas fa-cog"></i>
-                    Settings
-                </a>
-                
-                <a href="/admin/pendaftar" class="btn btn-secondary">
-                    <i class="fas fa-users"></i>
-                    Lihat Pendaftar
-                </a>
-                
-                <a href="/admin/daftar-ulang" class="btn btn-secondary">
-                    <i class="fas fa-clipboard-list"></i>
-                    Lihat Daftar Ulang
-                </a>
-                
-                <a href="/admin/siswa" class="btn btn-secondary">
-                    <i class="fas fa-graduation-cap"></i>
-                    Lihat Siswa
-                </a>
-            </div>
-        </div>
-    </div>
 </div>
 
 <style>
@@ -125,6 +125,19 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
 .stat-card {
@@ -276,8 +289,23 @@
         grid-template-columns: 1fr;
     }
     
-    div[style*="grid-template-columns: 2fr 1fr"] {
-        display: block;
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .quick-actions-card {
+        order: 1;
+    }
+    
+    .recent-applications-card {
+        order: 2;
+    }
+    
+    .quick-actions-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
     }
     
     .content-card {
@@ -294,6 +322,23 @@
     
     .card-header {
         padding: 1rem 1rem 0;
+    }
+    
+    .btn {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .table th,
+    .table td {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
     }
 }
 </style>

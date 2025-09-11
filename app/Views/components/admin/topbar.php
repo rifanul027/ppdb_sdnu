@@ -1,46 +1,46 @@
 <header class="topbar">
     <div class="topbar-content">
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <button class="mobile-menu-btn" onclick="toggleSidebar()">
+        <div class="topbar-left">
+            <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Toggle Menu">
                 <i class="fas fa-bars"></i>
             </button>
             <h1 class="page-title"><?= $pageTitle ?? 'Dashboard' ?></h1>
         </div>
         
         <div class="user-menu">
-            <div style="text-align: right; margin-right: 1rem;">
-                <div style="font-weight: 600; font-size: 0.875rem;">
+            <div class="user-info">
+                <div class="user-name">
                     <?= session()->get('username') ?? 'Admin' ?>
                 </div>
-                <div style="font-size: 0.75rem; color: #64748b;">
+                <div class="user-time">
                     <?= date('d M Y, H:i') ?>
                 </div>
             </div>
-            <div class="user-avatar" style="position: relative;">
-                <?php if (session()->get('avatar')): ?>
-                    <img src="/uploads/avatars/<?= session()->get('avatar') ?>" alt="Avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
-                <?php else: ?>
-                    <i class="fas fa-user"></i>
-                <?php endif; ?>
-                
-                <!-- Dropdown Menu -->
-                <div class="dropdown-menu" id="admin-dropdown" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 0.5rem; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); min-width: 200px; z-index: 50;">
-                    <div style="padding: 0.5rem 0;">
-                        <div style="padding: 0.75rem 1rem; border-bottom: 1px solid #e5e7eb;">
-                            <div style="font-weight: 600; font-size: 0.875rem; color: #111827;">
-                                <?= session()->get('username') ?? 'Admin' ?>
-                            </div>
-                            <div style="font-size: 0.75rem; color: #6b7280;">
-                                <?= session()->get('email') ?? '' ?>
-                            </div>
+            <!-- User Dropdown -->
+            <div class="relative">
+                <button id="user-menu-btn" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-300">
+                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                        <?php if (session()->get('avatar')): ?>
+                            <img src="/uploads/avatars/<?= session()->get('avatar') ?>" alt="Avatar" class="w-full h-full rounded-full object-cover">
+                        <?php else: ?>
+                            <i class="fas fa-user text-white text-sm"></i>
+                        <?php endif; ?>
+                    </div>
+                    <span class="hidden sm:block"><?= session()->get('username') ?? 'Admin' ?></span>
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </button>
+
+                <div id="admin-dropdown" class="absolute right-4 mt-2 w-48 bg-white rounded-lg shadow-lg border hidden z-50">
+                    <div class="py-1">
+                        <div class="px-4 py-2 border-b">
+                            <div class="text-sm font-medium text-gray-900"><?= session()->get('username') ?? 'Admin' ?></div>
+                            <div class="text-sm text-gray-500"><?= session()->get('email') ?? '' ?></div>
                         </div>
-                        <a href="/admin/profile" style="display: block; padding: 0.75rem 1rem; color: #374151; text-decoration: none; font-size: 0.875rem; transition: background-color 0.15s;">
-                            <i class="fas fa-user" style="margin-right: 0.5rem; width: 16px;"></i>
-                            Profile
+                        <a href="/admin/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
+                            <i class="fas fa-user mr-2"></i>Profile
                         </a>
-                        <a href="/logout" onclick="return confirm('Yakin ingin logout?')" style="display: block; padding: 0.75rem 1rem; color: #dc2626; text-decoration: none; font-size: 0.875rem; transition: background-color 0.15s;">
-                            <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem; width: 16px;"></i>
-                            Logout
+                        <a href="/logout" onclick="return confirm('Yakin ingin logout?')" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition-colors duration-200">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
                         </a>
                     </div>
                 </div>
@@ -50,65 +50,25 @@
 </header>
 
 <script>
-// Toggle admin dropdown
-document.addEventListener('DOMContentLoaded', function() {
-    const userAvatar = document.querySelector('.user-avatar');
-    const dropdown = document.getElementById('admin-dropdown');
-    
-    if (userAvatar && dropdown) {
-        userAvatar.addEventListener('click', function(e) {
-            e.stopPropagation();
-            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-        });
+// User dropdown menu toggle (similar to navbar.php)
+const userMenuBtn = document.getElementById('user-menu-btn');
+const userMenu = document.getElementById('admin-dropdown');
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function() {
-            dropdown.style.display = 'none';
-        });
-
-        // Prevent dropdown from closing when clicking inside
-        dropdown.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-    }
-});
-
-// Hover effects for dropdown items
-document.addEventListener('DOMContentLoaded', function() {
-    const dropdownItems = document.querySelectorAll('.dropdown-menu a');
-    dropdownItems.forEach(item => {
-        item.addEventListener('mouseenter', function() {
-            this.style.backgroundColor = '#f3f4f6';
-        });
-        item.addEventListener('mouseleave', function() {
-            this.style.backgroundColor = 'transparent';
-        });
+if (userMenuBtn && userMenu) {
+    userMenuBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        userMenu.classList.toggle('hidden');
     });
-});
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function() {
+        userMenu.classList.add('hidden');
+    });
+
+    userMenu.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+}
 </script>
 
-<style>
-.user-avatar {
-    cursor: pointer;
-    transition: transform 0.15s ease;
-}
 
-.user-avatar:hover {
-    transform: scale(1.05);
-}
-
-.dropdown-menu {
-    animation: fadeIn 0.15s ease-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-</style>

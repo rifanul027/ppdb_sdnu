@@ -23,5 +23,8 @@
     </div>
   </div>
 
+  <!-- Scripts Section -->
+  <?= $this->renderSection('scripts') ?>
+
 </body>
 </html>

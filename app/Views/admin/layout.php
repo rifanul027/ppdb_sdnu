@@ -34,6 +34,26 @@
             overflow-y: auto;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             z-index: 1000;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Mobile Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
         }
 
         .sidebar-header {
@@ -108,8 +128,31 @@
 
         .topbar-content {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
+            max-width: 100%;
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #059669;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .mobile-menu-btn:hover {
+            background-color: #f1f5f9;
         }
 
         .page-title {
@@ -122,7 +165,22 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-left: auto;
+        }
+
+        .user-info {
+            text-align: right;
+            margin-right: 1rem;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #1e293b;
+        }
+
+        .user-time {
+            font-size: 0.75rem;
+            color: #64748b;
         }
 
         .user-avatar {
@@ -284,10 +342,28 @@
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 260px;
+            }
+            
+            .main-content {
+                margin-left: 260px;
+            }
+            
+            .topbar {
+                padding: 1rem 1.5rem;
+            }
+            
+            .content-area {
+                padding: 1.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
-                transition: transform 0.3s ease;
+                width: 280px;
             }
 
             .sidebar.active {
@@ -302,23 +378,108 @@
                 display: block;
             }
 
+            .topbar {
+                padding: 1rem;
+            }
+
+            .topbar-content {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .page-title {
+                font-size: 1.25rem;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .user-menu {
+                gap: 0.5rem;
+            }
+
+            .content-area {
+                padding: 1rem;
+            }
+
             .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .card-header,
+            .card-body {
+                padding: 1rem;
             }
         }
 
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: #059669;
-            font-size: 1.5rem;
-            cursor: pointer;
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+            }
+
+            .topbar {
+                padding: 0.75rem;
+            }
+
+            .page-title {
+                font-size: 1.125rem;
+            }
+
+            .content-area {
+                padding: 0.75rem;
+            }
+
+            .stat-card {
+                padding: 0.75rem;
+            }
+
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.813rem;
+            }
+
+            .table-container {
+                font-size: 0.875rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Touch devices */
+        @media (hover: none) and (pointer: coarse) {
+            .nav-link:hover {
+                background-color: transparent;
+            }
+            
+            .nav-link:active {
+                background-color: rgba(255,255,255,0.1);
+            }
+            
+            .stat-card:hover {
+                transform: none;
+            }
+            
+            .btn-primary:hover {
+                transform: none;
+            }
         }
     </style>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="admin-container">
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+        
         <?= $this->include('components/admin/sidebar') ?>
         
         <main class="main-content">
@@ -338,31 +499,106 @@
         // Mobile menu toggle
         function toggleSidebar() {
             const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
             sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            // Prevent body scroll when sidebar is open on mobile
+            if (window.innerWidth <= 768) {
+                document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+            }
+        }
+
+        function closeSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
         }
 
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(e) {
             const sidebar = document.querySelector('.sidebar');
             const menuBtn = document.querySelector('.mobile-menu-btn');
+            const overlay = document.getElementById('sidebar-overlay');
             
             if (window.innerWidth <= 768 && 
+                sidebar.classList.contains('active') &&
                 !sidebar.contains(e.target) && 
                 !menuBtn.contains(e.target)) {
+                closeSidebar();
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
+            if (window.innerWidth > 768) {
                 sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Handle escape key to close sidebar
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && window.innerWidth <= 768) {
+                closeSidebar();
             }
         });
 
         // Set active nav link
-        const currentPath = window.location.pathname;
-        const navLinks = document.querySelectorAll('.nav-link');
-        
-        navLinks.forEach(link => {
-            if (link.getAttribute('href') === currentPath || 
-                (currentPath.includes(link.getAttribute('href')) && link.getAttribute('href') !== '/admin')) {
-                link.classList.add('active');
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath || 
+                    (currentPath.includes(link.getAttribute('href')) && link.getAttribute('href') !== '/admin')) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Smooth scrolling for sidebar on mobile
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar && window.innerWidth <= 768) {
+                sidebar.style.scrollBehavior = 'smooth';
             }
         });
+
+        // Touch swipe to open/close sidebar on mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (window.innerWidth <= 768) {
+                const swipeDistance = touchEndX - touchStartX;
+                const sidebar = document.querySelector('.sidebar');
+                
+                // Swipe right to open sidebar (from left edge)
+                if (swipeDistance > 50 && touchStartX < 50 && !sidebar.classList.contains('active')) {
+                    toggleSidebar();
+                }
+                // Swipe left to close sidebar
+                else if (swipeDistance < -50 && sidebar.classList.contains('active')) {
+                    closeSidebar();
+                }
+            }
+        }
     </script>
 </body>
 </html>

@@ -12,7 +12,7 @@ $routes->get('/ppdb', 'Ppdb::index');
 $routes->get('/ppdb/pengumuman', 'Ppdb::pengumuman');
 $routes->get('/daftar', 'Ppdb::daftar');
 $routes->post('/daftar', 'Ppdb::prosesDaftar');
-$routes->get('/student-profile', 'Ppdb::studentProfile');
+$routes->get('/profile-siswa', 'Ppdb::studentProfile');
 $routes->match(['GET', 'POST'], '/edit-profile', 'Ppdb::editProfile');
 $routes->post('/upload-payment', 'Ppdb::uploadPayment');
 
@@ -51,6 +51,7 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->get('daftar-ulang', 'AdminDaftarUlang::index');
     $routes->get('daftar-ulang/detail/(:segment)', 'AdminDaftarUlang::detail/$1');
     $routes->post('daftar-ulang/konfirmasi-pembayaran', 'AdminDaftarUlang::konfirmasiPembayaran');
+    $routes->post('daftar-ulang/validasi-pembayaran', 'AdminDaftarUlang::validasiPembayaran');
     $routes->get('pengumuman', 'AdminPengumuman::index');
     $routes->post('pengumuman/create', 'AdminPengumuman::create');
     $routes->get('pengumuman/detail/(:segment)', 'AdminPengumuman::detail/$1');
@@ -58,16 +59,22 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->post('pengumuman/toggle-active/(:segment)', 'AdminPengumuman::toggleActive/$1');
     $routes->post('pengumuman/delete/(:segment)', 'AdminPengumuman::delete/$1');
     // rekap siswa management
-    $routes->get('rekap-siswa', 'Admin::rekapSiswa');
-    // settings and profile
-    $routes->get('settings', 'Admin::settings');
-    $routes->get('settings/biaya', 'Admin::settingsBiaya');
-    $routes->get('settings/pendaftaran', 'Admin::settingsPendaftaran');
-    $routes->get('profile', 'Auth::profile');
+    $routes->get('rekap-siswa', 'AdminRekapSiswa::index');
+    $routes->get('rekap-siswa/data', 'AdminRekapSiswa::getStudentsData');
+    $routes->get('rekap-siswa/summary', 'AdminRekapSiswa::getSummaryStats');
+    $routes->get('rekap-siswa/export-excel', 'AdminRekapSiswa::exportExcel');
+    $routes->get('rekap-siswa/export-pdf', 'AdminRekapSiswa::exportPdf');
+    // pengaturan and profile
+    $routes->get('pengaturan', 'SettingsController::index');
     
-    // API endpoints for admin
-    $routes->post('settings/save', 'Admin::saveSettings');
-    $routes->post('settings/biaya/(:any)', 'Admin::saveBiaya/$1');
+    // Pengaturan routes for tahun ajaran
+    $routes->post('pengaturan/create', 'SettingsController::create');
+    $routes->get('pengaturan/detail/(:segment)', 'SettingsController::detail/$1');
+    $routes->post('pengaturan/update/(:segment)', 'SettingsController::update/$1');
+    $routes->post('pengaturan/toggle-active/(:segment)', 'SettingsController::toggleActive/$1');
+    $routes->post('pengaturan/delete/(:segment)', 'SettingsController::delete/$1');
+    
+    $routes->get('profile', 'Auth::profile');
     
     // Rekap Siswa API routes
     $routes->get('students-data', 'Admin::getStudentsData');
@@ -80,18 +87,7 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->delete('ppdb/student/(:segment)/delete', 'Ppdb::deleteStudent/$1');
     $routes->post('ppdb/student/(:segment)/status/(:segment)', 'Ppdb::updateStudentStatus/$1/$2');
     
-    // Settings API routes
-    $routes->get('api/settings/tahun-ajaran', 'Admin::getTahunAjaran');
-    $routes->post('api/settings/tahun-ajaran', 'Admin::storeTahunAjaran');
-    $routes->put('api/settings/tahun-ajaran/(:segment)', 'Admin::updateTahunAjaran/$1');
-    $routes->delete('api/settings/tahun-ajaran/(:segment)', 'Admin::deleteTahunAjaran/$1');
-    $routes->post('api/settings/tahun-ajaran/(:segment)/activate', 'Admin::activateTahunAjaran/$1');
-    
-    $routes->get('api/settings/beasiswa', 'Admin::getBeasiswa');
-    $routes->post('api/settings/beasiswa', 'Admin::storeBeasiswa');
-    $routes->put('api/settings/beasiswa/(:segment)', 'Admin::updateBeasiswa/$1');
-    $routes->delete('api/settings/beasiswa/(:segment)', 'Admin::deleteBeasiswa/$1');
-    
+    // Profile management
     $routes->post('profile/update', 'Auth::updateProfile');
     $routes->post('profile/change-password', 'Auth::changePassword');
     $routes->post('profile/upload-photo', 'Auth::uploadPhoto');

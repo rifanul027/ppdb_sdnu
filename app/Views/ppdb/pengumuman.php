@@ -23,7 +23,7 @@ function generateFallbackImage($title) {
     <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
       <div class="max-w-2xl text-center mx-auto">
         <p class="inline-block text-sm font-semibold text-nu-green bg-nu-cream px-4 py-2 rounded-full border border-nu-green/20">
-          PPDB 2025/2026
+            PPDB <?= date('Y') ?>/<?= date('Y') + 1 ?>
         </p>
 
         <!-- Title -->
@@ -450,7 +450,7 @@ function generateFallbackImage($title) {
         
         <h3 class="text-3xl font-bold text-nu-dark mb-4">Belum Ada Pengumuman</h3>
         <p class="text-gray-600 text-lg mb-8 max-w-2xl mx-auto">
-          Pengumuman terbaru mengenai PPDB 2025/2026 akan muncul di sini. 
+          Pengumuman terbaru mengenai PPDB <?= date('Y') ?>/<?= date('Y') + 1 ?> akan muncul di sini. 
           Pastikan Anda mengecek halaman ini secara berkala untuk mendapatkan informasi terkini.
         </p>
         

@@ -7,7 +7,24 @@
         <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;"><?= $pageTitle ?></h2>
         <p style="color: #64748b;">Kelola konfirmasi pembayaran siswa yang diterima</p>
     </div>
-    <div style="display: flex; gap: 1rem;">
+    <div style="display: flex; gap: 1rem; align-items: center;">
+        <!-- Filters -->
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <select id="filterTahunAjaran" class="form-control" style="width: auto;" onchange="applyFilters()">
+                <?php foreach ($tahunAjaranList as $ta): ?>
+                    <option value="<?= $ta['tahun_mulai'] ?>" <?= $ta['tahun_mulai'] == $selectedYear ? 'selected' : '' ?>>
+                        <?= esc($ta['nama']) ?> (<?= $ta['tahun_mulai'] ?>)
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            
+            <select id="filterAccepted" class="form-control" style="width: auto;" onchange="applyFilters()">
+                <option value="all" <?= $acceptedFilter == 'all' ? 'selected' : '' ?>>Semua Pembayaran</option>
+                <option value="validated" <?= $acceptedFilter == 'validated' ? 'selected' : '' ?>>Sudah Divalidasi</option>
+                <option value="not_validated" <?= $acceptedFilter == 'not_validated' ? 'selected' : '' ?>>Belum Divalidasi</option>
+            </select>
+        </div>
+        
         <button class="btn btn-primary" onclick="refreshData()">
             <i class="fas fa-sync"></i>
             Refresh
@@ -28,9 +45,17 @@
     <div class="content-card">
         <div class="card-body" style="text-align: center;">
             <div style="font-size: 2rem; font-weight: 700; color: #f59e0b; margin-bottom: 0.5rem;">
-                <?= count(array_filter($siswa, function($s) { return $s['bukti_pembayaran_id'] == null; })) ?>
+                <?= count(array_filter($siswa, function($s) { return $s['bukti_pembayaran_id'] != null && $s['pembayaran_accepted_at'] == null; })) ?>
             </div>
-            <div style="color: #64748b; font-size: 0.875rem;">Belum Konfirmasi Pembayaran</div>
+            <div style="color: #64748b; font-size: 0.875rem;">Belum Divalidasi</div>
+        </div>
+    </div>
+    <div class="content-card">
+        <div class="card-body" style="text-align: center;">
+            <div style="font-size: 2rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem;">
+                <?= count(array_filter($siswa, function($s) { return $s['pembayaran_accepted_at'] != null; })) ?>
+            </div>
+            <div style="color: #64748b; font-size: 0.875rem;">Sudah Divalidasi</div>
         </div>
     </div>
 </div>
@@ -72,9 +97,19 @@
                         </td>
                         <td>
                             <?php if ($s['bukti_pembayaran_id'] != null): ?>
-                                <span class="badge badge-success">Sudah Dikonfirmasi</span>
+                                <?php if ($s['pembayaran_accepted_at'] != null): ?>
+                                    <span class="badge badge-success">Sudah Divalidasi</span>
+                                    <div style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">
+                                        <?= date('d/m/Y H:i', strtotime($s['pembayaran_accepted_at'])) ?>
+                                    </div>
+                                <?php else: ?>
+                                    <span class="badge badge-warning">Menunggu Validasi</span>
+                                <?php endif; ?>
+                                <div style="font-size: 0.75rem; color: #059669; margin-top: 0.25rem; font-family: monospace; font-weight: 600;">
+                                    ID: <?= esc($s['bukti_pembayaran_id']) ?>
+                                </div>
                             <?php else: ?>
-                                <span class="badge badge-warning">Belum Dikonfirmasi</span>
+                                <span class="badge badge-danger">Belum Upload Bukti</span>
                             <?php endif; ?>
                         </td>
                         <td>
@@ -96,6 +131,15 @@
                                         title="Lihat Detail">
                                     <i class="fas fa-eye"></i>
                                 </button>
+                                <?php if ($s['nomor_telepon']): ?>
+                                <a href="https://wa.me/62<?= ltrim($s['nomor_telepon'], '0') ?>" 
+                                   target="_blank" 
+                                   class="btn btn-success" 
+                                   style="padding: 0.5rem; font-size: 0.75rem;"
+                                   title="WhatsApp">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                                <?php endif; ?>
                                 <?php if ($s['bukti_pembayaran_id'] == null): ?>
                                 <button onclick="showPembayaranModal('<?= $s['id'] ?>', '<?= esc($s['nama_lengkap']) ?>')" 
                                         class="btn btn-primary" 
@@ -134,49 +178,14 @@
 
 <!-- Modal Detail Siswa -->
 <div class="modal fade" id="detailModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Detail Siswa</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h6>Data Pribadi</h6>
-                        <table class="table table-borderless table-sm">
-                            <tr><td width="40%"><strong>Nama Lengkap</strong></td><td id="detail-nama">-</td></tr>
-                            <tr><td><strong>No. Registrasi</strong></td><td id="detail-no-reg">-</td></tr>
-                            <tr><td><strong>NISN</strong></td><td id="detail-nisn">-</td></tr>
-                            <tr><td><strong>Tempat Lahir</strong></td><td id="detail-tempat-lahir">-</td></tr>
-                            <tr><td><strong>Tanggal Lahir</strong></td><td id="detail-tanggal-lahir">-</td></tr>
-                            <tr><td><strong>Jenis Kelamin</strong></td><td id="detail-jenis-kelamin">-</td></tr>
-                            <tr><td><strong>Agama</strong></td><td id="detail-agama">-</td></tr>
-                            <tr><td><strong>Alamat</strong></td><td id="detail-alamat">-</td></tr>
-                            <tr><td><strong>Domisili</strong></td><td id="detail-domisili">-</td></tr>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-                        <h6>Data Orang Tua</h6>
-                        <table class="table table-borderless table-sm">
-                            <tr><td width="40%"><strong>Nama Ayah</strong></td><td id="detail-nama-ayah">-</td></tr>
-                            <tr><td><strong>Nama Ibu</strong></td><td id="detail-nama-ibu">-</td></tr>
-                            <tr><td><strong>No. Telepon</strong></td><td id="detail-nomor-telepon">-</td></tr>
-                        </table>
-                        
-                        <h6 class="mt-3">Data Pendidikan</h6>
-                        <table class="table table-borderless table-sm">
-                            <tr><td width="40%"><strong>Asal TK/RA</strong></td><td id="detail-asal-tk">-</td></tr>
-                        </table>
-                        
-                        <h6 class="mt-3">Status</h6>
-                        <table class="table table-borderless table-sm">
-                            <tr><td width="40%"><strong>Status</strong></td><td id="detail-status">-</td></tr>
-                            <tr><td><strong>Diterima Pada</strong></td><td id="detail-accepted-at">-</td></tr>
-                            <tr><td><strong>Status Pembayaran</strong></td><td id="detail-status-pembayaran">-</td></tr>
-                        </table>
-                    </div>
-                </div>
+                <!-- Content will be loaded dynamically -->
             </div>
         </div>
     </div>
@@ -242,10 +251,22 @@
 </div>
 
 <script>
-// Show detail modal
+// Apply filters function
+function applyFilters() {
+    const tahunAjaran = document.getElementById('filterTahunAjaran').value;
+    const acceptedFilter = document.getElementById('filterAccepted').value;
+    
+    const url = new URL(window.location);
+    url.searchParams.set('tahun_mulai', tahunAjaran);
+    url.searchParams.set('accepted_filter', acceptedFilter);
+    
+    window.location.href = url.toString();
+}
+
+// Show detail modal with payment validation
 function showDetailModal(studentId) {
     // Show loading
-    $('#detailModal .modal-body').html('<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Memuat data...</div>');
+    $('#detailModal .modal-body').html('<div class="text-center py-5"><i class="fas fa-spinner fa-spin fa-2x"></i><p class="mt-3">Memuat data siswa...</p></div>');
     $('#detailModal').modal('show');
     
     // Fetch student data
@@ -255,66 +276,100 @@ function showDetailModal(studentId) {
             if (data.status === 'success') {
                 const siswa = data.data;
                 
+                let paymentSection = '';
+                if (siswa.bukti_pembayaran_id) {
+                    const statusBadge = siswa.pembayaran_accepted_at ? 
+                        '<span class="badge badge-success">Sudah Divalidasi</span>' : 
+                        '<span class="badge badge-warning">Menunggu Validasi</span>';
+                    
+                    const validationDate = siswa.pembayaran_accepted_at ? 
+                        `<tr><td><strong>Divalidasi Pada</strong></td><td>${new Date(siswa.pembayaran_accepted_at).toLocaleString('id-ID')}</td></tr>` : '';
+                    
+                    const imageSection = siswa.bukti_url ? 
+                        `<div class="mt-3">
+                            <h6>Bukti Pembayaran</h6>
+                            <img src="<?= base_url() ?>${siswa.bukti_url}" 
+                                 alt="Bukti Pembayaran" 
+                                 class="img-thumbnail" 
+                                 style="max-width: 300px; cursor: pointer;" 
+                                 onclick="window.open('<?= base_url() ?>${siswa.bukti_url}', '_blank')">
+                        </div>` : '';
+                        
+                    const validationButton = !siswa.pembayaran_accepted_at ? 
+                        `<button type="button" class="btn btn-success mt-3" onclick="validasiPembayaran('${siswa.id}')">
+                            <i class="fas fa-check"></i> Validasi Pembayaran
+                        </button>` : '';
+                    
+                    paymentSection = `
+                        <div class="col-md-12">
+                            <h6>Data Pembayaran</h6>
+                            <table class="table table-borderless table-sm">
+                                <tr><td width="20%"><strong>Status Pembayaran</strong></td><td>${statusBadge}</td></tr>
+                                <tr><td><strong>Nama Pembayar</strong></td><td>${siswa.nama_pembayar || '-'}</td></tr>
+                                <tr><td><strong>Metode</strong></td><td>${siswa.pembayaran_metode || '-'}</td></tr>
+                                <tr><td><strong>Tanggal Upload</strong></td><td>${siswa.pembayaran_created_at ? new Date(siswa.pembayaran_created_at).toLocaleString('id-ID') : '-'}</td></tr>
+                                ${validationDate}
+                            </table>
+                            ${imageSection}
+                            ${validationButton}
+                        </div>`;
+                } else {
+                    paymentSection = `
+                        <div class="col-md-12">
+                            <h6>Data Pembayaran</h6>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> Siswa belum mengupload bukti pembayaran
+                            </div>
+                        </div>`;
+                }
+                
+                const waButton = siswa.nomor_telepon ? 
+                    `<a href="https://wa.me/62${siswa.nomor_telepon.replace(/^0/, '')}" 
+                       target="_blank" 
+                       class="btn btn-success">
+                        <i class="fab fa-whatsapp"></i> WhatsApp
+                    </a>` : '';
+                
                 // Restore modal content
                 $('#detailModal .modal-body').html(`
                     <div class="row">
                         <div class="col-md-6">
                             <h6>Data Pribadi</h6>
                             <table class="table table-borderless table-sm">
-                                <tr><td width="40%"><strong>Nama Lengkap</strong></td><td id="detail-nama">-</td></tr>
-                                <tr><td><strong>No. Registrasi</strong></td><td id="detail-no-reg">-</td></tr>
-                                <tr><td><strong>NISN</strong></td><td id="detail-nisn">-</td></tr>
-                                <tr><td><strong>Tempat Lahir</strong></td><td id="detail-tempat-lahir">-</td></tr>
-                                <tr><td><strong>Tanggal Lahir</strong></td><td id="detail-tanggal-lahir">-</td></tr>
-                                <tr><td><strong>Jenis Kelamin</strong></td><td id="detail-jenis-kelamin">-</td></tr>
-                                <tr><td><strong>Agama</strong></td><td id="detail-agama">-</td></tr>
-                                <tr><td><strong>Alamat</strong></td><td id="detail-alamat">-</td></tr>
-                                <tr><td><strong>Domisili</strong></td><td id="detail-domisili">-</td></tr>
+                                <tr><td width="40%"><strong>Nama Lengkap</strong></td><td>${siswa.nama_lengkap || '-'}</td></tr>
+                                <tr><td><strong>No. Registrasi</strong></td><td>${siswa.no_registrasi || '-'}</td></tr>
+                                <tr><td><strong>NISN</strong></td><td>${siswa.nisn || '-'}</td></tr>
+                                <tr><td><strong>Tempat Lahir</strong></td><td>${siswa.tempat_lahir || '-'}</td></tr>
+                                <tr><td><strong>Tanggal Lahir</strong></td><td>${siswa.tanggal_lahir ? new Date(siswa.tanggal_lahir).toLocaleDateString('id-ID') : '-'}</td></tr>
+                                <tr><td><strong>Jenis Kelamin</strong></td><td>${siswa.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}</td></tr>
+                                <tr><td><strong>Agama</strong></td><td>${siswa.agama || '-'}</td></tr>
+                                <tr><td><strong>Alamat</strong></td><td>${siswa.alamat || '-'}</td></tr>
+                                <tr><td><strong>Domisili</strong></td><td>${siswa.domisili || '-'}</td></tr>
                             </table>
                         </div>
                         <div class="col-md-6">
                             <h6>Data Orang Tua</h6>
                             <table class="table table-borderless table-sm">
-                                <tr><td width="40%"><strong>Nama Ayah</strong></td><td id="detail-nama-ayah">-</td></tr>
-                                <tr><td><strong>Nama Ibu</strong></td><td id="detail-nama-ibu">-</td></tr>
-                                <tr><td><strong>No. Telepon</strong></td><td id="detail-nomor-telepon">-</td></tr>
+                                <tr><td width="40%"><strong>Nama Ayah</strong></td><td>${siswa.nama_ayah || '-'}</td></tr>
+                                <tr><td><strong>Nama Ibu</strong></td><td>${siswa.nama_ibu || '-'}</td></tr>
+                                <tr><td><strong>No. Telepon</strong></td><td>${siswa.nomor_telepon || '-'} ${waButton}</td></tr>
                             </table>
                             
                             <h6 class="mt-3">Data Pendidikan</h6>
                             <table class="table table-borderless table-sm">
-                                <tr><td width="40%"><strong>Asal TK/RA</strong></td><td id="detail-asal-tk">-</td></tr>
+                                <tr><td width="40%"><strong>Asal TK/RA</strong></td><td>${siswa.asal_tk_ra || '-'}</td></tr>
                             </table>
                             
                             <h6 class="mt-3">Status</h6>
                             <table class="table table-borderless table-sm">
-                                <tr><td width="40%"><strong>Status</strong></td><td id="detail-status">-</td></tr>
-                                <tr><td><strong>Diterima Pada</strong></td><td id="detail-accepted-at">-</td></tr>
-                                <tr><td><strong>Status Pembayaran</strong></td><td id="detail-status-pembayaran">-</td></tr>
+                                <tr><td width="40%"><strong>Status</strong></td><td>${siswa.status || '-'}</td></tr>
+                                <tr><td><strong>Tahun Ajaran</strong></td><td>${siswa.tahun_ajaran_nama || '-'}</td></tr>
+                                <tr><td><strong>Diterima Pada</strong></td><td>${siswa.accepted_at ? new Date(siswa.accepted_at).toLocaleString('id-ID') : '-'}</td></tr>
                             </table>
                         </div>
+                        ${paymentSection}
                     </div>
                 `);
-                
-                // Fill data
-                document.getElementById('detail-nama').textContent = siswa.nama_lengkap || '-';
-                document.getElementById('detail-no-reg').textContent = siswa.no_registrasi || '-';
-                document.getElementById('detail-nisn').textContent = siswa.nisn || '-';
-                document.getElementById('detail-tempat-lahir').textContent = siswa.tempat_lahir || '-';
-                document.getElementById('detail-tanggal-lahir').textContent = siswa.tanggal_lahir ? 
-                    new Date(siswa.tanggal_lahir).toLocaleDateString('id-ID') : '-';
-                document.getElementById('detail-jenis-kelamin').textContent = siswa.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan';
-                document.getElementById('detail-agama').textContent = siswa.agama || '-';
-                document.getElementById('detail-alamat').textContent = siswa.alamat || '-';
-                document.getElementById('detail-domisili').textContent = siswa.domisili || '-';
-                document.getElementById('detail-nama-ayah').textContent = siswa.nama_ayah || '-';
-                document.getElementById('detail-nama-ibu').textContent = siswa.nama_ibu || '-';
-                document.getElementById('detail-nomor-telepon').textContent = siswa.nomor_telepon || '-';
-                document.getElementById('detail-asal-tk').textContent = siswa.asal_tk_ra || '-';
-                document.getElementById('detail-status').textContent = siswa.status || '-';
-                document.getElementById('detail-accepted-at').textContent = siswa.accepted_at ? 
-                    new Date(siswa.accepted_at).toLocaleDateString('id-ID') : '-';
-                document.getElementById('detail-status-pembayaran').textContent = siswa.bukti_pembayaran_id ? 
-                    'Sudah Dikonfirmasi' : 'Belum Dikonfirmasi';
             } else {
                 $('#detailModal .modal-body').html('<div class="alert alert-danger">Gagal memuat data siswa</div>');
             }
@@ -323,6 +378,38 @@ function showDetailModal(studentId) {
             console.error('Error:', error);
             $('#detailModal .modal-body').html('<div class="alert alert-danger">Terjadi kesalahan saat memuat data</div>');
         });
+}
+
+// Validate payment function
+function validasiPembayaran(studentId) {
+    if (!confirm('Apakah Anda yakin ingin memvalidasi pembayaran ini?')) {
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('student_id', studentId);
+    
+    fetch('<?= base_url('admin/daftar-ulang/validasi-pembayaran') ?>', {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Pembayaran berhasil divalidasi!');
+            $('#detailModal').modal('hide');
+            location.reload();
+        } else {
+            alert('Gagal memvalidasi pembayaran: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan saat memvalidasi pembayaran');
+    });
 }
 
 // Show pembayaran modal

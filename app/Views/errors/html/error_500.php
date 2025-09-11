@@ -71,9 +71,6 @@
             <div class="animate-slide-up">
                 <!-- Error Icon -->
                 <div class="mb-8">
-                    <div class="mx-auto w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-6 animate-pulse-slow">
-                        <i class="fas fa-exclamation-triangle text-4xl text-orange-600"></i>
-                    </div>
                     <h1 class="text-6xl font-bold text-orange-600">500</h1>
                     <div class="w-24 h-1 bg-orange-500 mx-auto mt-4 rounded-full"></div>
                 </div>
@@ -110,30 +107,6 @@
                     </a>
                 </div>
                 
-                <!-- Additional Info -->
-                <div class="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <div class="flex items-center justify-center mb-2">
-                        <i class="fas fa-tools text-yellow-600 mr-2"></i>
-                        <p class="text-sm font-medium text-yellow-800">Sedang Diperbaiki</p>
-                    </div>
-                    <p class="text-sm text-yellow-700">
-                        Kami sedang memperbaiki masalah ini. Jika masalah berlanjut, 
-                        silakan hubungi tim dukungan teknis kami.
-                    </p>
-                </div>
-                
-                <!-- Status Updates -->
-                <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                    <div class="flex items-center justify-center mb-2">
-                        <i class="fas fa-clock text-blue-600 mr-2"></i>
-                        <p class="text-sm font-medium text-blue-800">Estimasi Pemulihan</p>
-                    </div>
-                    <p class="text-sm text-blue-700">
-                        Biasanya masalah seperti ini dapat diselesaikan dalam 5-15 menit. 
-                        Terima kasih atas kesabaran Anda.
-                    </p>
-                </div>
-                
                 <!-- Contact Info -->
                 <div class="mt-12 pt-8 border-t border-gray-200">
                     <p class="text-sm text-gray-500 mb-4">Laporkan masalah atau butuh bantuan:</p>
@@ -156,14 +129,12 @@
         </div>
     </div>
 
-    <!-- Auto Refresh Script -->
+    <!-- Auto Redirect Script -->
     <script>
-        // Auto refresh setelah 30 detik
+        // Auto redirect ke beranda setelah 3 detik
         setTimeout(function() {
-            if (confirm('Halaman akan dimuat ulang otomatis. Apakah Anda ingin melanjutkan?')) {
-                window.location.reload();
-            }
-        }, 30000);
+            window.location.href = '<?= base_url() ?>';
+        }, 3000);
     </script>
 </body>
 </html>

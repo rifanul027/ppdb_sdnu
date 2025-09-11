@@ -27,7 +27,7 @@
         <!-- End Title -->
 
         <div class="mt-6 max-w-3xl">
-          <p class="text-lg text-gray-700 leading-relaxed">Penerimaan Peserta Didik Baru SD Nahdlatul Ulama Pemanahan Tahun Ajaran 2025/2026</p>
+          <p class="text-lg text-gray-700 leading-relaxed">Penerimaan Peserta Didik Baru SD Nahdlatul Ulama Pemanahan Tahun Ajaran <?= date('Y') ?>/<?= date('Y') + 1 ?></p>
         </div>
 
         <!-- Buttons -->

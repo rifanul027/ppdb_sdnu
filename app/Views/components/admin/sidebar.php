@@ -1,8 +1,8 @@
 <aside class="sidebar">
-    <div class="sidebar-header">
-        <img src="/logo_sdnuputih.png" alt="Logo" style="max-width: 60px; margin-bottom: 10px;">
-        <h2>PPDB SD NU</h2>
-        <p>Admin Dashboard</p>
+    <div class="sidebar-header flex flex-col items-center py-6">
+        <img src="/logo_sdnuputih.png" alt="Logo" class="mb-2 w-16 h-16 object-contain mx-auto">
+        <h2 class="text-lg font-bold text-white text-center">PPDB SD NU</h2>
+        <p class="text-sm text-gray-300 text-center">Admin Dashboard</p>
     </div>
     
     <nav class="sidebar-nav">
@@ -46,7 +46,7 @@
         </div>
         
         <div class="nav-item">
-            <a href="/admin/settings" class="nav-link">
+            <a href="/admin/pengaturan" class="nav-link">
                 <i class="fas fa-cog"></i>
                 <span>Settings</span>
             </a>
@@ -83,6 +83,12 @@
     background-color: rgba(255,255,255,0.1);
     border-radius: 5px;
     margin-bottom: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.nav-parent:hover {
+    background-color: rgba(255,255,255,0.15);
 }
 
 .nav-parent i {
@@ -102,6 +108,7 @@
     color: rgba(255,255,255,0.8);
     border-left: 2px solid rgba(255,255,255,0.2);
     margin-left: 10px;
+    transition: all 0.2s ease;
 }
 
 .nav-child .nav-link:hover {
@@ -114,5 +121,81 @@
 .nav-child .nav-link i {
     font-size: 14px;
     width: 16px;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .sidebar-header {
+        padding: 1.5rem 1rem;
+    }
+    
+    .sidebar-header h2 {
+        font-size: 1.125rem;
+    }
+    
+    .nav-link {
+        padding: 0.875rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .nav-parent {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+    
+    .nav-child .nav-link {
+        padding: 8px 15px;
+        font-size: 13px;
+        margin-left: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar-header {
+        padding: 1rem 0.75rem;
+    }
+    
+    .sidebar-header img {
+        max-width: 50px !important;
+    }
+    
+    .nav-link {
+        padding: 0.75rem 0.75rem;
+    }
+    
+    .nav-parent {
+        padding: 10px 12px;
+    }
+    
+    .nav-child .nav-link {
+        padding: 6px 12px;
+        margin-left: 6px;
+    }
+}
+
+/* Touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .nav-link:hover {
+        background-color: transparent;
+        transform: none;
+    }
+    
+    .nav-child .nav-link:hover {
+        background-color: transparent;
+        transform: none;
+    }
+    
+    .nav-parent:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+    
+    /* Active states for touch */
+    .nav-link:active {
+        background-color: rgba(255,255,255,0.1);
+    }
+    
+    .nav-child .nav-link:active {
+        background-color: rgba(255,255,255,0.1);
+    }
 }
 </style>

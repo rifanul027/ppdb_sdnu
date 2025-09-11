@@ -51,7 +51,7 @@ class Ppdb extends BaseController
         // Check if user already has student_id
         if (session()->get('student_id')) {
             log_message('debug', 'User already has student_id - redirecting to profile');
-            return redirect()->to('/student-profile');
+            return redirect()->to('/profile-siswa');
         }
         
         log_message('debug', 'GET request - showing form');
@@ -84,7 +84,7 @@ class Ppdb extends BaseController
         // Check if user already has student_id
         if (session()->get('student_id')) {
             log_message('debug', 'User already has student_id - redirecting to profile');
-            return redirect()->to('/student-profile');
+            return redirect()->to('/profile-siswa');
         }
         
         try {
@@ -168,7 +168,7 @@ class Ppdb extends BaseController
                 'Selamat! Pendaftaran Anda berhasil dengan nomor registrasi: ' . $student['no_registrasi']
             );
             
-            return redirect()->to('/student-profile');
+            return redirect()->to('/profile-siswa');
             
         } catch (\Exception $e) {
             log_message('error', 'Registration error: ' . $e->getMessage());
@@ -236,7 +236,7 @@ class Ppdb extends BaseController
         
         if (!$studentData) {
             setErrorToast('Data Tidak Ditemukan', 'Data siswa tidak ditemukan.');
-            return redirect()->to('/student-profile');
+            return redirect()->to('/profile-siswa');
         }
         
         $data = [
@@ -272,7 +272,7 @@ class Ppdb extends BaseController
             $this->studentModel->updateStudentProfile($studentId, $formData);
             
             setSuccessToast('Profil Diperbarui', 'Data profil Anda berhasil diperbarui.');
-            return redirect()->to('/student-profile');
+            return redirect()->to('/profile-siswa');
             
         } catch (\Exception $e) {
             log_message('error', 'Profile update error: ' . $e->getMessage());
@@ -294,7 +294,7 @@ class Ppdb extends BaseController
         }
         
         if ($this->request->getMethod() !== 'POST') {
-            return redirect()->to('/student-profile');
+            return redirect()->to('/profile-siswa');
         }
         
         try {
@@ -319,7 +319,7 @@ class Ppdb extends BaseController
             ]);
             
             setSuccessToast('Pembayaran Berhasil', 'Data pembayaran berhasil diupload. Silakan tunggu konfirmasi dari admin.');
-            return redirect()->to('/student-profile');
+            return redirect()->to('/profile-siswa');
             
         } catch (\Exception $e) {
             log_message('error', 'Payment upload error: ' . $e->getMessage());
