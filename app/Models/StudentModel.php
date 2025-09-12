@@ -256,6 +256,10 @@ class StudentModel extends Model
         if (!empty($filters['tahun_ajaran'])) {
             $builder->where('tahun_ajaran.nama', $filters['tahun_ajaran']);
         }
+        
+        if (!empty($filters['tahun_ajaran_id'])) {
+            $builder->where('students.tahun_ajaran_id', $filters['tahun_ajaran_id']);
+        }
 
         if (!empty($filters['tanggal_dari'])) {
             $builder->where('DATE(students.created_at) >=', $filters['tanggal_dari']);

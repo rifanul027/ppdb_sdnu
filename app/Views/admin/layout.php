@@ -6,6 +6,10 @@
     <title><?= $title ?? 'Admin Dashboard' ?> - PPDB SD NU</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom Styles Section -->
+    <?= $this->renderSection('styles') ?>
+    
     <style>
         * {
             margin: 0;
@@ -494,6 +498,9 @@
     <!-- Include jQuery and Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom Scripts Section -->
+    <?= $this->renderSection('scripts') ?>
     
     <script>
         // Mobile menu toggle

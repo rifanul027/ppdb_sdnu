@@ -357,9 +357,40 @@ class Ppdb extends BaseController
             $pengumuman['is_mockup'] = strpos($pengumuman['image_url'], 'via.placeholder.com') !== false;
         }
         
+        // Get all tahun ajaran for filter
+        $tahunAjaranList = $this->tahunAjaranModel->orderBy('tahun_mulai', 'DESC')->findAll();
+        
+        // Get default tahun ajaran (current year)
+        $currentYear = date('Y');
+        $defaultTahunAjaran = $this->tahunAjaranModel->where('tahun_mulai', $currentYear)->first();
+        
+        // Get selected tahun ajaran from query parameter or use default
+        $selectedTahunAjaranId = $this->request->getGet('tahun_ajaran') ?? ($defaultTahunAjaran['id'] ?? null);
+        
+        // Build filter for students
+        $filters = ['status' => 'siswa'];
+        if ($selectedTahunAjaranId) {
+            $filters['tahun_ajaran_id'] = $selectedTahunAjaranId;
+        }
+        
+        // Get students with status 'siswa' filtered by tahun ajaran and ordered by payment ID
+        $siswaData = $this->studentModel->getStudentsWithRelations($filters)
+            ->orderBy('students.bukti_pembayaran_id', 'ASC')
+            ->get()
+            ->getResultArray();
+        
+        // Add row numbers for display
+        foreach ($siswaData as $index => &$siswa) {
+            $siswa['row_number'] = $index + 1;
+        }
+        
         $data = [
             'title' => 'Pengumuman PPDB - SDNU Pemanahan',
             'pengumuman' => $pengumumanList,
+            'siswa_list' => $siswaData,
+            'tahun_ajaran_list' => $tahunAjaranList,
+            'selected_tahun_ajaran' => $selectedTahunAjaranId,
+            'default_tahun_ajaran' => $defaultTahunAjaran,
         ];
         
         return view('ppdb/pengumuman', $data);

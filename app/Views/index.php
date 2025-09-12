@@ -164,7 +164,7 @@
         </p>
         <h4 class="font-medium text-lg text-nu-dark">Pendaftar Awal</h4>
         <span class="mt-5 font-bold text-5xl text-nu-dark">
-            Bebas SPP
+            Beasiswa SPP
         </span>
         <ul class="mt-7 space-y-2.5 text-sm">
             <li class="flex space-x-2">

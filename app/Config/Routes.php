@@ -7,7 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
-// PPDB Routes
+// PPDB General Routes
 $routes->get('/ppdb', 'Ppdb::index');
 $routes->get('/ppdb/pengumuman', 'Ppdb::pengumuman');
 $routes->get('/daftar', 'Ppdb::daftar');
@@ -65,14 +65,26 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->get('rekap-siswa/export-excel', 'AdminRekapSiswa::exportExcel');
     $routes->get('rekap-siswa/export-pdf', 'AdminRekapSiswa::exportPdf');
     // pengaturan and profile
-    $routes->get('pengaturan', 'SettingsController::index');
+    $routes->get('pengaturan', 'AdminSettings::index');
     
     // Pengaturan routes for tahun ajaran
-    $routes->post('pengaturan/create', 'SettingsController::create');
-    $routes->get('pengaturan/detail/(:segment)', 'SettingsController::detail/$1');
-    $routes->post('pengaturan/update/(:segment)', 'SettingsController::update/$1');
-    $routes->post('pengaturan/toggle-active/(:segment)', 'SettingsController::toggleActive/$1');
-    $routes->post('pengaturan/delete/(:segment)', 'SettingsController::delete/$1');
+    $routes->get('settings/getTahunAjaran', 'AdminSettings::getTahunAjaran');
+    $routes->post('settings/storeTahunAjaran', 'AdminSettings::storeTahunAjaran');
+    $routes->post('settings/updateTahunAjaran/(:segment)', 'AdminSettings::updateTahunAjaran/$1');
+    $routes->delete('settings/deleteTahunAjaran/(:segment)', 'AdminSettings::deleteTahunAjaran/$1');
+    $routes->post('settings/activateTahunAjaran/(:segment)', 'AdminSettings::activateTahunAjaran/$1');
+    
+    // Pengaturan routes for kategori
+    $routes->get('settings/getKategori', 'AdminSettings::getKategori');
+    $routes->post('settings/storeKategori', 'AdminSettings::storeKategori');
+    $routes->post('settings/updateKategori/(:segment)', 'AdminSettings::updateKategori/$1');
+    $routes->delete('settings/deleteKategori/(:segment)', 'AdminSettings::deleteKategori/$1');
+    
+    // Pengaturan routes for gelombang pendaftaran
+    $routes->get('settings/getGelombang', 'AdminSettings::getGelombang');
+    $routes->post('settings/storeGelombang', 'AdminSettings::storeGelombang');
+    $routes->post('settings/updateGelombang/(:segment)', 'AdminSettings::updateGelombang/$1');
+    $routes->delete('settings/deleteGelombang/(:segment)', 'AdminSettings::deleteGelombang/$1');
     
     $routes->get('profile', 'Auth::profile');
     

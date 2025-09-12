@@ -2,29 +2,29 @@
 
 <?= $this->section('content') ?>
 
-<div style="margin-bottom: 2rem;">
-    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;">Profile Admin</h2>
-    <p style="color: #64748b;">Kelola informasi akun admin Anda</p>
+<div class="mb-8">
+    <h2 class="text-2xl font-semibold mb-2 text-gray-800">Profile Admin</h2>
+    <p class="text-gray-600">Kelola informasi akun admin Anda</p>
 </div>
 
 <!-- Alert Messages -->
 <?php if (session()->getFlashdata('success')): ?>
-    <div style="background-color: #d1fae5; border: 1px solid #a7f3d0; color: #065f46; padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-        <i class="fas fa-check-circle" style="margin-right: 0.5rem;"></i>
+    <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-4">
+        <i class="fas fa-check-circle mr-2"></i>
         <?= session()->getFlashdata('success') ?>
     </div>
 <?php endif; ?>
 
 <?php if (session()->getFlashdata('error')): ?>
-    <div style="background-color: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-        <i class="fas fa-exclamation-circle" style="margin-right: 0.5rem;"></i>
+    <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-4">
+        <i class="fas fa-exclamation-circle mr-2"></i>
         <?= session()->getFlashdata('error') ?>
     </div>
 <?php endif; ?>
 
 <?php if (session()->getFlashdata('errors')): ?>
-    <div style="background-color: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 0.75rem 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-        <ul style="margin: 0; padding-left: 1rem;">
+    <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-4">
+        <ul class="ml-4 list-disc">
             <?php foreach (session()->getFlashdata('errors') as $error): ?>
                 <li><?= $error ?></li>
             <?php endforeach; ?>
@@ -32,161 +32,166 @@
     </div>
 <?php endif; ?>
 
-<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
     <!-- Profile Photo & Info -->
-    <div class="content-card">
-        <div class="card-body" style="text-align: center;">
-            <div style="margin-bottom: 2rem;">
-                <div style="width: 120px; height: 120px; margin: 0 auto; position: relative;">
-                    <?php if (!empty($user['avatar'])): ?>
-                        <img src="/uploads/avatars/<?= $user['avatar'] ?>" alt="Profile Photo" 
-                             style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 4px solid #e5e7eb;">
-                    <?php else: ?>
-                        <div style="width: 100%; height: 100%; border-radius: 50%; background-color: #1B5E20; display: flex; align-items: center; justify-content: center; border: 4px solid #e5e7eb;">
-                            <i class="fas fa-user" style="font-size: 3rem; color: white;"></i>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <label for="fotoInput" style="position: absolute; bottom: 0; right: 0; background-color: #1B5E20; color: white; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        <i class="fas fa-camera" style="font-size: 0.875rem;"></i>
-                    </label>
-                    <input type="file" id="fotoInput" accept="image/*" style="display: none;">
-                </div>
-            </div>
-            
-            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem;">
-                <?= $user['username'] ?? 'Admin' ?>
-            </h3>
-            <p style="color: #64748b; margin-bottom: 1rem;">
-                <?= $user['email'] ?? '' ?>
-            </p>
-            <p style="color: #64748b; font-size: 0.875rem;">
-                Role: <span style="background-color: #1B5E20; color: white; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-size: 0.75rem;">
-                    <?= ucfirst($user['role'] ?? 'admin') ?>
-                </span>
-            </p>
-            
-            <div style="margin-top: 2rem;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: center;">
-                    <div style="padding: 1rem; background-color: #f8fafc; border-radius: 0.5rem;">
-                        <div style="font-size: 1.5rem; font-weight: 600; color: #1B5E20;">
-                            <?= date('d') ?>
-                        </div>
-                        <div style="font-size: 0.75rem; color: #64748b;">Login Hari Ini</div>
-                    </div>
-                    <div style="padding: 1rem; background-color: #f8fafc; border-radius: 0.5rem;">
-                        <div style="font-size: 1.5rem; font-weight: 600; color: #1B5E20;">
-                            <?= date('M') ?>
-                        </div>
-                        <div style="font-size: 0.75rem; color: #64748b;">Bulan Aktif</div>
+    <div class="lg:col-span-1">
+        <div class="content-card">
+            <div class="card-body text-center">
+                <div class="mb-8">
+                    <div class="w-32 h-32 mx-auto relative">
+                        <?php if (!empty($user['avatar'])): ?>
+                            <img src="/uploads/avatars/<?= $user['avatar'] ?>" alt="Profile Photo" 
+                                 class="w-full h-full rounded-full object-cover border-4 border-gray-200">
+                        <?php else: ?>
+                            <div class="w-full h-full rounded-full bg-green-800 flex items-center justify-center border-4 border-gray-200">
+                                <i class="fas fa-user text-5xl text-white"></i>
+                            </div>
+                        <?php endif; ?>
+                        
+                        <label for="fotoInput" class="absolute bottom-0 right-0 bg-green-800 text-white w-9 h-9 rounded-full flex items-center justify-center cursor-pointer shadow-md hover:bg-green-700 transition-colors">
+                            <i class="fas fa-camera text-sm"></i>
+                        </label>
+                        <input type="file" id="fotoInput" accept="image/*" class="hidden">
                     </div>
                 </div>
-            </div>
-            
-            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e2e8f0;">
-                <p style="font-size: 0.875rem; color: #64748b; margin-bottom: 0.5rem;">Member sejak</p>
-                <p style="font-weight: 600; color: #374151;">
-                    <?= isset($user['created_at']) ? date('d F Y', strtotime($user['created_at'])) : 'Tidak diketahui' ?>
+                
+                <h3 class="text-xl font-semibold mb-2 text-gray-800">
+                    <?= $user['username'] ?? 'Admin' ?>
+                </h3>
+                <p class="text-gray-600 mb-4">
+                    <?= $user['email'] ?? '' ?>
                 </p>
+                <p class="text-gray-600 text-sm">
+                    Role: <span class="bg-green-800 text-white px-2 py-1 rounded text-xs font-medium">
+                        <?= ucfirst($user['role'] ?? 'admin') ?>
+                    </span>
+                </p>
+                
+                <div class="mt-8">
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl font-semibold text-green-800">
+                                <?= date('d') ?>
+                            </div>
+                            <div class="text-xs text-gray-600">Login Hari Ini</div>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <div class="text-2xl font-semibold text-green-800">
+                                <?= date('M') ?>
+                            </div>
+                            <div class="text-xs text-gray-600">Bulan Aktif</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                    <p class="text-sm text-gray-600 mb-2">Member sejak</p>
+                    <p class="font-semibold text-gray-700">
+                        <?= isset($user['created_at']) ? date('d F Y', strtotime($user['created_at'])) : 'Tidak diketahui' ?>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
     
     <!-- Profile Form -->
-    <div class="content-card">
-        <div class="card-header">
-            <h3 class="card-title">Informasi Personal</h3>
-        </div>
-        <div class="card-body">
-            <form method="POST" action="/profile/update" id="profileForm">
-                <?= csrf_field() ?>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
-                    <div>
-                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Username</label>
-                        <input type="text" name="username" value="<?= $user['username'] ?? '' ?>" 
-                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;" 
-                               required>
+    <div class="lg:col-span-2 space-y-6">
+        <div class="content-card">
+            <div class="card-header">
+                <h3 class="card-title">Informasi Personal</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="/profile/update" id="profileForm">
+                    <?= csrf_field() ?>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block font-medium mb-2 text-gray-700">Username</label>
+                            <input type="text" name="username" value="<?= $user['username'] ?? '' ?>" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" 
+                                   required>
+                        </div>
+                        <div>
+                            <label class="block font-medium mb-2 text-gray-700">Email</label>
+                            <input type="email" name="email" value="<?= $user['email'] ?? '' ?>" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" 
+                                   required>
+                        </div>
                     </div>
-                    <div>
-                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Email</label>
-                        <input type="email" name="email" value="<?= $user['email'] ?? '' ?>" 
-                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;" 
-                               required>
+                    
+                    <div class="mb-6">
+                        <label class="block font-medium mb-2 text-gray-700">Role</label>
+                        <input type="text" value="<?= ucfirst($user['role'] ?? 'admin') ?>" 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm bg-gray-50" 
+                               readonly>
                     </div>
-                </div>
-                
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Role</label>
-                    <input type="text" value="<?= ucfirst($user['role'] ?? 'admin') ?>" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem; background-color: #f9fafb;" 
-                           readonly>
-                </div>
-                
-                <div style="display: flex; justify-content: end; gap: 0.75rem;">
-                    <button type="button" onclick="document.getElementById('profileForm').reset()" 
-                            style="padding: 0.75rem 1.5rem; border: 1px solid #d1d5db; background-color: white; color: #374151; border-radius: 0.5rem; font-weight: 500; cursor: pointer;">
-                        Reset
-                    </button>
-                    <button type="submit" 
-                            style="padding: 0.75rem 1.5rem; background-color: #1B5E20; color: white; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer;">
-                        Simpan Perubahan
-                    </button>
-                </div>
-            </form>
+                    
+                    <div class="flex flex-col sm:flex-row justify-end gap-3">
+                        <button type="button" onclick="document.getElementById('profileForm').reset()" 
+                                class="px-6 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+                            Reset
+                        </button>
+                        <button type="submit" 
+                                class="px-6 py-2 bg-green-800 text-white rounded-lg font-medium hover:bg-green-700 transition-colors">
+                            Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-</div>
 
-<!-- Change Password -->
-<div class="content-card" style="margin-top: 2rem;">
-    <div class="card-header">
-        <h3 class="card-title">Ganti Password</h3>
-    </div>
-    <div class="card-body">
-        <form method="POST" action="/profile/change-password" id="passwordForm">
-            <?= csrf_field() ?>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem;">
-                <div style="position: relative;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Password Lama</label>
-                    <input type="password" name="current_password" id="currentPassword" 
-                           style="width: 100%; padding: 0.75rem; padding-right: 2.5rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;" 
-                           required>
-                    <button type="button" onclick="togglePassword('currentPassword')" 
-                            style="position: absolute; right: 0.75rem; top: 2.25rem; background: none; border: none; color: #6b7280; cursor: pointer;">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                
-                <div style="position: relative;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Password Baru</label>
-                    <input type="password" name="new_password" id="newPassword" 
-                           style="width: 100%; padding: 0.75rem; padding-right: 2.5rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;" 
-                           required>
-                    <button type="button" onclick="togglePassword('newPassword')" 
-                            style="position: absolute; right: 0.75rem; top: 2.25rem; background: none; border: none; color: #6b7280; cursor: pointer;">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                
-                <div style="position: relative;">
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem; color: #374151;">Konfirmasi Password</label>
-                    <input type="password" name="confirm_password" id="confirmPassword" 
-                           style="width: 100%; padding: 0.75rem; padding-right: 2.5rem; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem;" 
-                           required>
-                    <button type="button" onclick="togglePassword('confirmPassword')" 
-                            style="position: absolute; right: 0.75rem; top: 2.25rem; background: none; border: none; color: #6b7280; cursor: pointer;">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
+        <!-- Change Password -->
+        <div class="content-card">
+            <div class="card-header">
+                <h3 class="card-title">Ganti Password</h3>
             </div>
-            
-            <div style="margin-top: 2rem;">
-                <button type="submit" 
-                        style="padding: 0.75rem 1.5rem; background-color: #dc2626; color: white; border: none; border-radius: 0.5rem; font-weight: 500; cursor: pointer;">
-                    Ganti Password
-                </button>
+            <div class="card-body">
+                <form method="POST" action="/profile/change-password" id="passwordForm">
+                    <?= csrf_field() ?>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="relative">
+                            <label class="block font-medium mb-2 text-gray-700">Password Lama</label>
+                            <input type="password" name="current_password" id="currentPassword" 
+                                   class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" 
+                                   required>
+                            <button type="button" onclick="togglePassword('currentPassword')" 
+                                    class="absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="relative">
+                            <label class="block font-medium mb-2 text-gray-700">Password Baru</label>
+                            <input type="password" name="new_password" id="newPassword" 
+                                   class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" 
+                                   required>
+                            <button type="button" onclick="togglePassword('newPassword')" 
+                                    class="absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="relative">
+                            <label class="block font-medium mb-2 text-gray-700">Konfirmasi Password</label>
+                            <input type="password" name="confirm_password" id="confirmPassword" 
+                                   class="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors" 
+                                   required>
+                            <button type="button" onclick="togglePassword('confirmPassword')" 
+                                    class="absolute right-3 top-9 text-gray-400 hover:text-gray-600 transition-colors">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8">
+                        <button type="submit" 
+                                class="px-6 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors">
+                            <i class="fas fa-key mr-2"></i>
+                            Ganti Password
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 

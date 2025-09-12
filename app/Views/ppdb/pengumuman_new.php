@@ -246,61 +246,14 @@ function generateFallbackImage($title) {
           <p class="mt-4 text-lg text-gray-600">Siswa yang telah diterima di SDNU Pemanahan</p>
         </div>
 
-        <div class="max-w-6xl mx-auto">
-          <!-- Filter Section -->
-          <div class="mb-8 bg-white rounded-xl shadow-md border border-nu-green/20 p-6">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div class="flex items-center gap-2">
-                <i class="fas fa-filter text-nu-green"></i>
-                <span class="text-sm font-medium text-gray-700">Filter Tahun Ajaran:</span>
-              </div>
-              
-              <div class="flex items-center gap-4 w-full sm:w-auto">
-                <select id="tahun-ajaran-filter" onchange="filterByTahunAjaran()" 
-                        class="flex-1 sm:flex-none sm:min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-nu-green text-sm">
-                  <option value="">Semua Tahun Ajaran</option>
-                  <?php if (!empty($tahun_ajaran_list)): ?>
-                    <?php foreach ($tahun_ajaran_list as $tahun): ?>
-                      <option value="<?= esc($tahun['id']) ?>" 
-                              <?= ($selected_tahun_ajaran == $tahun['id']) ? 'selected' : '' ?>>
-                        <?= esc($tahun['nama']) ?>
-                      </option>
-                    <?php endforeach; ?>
-                  <?php endif; ?>
-                </select>
-                
-                <button onclick="resetFilter()" 
-                        class="inline-flex items-center gap-x-2 py-2 px-4 text-sm font-medium rounded-lg border-2 border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all duration-200">
-                  <i class="fas fa-refresh text-xs"></i>
-                  Reset
-                </button>
-              </div>
-            </div>
-          </div>
-
         <?php if (!empty($siswa_list) && is_array($siswa_list)): ?>
+          <div class="max-w-6xl mx-auto">
             <!-- Stats -->
             <div class="mb-8 bg-gradient-to-r from-nu-green/5 to-nu-gold/5 rounded-xl p-6 border border-nu-green/20">
               <div class="text-center">
                 <h3 class="text-lg font-semibold text-nu-dark mb-2">Total Siswa Diterima</h3>
                 <div class="text-4xl font-bold text-nu-green"><?= count($siswa_list) ?></div>
-                <?php if ($selected_tahun_ajaran && !empty($tahun_ajaran_list)): ?>
-                  <?php 
-                    $selectedTahunAjaranData = null;
-                    foreach ($tahun_ajaran_list as $ta) {
-                      if ($ta['id'] == $selected_tahun_ajaran) {
-                        $selectedTahunAjaranData = $ta;
-                        break;
-                      }
-                    }
-                  ?>
-                  <?php if ($selectedTahunAjaranData): ?>
-                    <p class="text-gray-600 mt-2"><?= esc($selectedTahunAjaranData['nama']) ?></p>
-                    <p class="text-sm text-gray-500"><?= esc($selectedTahunAjaranData['tahun_mulai']) ?>/<?= esc($selectedTahunAjaranData['tahun_selesai']) ?></p>
-                  <?php endif; ?>
-                <?php else: ?>
-                  <p class="text-gray-600 mt-2">Semua Tahun Ajaran</p>
-                <?php endif; ?>
+                <p class="text-gray-600 mt-2">Tahun Ajaran <?= date('Y') ?>/<?= date('Y') + 1 ?></p>
               </div>
             </div>
 
@@ -313,9 +266,6 @@ function generateFallbackImage($title) {
                       <th class="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider">No</th>
                       <th class="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider">Nama</th>
                       <th class="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider">Alamat</th>
-                      <?php if (!$selected_tahun_ajaran): ?>
-                        <th class="px-6 py-4 text-left text-xs font-medium text-white uppercase tracking-wider">Tahun Ajaran</th>
-                      <?php endif; ?>
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y divide-gray-200">
@@ -341,11 +291,6 @@ function generateFallbackImage($title) {
                             <div class="text-xs text-gray-500 mt-1">Domisili: <?= esc($siswa['domisili']) ?></div>
                           <?php endif; ?>
                         </td>
-                        <?php if (!$selected_tahun_ajaran): ?>
-                          <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900"><?= esc($siswa['tahun_ajaran_nama'] ?? '-') ?></div>
-                          </td>
-                        <?php endif; ?>
                       </tr>
                     <?php endforeach; ?>
                   </tbody>
@@ -399,30 +344,6 @@ function generateFallbackImage($title) {
     activeTab.classList.remove('tab-inactive', 'text-gray-500', 'hover:bg-white/[0.12]', 'hover:text-white');
     activeTab.classList.add('tab-active', 'bg-white', 'text-nu-green', 'shadow');
     activeTab.setAttribute('aria-selected', 'true');
-  }
-
-  // Filter functionality for tahun ajaran
-  function filterByTahunAjaran() {
-    const select = document.getElementById('tahun-ajaran-filter');
-    const selectedValue = select.value;
-    
-    // Build URL with query parameter
-    const currentUrl = new URL(window.location);
-    if (selectedValue) {
-      currentUrl.searchParams.set('tahun_ajaran', selectedValue);
-    } else {
-      currentUrl.searchParams.delete('tahun_ajaran');
-    }
-    
-    // Reload page with new filter
-    window.location.href = currentUrl.toString();
-  }
-
-  // Reset filter functionality
-  function resetFilter() {
-    const currentUrl = new URL(window.location);
-    currentUrl.searchParams.delete('tahun_ajaran');
-    window.location.href = currentUrl.toString();
   }
 
   // Expand/collapse functionality for announcements

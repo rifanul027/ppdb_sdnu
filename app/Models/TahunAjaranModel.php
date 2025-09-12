@@ -58,7 +58,8 @@ class TahunAjaranModel extends Model
     protected function beforeInsert(array $data)
     {
         if (!isset($data['data']['id'])) {
-            $data['data']['id'] = service('uuid')->generate();
+            helper('uuid');
+            $data['data']['id'] = generateUUID();
         }
         return $data;
     }
@@ -120,5 +121,32 @@ class TahunAjaranModel extends Model
         $this->db->transComplete();
         
         return $this->db->transStatus();
+    }
+
+    /**
+     * Get statistics for tahun ajaran
+     */
+    public function getStatistics()
+    {
+        $active = $this->where('is_active', 1)->countAllResults(false);
+        $total = $this->countAllResults();
+        
+        return [
+            'total' => $total,
+            'active' => $active,
+            'inactive' => $total - $active
+        ];
+    }
+
+    /**
+     * Check if can delete tahun ajaran
+     */
+    public function canDelete($id)
+    {
+        // Check if there are students registered in this tahun ajaran
+        $studentModel = new \App\Models\StudentModel();
+        $studentCount = $studentModel->where('tahun_ajaran_id', $id)->countAllResults();
+        
+        return $studentCount === 0;
     }
 }

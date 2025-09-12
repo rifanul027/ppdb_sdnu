@@ -1,406 +1,299 @@
 <?= $this->extend('admin/layout') ?>
 
+<?= $this->section('styles') ?>
+<link rel="stylesheet" href="<?= base_url('assets/css/admin-settings.css') ?>">
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-    <div>
-        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;"><?= $pageTitle ?></h2>
-        <p style="color: #64748b;">Kelola tahun ajaran untuk sistem PPDB</p>
+<div class="container-fluid">
+    <!-- Header Section -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800"><?= $pageTitle ?></h1>
+            <p class="text-muted">Kelola pengaturan untuk sistem PPDB SD Negeri Unggulan</p>
+        </div>
     </div>
-    <div style="display: flex; gap: 1rem;">
-        <button class="btn btn-primary" onclick="showCreateModal()">
-            <i class="fas fa-plus"></i>
-            Tambah Tahun Ajaran
-        </button>
-        <button class="btn btn-secondary" onclick="refreshData()">
-            <i class="fas fa-sync"></i>
-            Refresh
-        </button>
-    </div>
-</div>
 
-<!-- Statistics Cards -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
-    <div class="content-card">
-        <div class="card-body" style="text-align: center;">
-            <div style="font-size: 2rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem;">
-                <?= count($tahunAjaran) ?>
-            </div>
-            <div style="color: #64748b; font-size: 0.875rem;">Total Tahun Ajaran</div>
-        </div>
-    </div>
-    <div class="content-card">
-        <div class="card-body" style="text-align: center;">
-            <div style="font-size: 2rem; font-weight: 700; color: #10b981; margin-bottom: 0.5rem;">
-                <?= count(array_filter($tahunAjaran, function($ta) { return $ta['is_active'] == 1; })) ?>
-            </div>
-            <div style="color: #64748b; font-size: 0.875rem;">Aktif</div>
-        </div>
-    </div>
-    <div class="content-card">
-        <div class="card-body" style="text-align: center;">
-            <div style="font-size: 2rem; font-weight: 700; color: #6b7280; margin-bottom: 0.5rem;">
-                <?= count(array_filter($tahunAjaran, function($ta) { return $ta['is_active'] == 0; })) ?>
-            </div>
-            <div style="color: #64748b; font-size: 0.875rem;">Tidak Aktif</div>
-        </div>
-    </div>
-</div>
+    <!-- Alert for messages -->
+    <div id="alertContainer"></div>
 
-<!-- Filter Section -->
-<div class="content-card" style="margin-bottom: 2rem;">
-    <div class="card-body">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;">
-            <div>
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Filter Status</label>
-                <select id="filterStatus" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
-                    <option value="">Semua Status</option>
-                    <option value="1">Aktif</option>
-                    <option value="0">Tidak Aktif</option>
-                </select>
-            </div>
-            
-            <div>
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Pencarian</label>
-                <input type="text" id="searchInput" placeholder="Cari nama tahun ajaran..." 
-                       style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
-            </div>
-            
-            <div style="display: flex; gap: 0.5rem;">
-                <button onclick="applyFilters()" class="btn btn-primary">
-                    <i class="fas fa-search"></i>
-                    Filter
-                </button>
-                <button onclick="resetFilters()" class="btn btn-secondary">
-                    <i class="fas fa-times"></i>
-                    Reset
-                </button>
-            </div>
+    <!-- Tabs Navigation -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <ul class="nav nav-tabs card-header-tabs" id="settingsTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="tahun-ajaran-tab" data-toggle="tab" href="#tahun-ajaran" 
+                       role="tab" aria-controls="tahun-ajaran" aria-selected="true">
+                        <i class="fas fa-calendar-alt mr-2"></i>Tahun Ajaran
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="kategori-tab" data-toggle="tab" href="#kategori" 
+                       role="tab" aria-controls="kategori" aria-selected="false">
+                        <i class="fas fa-tags mr-2"></i>Kategori
+                    </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="gelombang-tab" data-toggle="tab" href="#gelombang" 
+                       role="tab" aria-controls="gelombang" aria-selected="false">
+                        <i class="fas fa-wave-square mr-2"></i>Gelombang Pendaftaran
+                    </a>
+                </li>
+            </ul>
         </div>
-    </div>
-</div>
 
-<!-- Data Table -->
-<div class="content-card">
-    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-        <h3 class="card-title">Data Tahun Ajaran</h3>
-        <div style="color: #64748b; font-size: 0.875rem;">
-            Total: <?= count($tahunAjaran) ?> tahun ajaran
-        </div>
-    </div>
-    <div class="card-body" style="padding: 0;">
-        <div class="table-container">
-            <table class="table" id="tahunAjaranTable">
-                <thead>
-                    <tr>
-                        <th style="width: 50px;">#</th>
-                        <th>Nama Tahun Ajaran</th>
-                        <th style="width: 120px;">Periode</th>
-                        <th style="width: 100px;">Status</th>
-                        <th style="width: 150px;">Tanggal Dibuat</th>
-                        <th style="width: 150px;">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($tahunAjaran as $index => $ta): ?>
-                    <tr data-status="<?= $ta['is_active'] ?>" data-nama="<?= strtolower($ta['nama']) ?>">
-                        <td><?= $index + 1 ?></td>
-                        <td>
-                            <div style="font-weight: 500;"><?= esc($ta['nama']) ?></div>
-                            <small style="color: #64748b;"><?= esc($ta['deskripsi']) ?></small>
-                        </td>
-                        <td>
-                            <div style="font-weight: 500;"><?= $ta['tahun_mulai'] ?>/<?= $ta['tahun_selesai'] ?></div>
-                        </td>
-                        <td>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input status-switch" type="checkbox" 
-                                       <?= $ta['is_active'] ? 'checked' : '' ?>
-                                       onchange="toggleStatus('<?= $ta['id'] ?>', this)"
-                                       style="cursor: pointer;">
-                            </div>
-                        </td>
-                        <td>
-                            <small style="color: #64748b;">
-                                <?= date('d M Y H:i', strtotime($ta['created_at'])) ?>
-                            </small>
-                        </td>
-                        <td>
-                            <div style="display: flex; gap: 0.5rem;">
-                                <button onclick="showEditModal('<?= $ta['id'] ?>')" 
-                                        class="btn btn-sm btn-primary" title="Edit">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button onclick="deleteTahunAjaran('<?= $ta['id'] ?>', '<?= esc($ta['nama']) ?>')" 
-                                        class="btn btn-sm btn-danger" title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                    <?php if (empty($tahunAjaran)): ?>
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 2rem; color: #64748b;">
-                            <i class="fas fa-inbox fa-3x" style="margin-bottom: 1rem; opacity: 0.3;"></i>
-                            <div>Belum ada tahun ajaran</div>
-                        </td>
-                    </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+        <div class="card-body">
+            <div class="tab-content" id="settingsTabContent">
+                
+                <!-- Tab Content: Tahun Ajaran -->
+                <div class="tab-pane fade show active" id="tahun-ajaran" role="tabpanel" aria-labelledby="tahun-ajaran-tab">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h5 class="card-title mb-1">Data Tahun Ajaran</h5>
+                            <small class="text-muted" id="tahun-ajaran-count">Loading...</small>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="showCreateModal('tahun-ajaran')">
+                            <i class="fas fa-plus mr-2"></i>Tambah Tahun Ajaran
+                        </button>
+                    </div>
+                    
+                    <!-- Loading indicator -->
+                    <div id="tahun-ajaran-loading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Memuat data tahun ajaran...</p>
+                    </div>
+                    
+                    <!-- Data container -->
+                    <div id="tahun-ajaran-container" class="row" style="display: none;"></div>
+                </div>
+
+                <!-- Tab Content: Kategori -->
+                <div class="tab-pane fade" id="kategori" role="tabpanel" aria-labelledby="kategori-tab">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h5 class="card-title mb-1">Data Kategori Siswa</h5>
+                            <small class="text-muted" id="kategori-count">Loading...</small>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="showCreateModal('kategori')">
+                            <i class="fas fa-plus mr-2"></i>Tambah Kategori
+                        </button>
+                    </div>
+                    
+                    <!-- Loading indicator -->
+                    <div id="kategori-loading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Memuat data kategori...</p>
+                    </div>
+                    
+                    <!-- Data container -->
+                    <div id="kategori-container" class="row" style="display: none;"></div>
+                </div>
+
+                <!-- Tab Content: Gelombang -->
+                <div class="tab-pane fade" id="gelombang" role="tabpanel" aria-labelledby="gelombang-tab">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h5 class="card-title mb-1">Data Gelombang Pendaftaran</h5>
+                            <small class="text-muted" id="gelombang-count">Loading...</small>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="showCreateModal('gelombang')">
+                            <i class="fas fa-plus mr-2"></i>Tambah Gelombang
+                        </button>
+                    </div>
+                    
+                    <!-- Loading indicator -->
+                    <div id="gelombang-loading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Memuat data gelombang...</p>
+                    </div>
+                    
+                    <!-- Data container -->
+                    <div id="gelombang-container" class="row" style="display: none;"></div>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Modal Create/Edit Tahun Ajaran -->
-<div class="modal fade" id="tahunAjaranModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+<!-- Modal for Tahun Ajaran -->
+<div class="modal fade" id="modal-tahun-ajaran" tabindex="-1" role="dialog" aria-labelledby="modalTahunAjaranLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Tambah Tahun Ajaran</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title" id="modalTahunAjaranLabel">Tambah Tahun Ajaran</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <form id="tahunAjaranForm">
+            <form id="form-tahun-ajaran">
                 <div class="modal-body">
-                    <input type="hidden" id="tahun-ajaran-id" name="id">
+                    <input type="hidden" id="tahun-ajaran-id">
                     
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label for="tahun-ajaran-nama">Nama Tahun Ajaran <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="tahun-ajaran-nama" name="nama" 
-                                       placeholder="Contoh: Tahun Ajaran 2024/2025" maxlength="100" required>
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="tahun-ajaran-nama" class="form-label">
+                            Nama Tahun Ajaran <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="tahun-ajaran-nama" 
+                               placeholder="Contoh: Tahun Ajaran 2024/2025" maxlength="100" required>
+                        <small class="form-text text-muted">Nama yang akan ditampilkan untuk tahun ajaran ini</small>
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="tahun-mulai">Tahun Mulai <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="tahun-mulai" name="tahun_mulai" 
+                                <label for="tahun-mulai" class="form-label">
+                                    Tahun Mulai <span class="text-danger">*</span>
+                                </label>
+                                <input type="number" class="form-control" id="tahun-mulai" 
                                        min="2020" max="2050" placeholder="2024" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="tahun-selesai">Tahun Selesai <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control" id="tahun-selesai" name="tahun_selesai" 
+                                <label for="tahun-selesai" class="form-label">
+                                    Tahun Selesai <span class="text-danger">*</span>
+                                </label>
+                                <input type="number" class="form-control" id="tahun-selesai" 
                                        min="2020" max="2050" placeholder="2025" required>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="tahun-ajaran-deskripsi">Deskripsi</label>
-                        <textarea class="form-control" id="tahun-ajaran-deskripsi" name="deskripsi" 
-                                  rows="3" placeholder="Masukkan deskripsi tahun ajaran (opsional)"></textarea>
+                        <label for="tahun-ajaran-deskripsi" class="form-label">Deskripsi</label>
+                        <textarea class="form-control" id="tahun-ajaran-deskripsi" rows="3" 
+                                  placeholder="Deskripsi tambahan untuk tahun ajaran ini (opsional)"></textarea>
                     </div>
-                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary" id="submitBtn">Simpan</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-tahun-ajaran">
+                        <i class="fas fa-save mr-2"></i>Simpan
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<!-- Modal for Kategori -->
+<div class="modal fade" id="modal-kategori" tabindex="-1" role="dialog" aria-labelledby="modalKategoriLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalKategoriLabel">Tambah Kategori</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-kategori">
+                <div class="modal-body">
+                    <input type="hidden" id="kategori-id">
+                    
+                    <div class="form-group">
+                        <label for="kategori-nama" class="form-label">
+                            Nama Kategori <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="kategori-nama" 
+                               placeholder="Contoh: Siswa Reguler" maxlength="100" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="kategori-spp" class="form-label">
+                            SPP (Rp) <span class="text-danger">*</span>
+                        </label>
+                        <input type="number" class="form-control" id="kategori-spp" 
+                               placeholder="500000" min="0" required>
+                        <small class="form-text text-muted">Biaya SPP per bulan untuk kategori ini</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="kategori-catatan" class="form-label">Catatan</label>
+                        <textarea class="form-control" id="kategori-catatan" rows="3" 
+                                  placeholder="Catatan tambahan untuk kategori ini (opsional)"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-kategori">
+                        <i class="fas fa-save mr-2"></i>Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Gelombang -->
+<div class="modal fade" id="modal-gelombang" tabindex="-1" role="dialog" aria-labelledby="modalGelombangLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalGelombangLabel">Tambah Gelombang Pendaftaran</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-gelombang">
+                <div class="modal-body">
+                    <input type="hidden" id="gelombang-id">
+                    
+                    <div class="form-group">
+                        <label for="gelombang-nama" class="form-label">
+                            Nama Gelombang <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" id="gelombang-nama" 
+                               placeholder="Contoh: Gelombang 1" maxlength="100" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="gelombang-tanggal-mulai" class="form-label">
+                                    Tanggal Mulai <span class="text-danger">*</span>
+                                </label>
+                                <input type="date" class="form-control" id="gelombang-tanggal-mulai" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="gelombang-tanggal-selesai" class="form-label">
+                                    Tanggal Selesai <span class="text-danger">*</span>
+                                </label>
+                                <input type="date" class="form-control" id="gelombang-tanggal-selesai" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-gelombang">
+                        <i class="fas fa-save mr-2"></i>Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
 <script>
-// Apply filters
-function applyFilters() {
-    const filterStatus = document.getElementById('filterStatus').value;
-    const searchInput = document.getElementById('searchInput').value.toLowerCase();
-    
-    const rows = document.querySelectorAll('#tahunAjaranTable tbody tr:not(:last-child)');
-    
-    rows.forEach(row => {
-        let show = true;
-        
-        // Skip if no data attributes (empty state row)
-        if (!row.dataset.status && !row.dataset.nama) return;
-        
-        // Filter status
-        if (filterStatus !== '' && row.dataset.status !== filterStatus) {
-            show = false;
-        }
-        
-        // Search filter
-        if (searchInput) {
-            const nama = row.dataset.nama;
-            if (!nama.includes(searchInput)) {
-                show = false;
-            }
-        }
-        
-        row.style.display = show ? '' : 'none';
-    });
+// Simple compatibility check and script loader
+if (typeof $ !== 'undefined') {
+    console.log('jQuery is available');
+} else {
+    console.log('jQuery not available yet, waiting...');
 }
-
-// Reset filters
-function resetFilters() {
-    document.getElementById('filterStatus').value = '';
-    document.getElementById('searchInput').value = '';
-    applyFilters();
-}
-
-// Show create modal
-function showCreateModal() {
-    document.getElementById('modalTitle').textContent = 'Tambah Tahun Ajaran';
-    document.getElementById('tahunAjaranForm').reset();
-    document.getElementById('tahun-ajaran-id').value = '';
-    document.getElementById('submitBtn').textContent = 'Simpan';
-    
-    $('#tahunAjaranModal').modal('show');
-}
-
-// Show edit modal
-function showEditModal(id) {
-    document.getElementById('modalTitle').textContent = 'Edit Tahun Ajaran';
-    document.getElementById('tahun-ajaran-id').value = id;
-    document.getElementById('submitBtn').textContent = 'Update';
-    
-    // Fetch data
-    fetch(`/admin/pengaturan/detail/${id}`, {
-        method: 'GET',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.status === 'success') {
-            const data = result.data;
-            document.getElementById('tahun-ajaran-nama').value = data.nama;
-            document.getElementById('tahun-mulai').value = data.tahun_mulai;
-            document.getElementById('tahun-selesai').value = data.tahun_selesai;
-            document.getElementById('tahun-ajaran-deskripsi').value = data.deskripsi;
-            
-            $('#tahunAjaranModal').modal('show');
-        } else {
-            alert('Gagal mengambil data: ' + result.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Terjadi kesalahan saat mengambil data');
-    });
-}
-
-// Handle form submission
-document.getElementById('tahunAjaranForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const id = document.getElementById('tahun-ajaran-id').value;
-    const url = id ? `/update/${id}` : '/create';
-    const method = 'POST';
-    
-    const formData = {
-        nama: document.getElementById('tahun-ajaran-nama').value,
-        tahun_mulai: document.getElementById('tahun-mulai').value,
-        tahun_selesai: document.getElementById('tahun-selesai').value,
-        deskripsi: document.getElementById('tahun-ajaran-deskripsi').value
-    };
-    
-    fetch(url, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.status === 'success') {
-            alert(result.message);
-            $('#tahunAjaranModal').modal('hide');
-            location.reload();
-        } else {
-            let errorMsg = result.message;
-            if (result.errors) {
-                errorMsg += '\n\nDetail error:\n';
-                Object.values(result.errors).forEach(error => {
-                    errorMsg += '- ' + error + '\n';
-                });
-            }
-            alert(errorMsg);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Terjadi kesalahan saat menyimpan data');
-    });
-});
-
-// Toggle status
-function toggleStatus(id, checkbox) {
-    if (!confirm('Yakin ingin mengubah status tahun ajaran ini?')) {
-        checkbox.checked = !checkbox.checked; // Revert checkbox
-        return;
-    }
-    
-    fetch(`/admin/pengaturan/toggle-active/${id}`, {
-        method: 'POST',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.status === 'success') {
-            // Update data attribute
-            checkbox.closest('tr').dataset.status = result.is_active;
-            alert(result.message);
-        } else {
-            checkbox.checked = !checkbox.checked; // Revert checkbox
-            alert('Gagal mengubah status: ' + result.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        checkbox.checked = !checkbox.checked; // Revert checkbox
-        alert('Terjadi kesalahan saat mengubah status');
-    });
-}
-
-// Delete tahun ajaran
-function deleteTahunAjaran(id, nama) {
-    if (!confirm(`Yakin ingin menghapus tahun ajaran "${nama}"?\n\nData yang dihapus tidak dapat dikembalikan.`)) {
-        return;
-    }
-    
-    fetch(`/admin/pengaturan/delete/${id}`, {
-        method: 'POST',
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.status === 'success') {
-            alert(result.message);
-            location.reload();
-        } else {
-            alert('Gagal menghapus: ' + result.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Terjadi kesalahan saat menghapus data');
-    });
-}
-
-// Refresh data function
-function refreshData() {
-    location.reload();
-}
-
-// Auto-apply filters when typing
-document.getElementById('searchInput').addEventListener('input', applyFilters);
-document.getElementById('filterStatus').addEventListener('change', applyFilters);
 </script>
-
-<?= $this->endsection() ?>
+<script src="<?= base_url('assets/js/admin-settings.js') ?>"></script>
+<?= $this->endSection() ?>
