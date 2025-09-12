@@ -29,7 +29,7 @@
                     <!-- CTA Button -->
                     <?php if (session()->get('logged_in')): ?>
                         <?php if (session()->get('student_id')): ?>
-                            <a href="/profile-siswa" class="bg-gradient-to-r from-nu-green to-nu-dark text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 font-medium">
+                            <a href="/student-profile" class="bg-gradient-to-r from-nu-green to-nu-dark text-white px-6 py-2 rounded-full hover:shadow-lg transition-all duration-300 font-medium">
                                 <i class="fas fa-user mr-2"></i>Profile Siswa
                             </a>
                         <?php else: ?>
@@ -105,7 +105,7 @@
                 </a>
                     <?php if (session()->get('logged_in')): ?>
                         <?php if (session()->get('student_id')): ?>
-                            <a href="/profile-siswa" class="bg-gradient-to-r from-nu-green to-nu-dark text-white py-2 px-4 rounded-lg font-medium text-center">
+                            <a href="/student-profile" class="bg-gradient-to-r from-nu-green to-nu-dark text-white py-2 px-4 rounded-lg font-medium text-center">
                                 <i class="fas fa-user mr-2"></i>Profile Siswa
                             </a>
                         <?php else: ?>

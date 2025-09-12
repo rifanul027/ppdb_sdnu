@@ -115,12 +115,12 @@
                 </div>
                 
                 <!-- Tips Section -->
-                <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div class="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg">
                     <div class="flex items-center justify-center mb-2">
-                        <i class="fas fa-lightbulb text-blue-600 mr-2"></i>
-                        <p class="text-sm font-medium text-blue-800">Tips</p>
+                        <i class="fas fa-lightbulb text-green-600 mr-2"></i>
+                        <p class="text-sm font-medium text-green-800">Tips</p>
                     </div>
-                    <div class="text-sm text-blue-700 text-left">
+                    <div class="text-sm text-green-700 text-left">
                         <ul class="list-disc list-inside space-y-1">
                             <li>Pastikan semua field diisi dengan benar</li>
                             <li>Periksa format data (email, nomor telepon, dll)</li>

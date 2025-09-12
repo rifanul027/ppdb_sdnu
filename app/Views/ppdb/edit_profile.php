@@ -2,20 +2,20 @@
 <?= $this->section('content') ?>
 
 <!-- Hero Section -->
-<div class="relative overflow-hidden bg-gradient-to-br from-nu-cream via-white to-nu-cream">
+<div class="relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50">
     <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
         <!-- Title -->
         <div class="max-w-2xl text-center mx-auto mb-8">
-            <h1 class="block font-bold text-nu-dark text-3xl md:text-4xl lg:text-5xl mb-4">
+            <h1 class="block font-bold text-gray-800 text-3xl md:text-4xl lg:text-5xl mb-4">
                 Edit 
-                <span class="bg-clip-text bg-gradient-to-r from-nu-green to-nu-gold text-transparent">Profil</span>
+                <span class="bg-clip-text bg-gradient-to-r from-green-600 to-green-800 text-transparent">Profil</span>
             </h1>
             <p class="text-lg text-gray-700">Perbarui data profil siswa SDNU Pemanahan</p>
         </div>
         
         <!-- Progress Indicator -->
         <div class="flex justify-center mb-8">
-            <div class="inline-flex items-center gap-x-2 bg-gradient-to-r from-nu-green to-nu-dark border border-nu-green/20 text-sm text-white p-2 px-4 rounded-full shadow-lg">
+            <div class="inline-flex items-center gap-x-2 bg-gradient-to-r from-green-600 to-green-700 border border-green-500/20 text-sm text-white p-2 px-4 rounded-full shadow-lg">
                 <i class="fas fa-user-edit"></i>
                 <span class="font-medium">Edit Data Siswa</span>
             </div>
@@ -45,125 +45,98 @@
         
         <form action="/edit-profile" method="post" class="space-y-8">
             <!-- Data Pribadi -->
-            <div class="bg-gradient-to-br from-nu-cream via-white to-nu-cream border border-nu-green/20 rounded-xl p-6 shadow-lg">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="inline-flex justify-center items-center size-10 rounded-full border border-nu-green/30 bg-white text-nu-green shadow-sm">
-                        <i class="fas fa-user"></i>
-                    </span>
-                    <h3 class="text-xl font-bold text-nu-dark">Data Pribadi Siswa</h3>
-                </div>
+            <?= form_section_header('Data Pribadi Siswa', 'fas fa-user') ?>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Nama Lengkap <span class="text-red-500">*</span></label>
-                        <input type="text" name="nama_lengkap" value="<?= old('nama_lengkap', $student['nama_lengkap']) ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300" required>
-                    </div>
+                <?= form_grid_start(2) ?>
+                    <?= form_input_text('nama_lengkap', 'Nama Lengkap', [
+                        'value' => $student['nama_lengkap'],
+                        'required' => true
+                    ]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">NISN</label>
-                        <input type="text" name="nisn" value="<?= old('nisn', $student['nisn']) ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300" pattern="\d{10}" maxlength="10">
-                        <p class="mt-1 text-sm text-gray-500">10 digit nomor NISN (opsional)</p>
-                    </div>
+                    <?= form_input_text('nisn', 'NISN', [
+                        'value' => $student['nisn'],
+                        'help' => '10 digit nomor NISN (opsional)',
+                        'class' => 'pattern="\d{10}" maxlength="10"'
+                    ]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Agama <span class="text-red-500">*</span></label>
-                        <select name="agama" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300" required>
-                            <option value="">Pilih Agama</option>
-                            <option value="Islam" <?= old('agama', $student['agama']) == 'Islam' ? 'selected' : '' ?>>Islam</option>
-                            <option value="Kristen" <?= old('agama', $student['agama']) == 'Kristen' ? 'selected' : '' ?>>Kristen</option>
-                            <option value="Katolik" <?= old('agama', $student['agama']) == 'Katolik' ? 'selected' : '' ?>>Katolik</option>
-                            <option value="Hindu" <?= old('agama', $student['agama']) == 'Hindu' ? 'selected' : '' ?>>Hindu</option>
-                            <option value="Buddha" <?= old('agama', $student['agama']) == 'Buddha' ? 'selected' : '' ?>>Buddha</option>
-                            <option value="Konghucu" <?= old('agama', $student['agama']) == 'Konghucu' ? 'selected' : '' ?>>Konghucu</option>
-                        </select>
-                    </div>
+                    <?= form_input_select('agama', 'Agama', get_agama_options(), [
+                        'value' => $student['agama'],
+                        'required' => true
+                    ]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Jenis Kelamin <span class="text-red-500">*</span></label>
-                        <select name="jenis_kelamin" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300" required>
-                            <option value="">Pilih Jenis Kelamin</option>
-                            <option value="L" <?= old('jenis_kelamin', $student['jenis_kelamin']) == 'L' ? 'selected' : '' ?>>Laki-laki</option>
-                            <option value="P" <?= old('jenis_kelamin', $student['jenis_kelamin']) == 'P' ? 'selected' : '' ?>>Perempuan</option>
-                        </select>
-                    </div>
+                    <?= form_input_select('jenis_kelamin', 'Jenis Kelamin', get_jenis_kelamin_options(), [
+                        'value' => $student['jenis_kelamin'],
+                        'required' => true
+                    ]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Tempat Lahir <span class="text-red-500">*</span></label>
-                        <input type="text" name="tempat_lahir" value="<?= old('tempat_lahir', $student['tempat_lahir']) ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300" required>
-                    </div>
+                    <?= form_input_text('tempat_lahir', 'Tempat Lahir', [
+                        'value' => $student['tempat_lahir'],
+                        'required' => true
+                    ]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Tanggal Lahir <span class="text-red-500">*</span></label>
-                        <input type="date" name="tanggal_lahir" value="<?= old('tanggal_lahir', $student['tanggal_lahir']) ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300" required>
-                    </div>
-                </div>
-            </div>
+                    <?= form_input_text('tanggal_lahir', 'Tanggal Lahir', [
+                        'type' => 'date',
+                        'value' => $student['tanggal_lahir'],
+                        'required' => true
+                    ]) ?>
+                <?= form_grid_end() ?>
+            <?= form_section_footer() ?>
             
             <!-- Data Orang Tua -->
-            <div class="bg-gradient-to-br from-nu-cream via-white to-nu-cream border border-nu-green/20 rounded-xl p-6 shadow-lg">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="inline-flex justify-center items-center size-10 rounded-full border border-nu-green/30 bg-white text-nu-green shadow-sm">
-                        <i class="fas fa-users"></i>
-                    </span>
-                    <h3 class="text-xl font-bold text-nu-dark">Data Orang Tua</h3>
-                </div>
+            <?= form_section_header('Data Orang Tua', 'fas fa-users') ?>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Nama Ayah <span class="text-red-500">*</span></label>
-                        <input type="text" name="nama_ayah" value="<?= old('nama_ayah', $student['nama_ayah']) ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300" required>
-                    </div>
+                <?= form_grid_start(2) ?>
+                    <?= form_input_text('nama_ayah', 'Nama Ayah', [
+                        'value' => $student['nama_ayah'],
+                        'required' => true
+                    ]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Nama Ibu <span class="text-red-500">*</span></label>
-                        <input type="text" name="nama_ibu" value="<?= old('nama_ibu', $student['nama_ibu']) ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300" required>
-                    </div>
-                </div>
-            </div>
+                    <?= form_input_text('nama_ibu', 'Nama Ibu', [
+                        'value' => $student['nama_ibu'],
+                        'required' => true
+                    ]) ?>
+                <?= form_grid_end() ?>
+            <?= form_section_footer() ?>
             
             <!-- Alamat & Kontak -->
-            <div class="bg-gradient-to-br from-nu-cream via-white to-nu-cream border border-nu-green/20 rounded-xl p-6 shadow-lg">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="inline-flex justify-center items-center size-10 rounded-full border border-nu-green/30 bg-white text-nu-green shadow-sm">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </span>
-                    <h3 class="text-xl font-bold text-nu-dark">Alamat & Kontak</h3>
-                </div>
+            <?= form_section_header('Alamat & Kontak', 'fas fa-map-marker-alt') ?>
                 
                 <div class="space-y-6">
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Alamat Lengkap <span class="text-red-500">*</span></label>
-                        <textarea name="alamat" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300" required><?= old('alamat', $student['alamat']) ?></textarea>
-                    </div>
+                    <?= form_input_textarea('alamat', 'Alamat Lengkap', [
+                        'value' => $student['alamat'],
+                        'required' => true,
+                        'rows' => 3
+                    ]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Alamat Domisili <span class="text-red-500">*</span></label>
-                        <textarea name="domisili" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300" required><?= old('domisili', $student['domisili']) ?></textarea>
-                        <p class="mt-1 text-sm text-gray-500">Alamat tempat tinggal saat ini</p>
-                    </div>
+                    <?= form_input_textarea('domisili', 'Alamat Domisili', [
+                        'value' => $student['domisili'],
+                        'required' => true,
+                        'rows' => 3,
+                        'help' => 'Alamat tempat tinggal saat ini'
+                    ]) ?>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-nu-dark font-semibold mb-2">Nomor Telepon <span class="text-red-500">*</span></label>
-                            <input type="tel" name="nomor_telepon" value="<?= old('nomor_telepon', $student['nomor_telepon']) ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300" required>
-                        </div>
+                    <?= form_grid_start(2) ?>
+                        <?= form_input_text('nomor_telepon', 'Nomor Telepon', [
+                            'type' => 'tel',
+                            'value' => $student['nomor_telepon'],
+                            'required' => true
+                        ]) ?>
                         
-                        <div>
-                            <label class="block text-nu-dark font-semibold mb-2">Asal TK/RA</label>
-                            <input type="text" name="asal_tk_ra" value="<?= old('asal_tk_ra', $student['asal_tk_ra']) ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300">
-                            <p class="mt-1 text-sm text-gray-500">Nama TK/RA asal (opsional)</p>
-                        </div>
-                    </div>
+                        <?= form_input_text('asal_tk_ra', 'Asal TK/RA', [
+                            'value' => $student['asal_tk_ra'],
+                            'help' => 'Nama TK/RA asal (opsional)'
+                        ]) ?>
+                    <?= form_grid_end() ?>
                 </div>
-            </div>
+            <?= form_section_footer() ?>
             
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button type="submit" class="inline-flex justify-center items-center gap-x-3 text-center bg-gradient-to-r from-nu-green to-nu-dark hover:from-nu-dark hover:to-nu-green border border-transparent text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8">
+                <button type="submit" class="inline-flex justify-center items-center gap-x-3 text-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 border border-transparent text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8">
                     <i class="fas fa-save"></i>
                     Simpan Perubahan
                 </button>
-                <a href="/profile-siswa" class="inline-flex justify-center items-center gap-x-3 text-center bg-gray-500 hover:bg-gray-600 border border-transparent text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8">
+                <a href="/student-profile" class="inline-flex justify-center items-center gap-x-3 text-center bg-gray-500 hover:bg-gray-600 border border-transparent text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8">
                     <i class="fas fa-times"></i>
                     Batal
                 </a>

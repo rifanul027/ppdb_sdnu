@@ -122,7 +122,7 @@ class AdminPendaftar extends BaseController
         ];
 
         if ($this->studentModel->update($id, $data)) {
-            return redirect()->to('/admin/pendaftar/pendaftar')->with('success', 'Data pendaftar berhasil diupdate');
+            return redirect()->to('/admin/pendaftar')->with('success', 'Data pendaftar berhasil diupdate');
         } else {
             return redirect()->back()->with('error', 'Gagal mengupdate data pendaftar');
         }
@@ -210,7 +210,9 @@ class AdminPendaftar extends BaseController
             'password' => 'required|min_length[8]',
             'akta' => 'uploaded[akta]|max_size[akta,5120]|ext_in[akta,pdf,jpg,jpeg,png]',
             'kk' => 'uploaded[kk]|max_size[kk,5120]|ext_in[kk,pdf,jpg,jpeg,png]',
-            'ijazah' => 'permit_empty|max_size[ijazah,5120]|ext_in[ijazah,pdf,jpg,jpeg,png]'
+            'ijazah' => 'permit_empty|max_size[ijazah,5120]|ext_in[ijazah,pdf,jpg,jpeg,png]',
+            'ktp_ayah' => 'uploaded[ktp_ayah]|max_size[ktp_ayah,5120]|ext_in[ktp_ayah,pdf,jpg,jpeg,png]',
+            'ktp_ibu' => 'uploaded[ktp_ibu]|max_size[ktp_ibu,5120]|ext_in[ktp_ibu,pdf,jpg,jpeg,png]'
         ];
 
         if (!$this->validate($validationRules)) {
@@ -241,36 +243,61 @@ class AdminPendaftar extends BaseController
 
             $noRegistrasi = $year . $newNumber;
 
-            // Handle file uploads
+            // Handle file uploads dengan path pendaftaran/id_siswa
+            $uploadPath = WRITEPATH . 'uploads/pendaftaran/' . $studentId;
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0755, true);
+            }
+
             $aktaFile = $this->request->getFile('akta');
             $kkFile = $this->request->getFile('kk');
             $ijazahFile = $this->request->getFile('ijazah');
+            $ktpAyahFile = $this->request->getFile('ktp_ayah');
+            $ktpIbuFile = $this->request->getFile('ktp_ibu');
 
             $aktaUrl = null;
             $kkUrl = null;
             $ijazahUrl = null;
+            $ktpAyahUrl = null;
+            $ktpIbuUrl = null;
 
             // Upload akta file
             if ($aktaFile && $aktaFile->isValid() && !$aktaFile->hasMoved()) {
                 $aktaNewName = 'akta_' . $studentId . '.' . $aktaFile->getExtension();
-                if ($aktaFile->move(WRITEPATH . 'uploads', $aktaNewName)) {
-                    $aktaUrl = 'uploads/' . $aktaNewName;
+                if ($aktaFile->move($uploadPath, $aktaNewName)) {
+                    $aktaUrl = 'writable/uploads/pendaftaran/' . $studentId . '/' . $aktaNewName;
                 }
             }
 
             // Upload kk file
             if ($kkFile && $kkFile->isValid() && !$kkFile->hasMoved()) {
                 $kkNewName = 'kk_' . $studentId . '.' . $kkFile->getExtension();
-                if ($kkFile->move(WRITEPATH . 'uploads', $kkNewName)) {
-                    $kkUrl = 'uploads/' . $kkNewName;
+                if ($kkFile->move($uploadPath, $kkNewName)) {
+                    $kkUrl = 'writable/uploads/pendaftaran/' . $studentId . '/' . $kkNewName;
                 }
             }
 
             // Upload ijazah file (optional)
             if ($ijazahFile && $ijazahFile->isValid() && !$ijazahFile->hasMoved()) {
                 $ijazahNewName = 'ijazah_' . $studentId . '.' . $ijazahFile->getExtension();
-                if ($ijazahFile->move(WRITEPATH . 'uploads', $ijazahNewName)) {
-                    $ijazahUrl = 'uploads/' . $ijazahNewName;
+                if ($ijazahFile->move($uploadPath, $ijazahNewName)) {
+                    $ijazahUrl = 'writable/uploads/pendaftaran/' . $studentId . '/' . $ijazahNewName;
+                }
+            }
+
+            // Upload KTP Ayah file
+            if ($ktpAyahFile && $ktpAyahFile->isValid() && !$ktpAyahFile->hasMoved()) {
+                $ktpAyahNewName = 'ktp_ayah_' . $studentId . '.' . $ktpAyahFile->getExtension();
+                if ($ktpAyahFile->move($uploadPath, $ktpAyahNewName)) {
+                    $ktpAyahUrl = 'writable/uploads/pendaftaran/' . $studentId . '/' . $ktpAyahNewName;
+                }
+            }
+
+            // Upload KTP Ibu file
+            if ($ktpIbuFile && $ktpIbuFile->isValid() && !$ktpIbuFile->hasMoved()) {
+                $ktpIbuNewName = 'ktp_ibu_' . $studentId . '.' . $ktpIbuFile->getExtension();
+                if ($ktpIbuFile->move($uploadPath, $ktpIbuNewName)) {
+                    $ktpIbuUrl = 'writable/uploads/pendaftaran/' . $studentId . '/' . $ktpIbuNewName;
                 }
             }
 
@@ -293,6 +320,8 @@ class AdminPendaftar extends BaseController
                 'akta_url' => $aktaUrl,
                 'kk_url' => $kkUrl,
                 'ijazah_url' => $ijazahUrl,
+                'ktp_ayah' => $ktpAyahUrl,
+                'ktp_ibu' => $ktpIbuUrl,
                 'status' => 'calon',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')

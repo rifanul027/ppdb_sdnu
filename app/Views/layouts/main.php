@@ -50,7 +50,6 @@
             }
         }
     </script>
-    </script>
     
     <style>
         .gradient-bg {
@@ -73,7 +72,6 @@
             background-size: 20px 20px;
         }
         
-        /* Custom Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -89,12 +87,10 @@
             animation: fadeInUp 0.6s ease-out forwards;
         }
         
-        /* Scrolling indicator */
         .scrolling {
             transition: all 0.3s ease;
         }
         
-        /* Enhanced hover effects */
         .hover-lift {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -104,7 +100,6 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
         
-        /* Loading animation enhancement */
         .loading-dots::after {
             content: '';
             animation: loadingDots 1.5s infinite;
@@ -115,7 +110,7 @@
             40% { content: '..'; }
             60%, 100% { content: '...'; }
         }
-    </style>>
+    </style>
     
 </head>
 <body class="font-inter gradient-bg min-h-screen">
@@ -141,11 +136,7 @@
             Kembali ke atas
         </span>
     </button>
-
-    <script src="https://preline.co/assets/js/hs-ui.bundle.js"></script>
-
     <script>
-        // Hide loading spinner with smooth transition
         window.addEventListener('load', function() {
             const loader = document.getElementById('loading');
             loader.style.opacity = '0';
@@ -154,15 +145,12 @@
             }, 300);
         });
         
-        // Scroll to top functionality with enhanced UX
         const scrollTopBtn = document.getElementById('scrollTop');
         let scrollTimeout;
         
         window.addEventListener('scroll', function() {
-            // Clear previous timeout
             clearTimeout(scrollTimeout);
             
-            // Show/hide scroll button with smooth animation
             if (window.pageYOffset > 300) {
                 scrollTopBtn.classList.remove('opacity-0', 'translate-y-4');
                 scrollTopBtn.classList.add('opacity-100', 'translate-y-0');
@@ -171,7 +159,6 @@
                 scrollTopBtn.classList.remove('opacity-100', 'translate-y-0');
             }
             
-            // Add scrolling indicator
             document.body.classList.add('scrolling');
             scrollTimeout = setTimeout(() => {
                 document.body.classList.remove('scrolling');
@@ -179,7 +166,6 @@
         });
         
         scrollTopBtn.addEventListener('click', function() {
-            // Add click animation
             this.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 this.style.transform = '';
@@ -191,7 +177,6 @@
             });
         });
         
-        // Enhanced smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -199,7 +184,7 @@
                 const target = document.getElementById(targetId);
                 
                 if (target) {
-                    const headerOffset = 80; // Account for fixed header
+                    const headerOffset = 80;
                     const elementPosition = target.getBoundingClientRect().top;
                     const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
                     
@@ -211,9 +196,7 @@
             });
         });
         
-        // Add loading states for forms and buttons
         document.addEventListener('DOMContentLoaded', function() {
-            // Add click handlers for buttons with loading states
             const buttons = document.querySelectorAll('button[type="submit"], .btn-submit');
             buttons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -222,7 +205,6 @@
                         this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
                         this.disabled = true;
                         
-                        // Re-enable after form submission or timeout
                         setTimeout(() => {
                             this.innerHTML = originalText;
                             this.disabled = false;
@@ -231,7 +213,6 @@
                 });
             });
             
-            // Enhance form validation feedback
             const inputs = document.querySelectorAll('input, textarea, select');
             inputs.forEach(input => {
                 input.addEventListener('blur', function() {
@@ -246,7 +227,6 @@
             });
         });
         
-        // Add intersection observer for animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -260,7 +240,6 @@
             });
         }, observerOptions);
         
-        // Observe elements for animation
         document.addEventListener('DOMContentLoaded', function() {
             const animateElements = document.querySelectorAll('.card, .feature-item, .pricing-card');
             animateElements.forEach(el => observer.observe(el));

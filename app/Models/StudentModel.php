@@ -17,6 +17,7 @@ class StudentModel extends Model
         'agama', 'tempat_lahir', 'tanggal_lahir', 'jenis_kelamin',
         'nama_ayah', 'nama_ibu', 'alamat', 'domisili', 'asal_tk_ra',
         'nomor_telepon', 'ijazah_url', 'akta_url', 'kk_url',
+        'ktp_ayah', 'ktp_ibu', 'kategori_id',
         'tahun_ajaran_id', 'bukti_pembayaran_id', 'beasiswa_id',
         'status', 'accepted_at'
     ];
@@ -58,7 +59,7 @@ class StudentModel extends Model
         return 'REG' . $year . $month . $newNumber;
     }
 
-    public function createStudent($formData, $tahunAjaranId)
+    public function createStudent($formData, $tahunAjaranId, $userId = null)
     {
         // Generate student ID and registration number
         $studentId = generate_uuid();
@@ -66,8 +67,8 @@ class StudentModel extends Model
         
         log_message('info', 'Starting registration process - Student ID: ' . $studentId . ', No Registrasi: ' . $noRegistrasi);
         
-        // Create upload directory
-        $uploadPath = WRITEPATH . 'uploads/' . $studentId;
+        // Create upload directory dengan struktur pendaftaran/id_siswa
+        $uploadPath = WRITEPATH . 'uploads/pendaftaran/' . $studentId;
         log_message('info', 'Creating upload directory: ' . $uploadPath);
         
         if (!is_dir($uploadPath)) {
@@ -80,16 +81,27 @@ class StudentModel extends Model
         log_message('info', 'Upload directory ready: ' . $uploadPath);
         
         // Handle file uploads
-        $aktaFile = $formData['files']['akta'];
-        $kkFile = $formData['files']['kk'];
-        $ijazahFile = $formData['files']['ijazah'];
+        $aktaFile = $formData['files']['akta'] ?? null;
+        $kkFile = $formData['files']['kk'] ?? null;
+        $ijazahFile = $formData['files']['ijazah'] ?? null;
+        $ktpAyahFile = $formData['files']['ktp_ayah'] ?? null;
+        $ktpIbuFile = $formData['files']['ktp_ibu'] ?? null;
+        
+        log_message('info', 'Files received: akta=' . ($aktaFile ? 'yes' : 'no') . 
+                           ', kk=' . ($kkFile ? 'yes' : 'no') . 
+                           ', ijazah=' . ($ijazahFile ? 'yes' : 'no') . 
+                           ', ktp_ayah=' . ($ktpAyahFile ? 'yes' : 'no') . 
+                           ', ktp_ibu=' . ($ktpIbuFile ? 'yes' : 'no'));
         
         $aktaUrl = null;
         $kkUrl = null;
         $ijazahUrl = null;
+        $ktpAyahUrl = null;
+        $ktpIbuUrl = null;
         
         // Validate and upload akta kelahiran
-        if ($aktaFile->isValid() && !$aktaFile->hasMoved()) {
+        if ($aktaFile && $aktaFile->isValid() && !$aktaFile->hasMoved()) {
+            log_message('info', 'Processing akta file: ' . $aktaFile->getName());
             if ($aktaFile->getSize() > 5 * 1024 * 1024) { // 5MB limit
                 throw new \Exception('Ukuran file akta kelahiran maksimal 5MB.');
             }
@@ -98,13 +110,15 @@ class StudentModel extends Model
             if (!$aktaFile->move($uploadPath, $aktaName)) {
                 throw new \Exception('Gagal mengupload akta kelahiran.');
             }
-            $aktaUrl = 'writable/uploads/' . $studentId . '/' . $aktaName;
+            $aktaUrl = 'writable/uploads/pendaftaran/' . $studentId . '/' . $aktaName;
+            log_message('info', 'Akta uploaded successfully: ' . $aktaUrl);
         } else {
             throw new \Exception('File akta kelahiran tidak valid atau tidak dapat diupload.');
         }
         
         // Validate and upload kartu keluarga
-        if ($kkFile->isValid() && !$kkFile->hasMoved()) {
+        if ($kkFile && $kkFile->isValid() && !$kkFile->hasMoved()) {
+            log_message('info', 'Processing KK file: ' . $kkFile->getName());
             if ($kkFile->getSize() > 5 * 1024 * 1024) { // 5MB limit
                 throw new \Exception('Ukuran file kartu keluarga maksimal 5MB.');
             }
@@ -113,21 +127,58 @@ class StudentModel extends Model
             if (!$kkFile->move($uploadPath, $kkName)) {
                 throw new \Exception('Gagal mengupload kartu keluarga.');
             }
-            $kkUrl = 'writable/uploads/' . $studentId . '/' . $kkName;
+            $kkUrl = 'writable/uploads/pendaftaran/' . $studentId . '/' . $kkName;
+            log_message('info', 'KK uploaded successfully: ' . $kkUrl);
         } else {
             throw new \Exception('File kartu keluarga tidak valid atau tidak dapat diupload.');
         }
         
         // Upload ijazah (optional)
         if ($ijazahFile && $ijazahFile->isValid() && !$ijazahFile->hasMoved()) {
+            log_message('info', 'Processing ijazah file: ' . $ijazahFile->getName());
             if ($ijazahFile->getSize() > 5 * 1024 * 1024) { // 5MB limit
                 throw new \Exception('Ukuran file ijazah maksimal 5MB.');
             }
             
             $ijazahName = 'ijazah_' . $studentId . '.' . $ijazahFile->getExtension();
             if ($ijazahFile->move($uploadPath, $ijazahName)) {
-                $ijazahUrl = 'writable/uploads/' . $studentId . '/' . $ijazahName;
+                $ijazahUrl = 'writable/uploads/pendaftaran/' . $studentId . '/' . $ijazahName;
+                log_message('info', 'Ijazah uploaded successfully: ' . $ijazahUrl);
             }
+        }
+        
+        // Validate and upload KTP Ayah
+        if ($ktpAyahFile && $ktpAyahFile->isValid() && !$ktpAyahFile->hasMoved()) {
+            log_message('info', 'Processing KTP Ayah file: ' . $ktpAyahFile->getName());
+            if ($ktpAyahFile->getSize() > 5 * 1024 * 1024) { // 5MB limit
+                throw new \Exception('Ukuran file KTP Ayah maksimal 5MB.');
+            }
+            
+            $ktpAyahName = 'ktp_ayah_' . $studentId . '.' . $ktpAyahFile->getExtension();
+            if (!$ktpAyahFile->move($uploadPath, $ktpAyahName)) {
+                throw new \Exception('Gagal mengupload KTP Ayah.');
+            }
+            $ktpAyahUrl = 'writable/uploads/pendaftaran/' . $studentId . '/' . $ktpAyahName;
+            log_message('info', 'KTP Ayah uploaded successfully: ' . $ktpAyahUrl);
+        } else {
+            throw new \Exception('File KTP Ayah tidak valid atau tidak dapat diupload.');
+        }
+        
+        // Validate and upload KTP Ibu
+        if ($ktpIbuFile && $ktpIbuFile->isValid() && !$ktpIbuFile->hasMoved()) {
+            log_message('info', 'Processing KTP Ibu file: ' . $ktpIbuFile->getName());
+            if ($ktpIbuFile->getSize() > 5 * 1024 * 1024) { // 5MB limit
+                throw new \Exception('Ukuran file KTP Ibu maksimal 5MB.');
+            }
+            
+            $ktpIbuName = 'ktp_ibu_' . $studentId . '.' . $ktpIbuFile->getExtension();
+            if (!$ktpIbuFile->move($uploadPath, $ktpIbuName)) {
+                throw new \Exception('Gagal mengupload KTP Ibu.');
+            }
+            $ktpIbuUrl = 'writable/uploads/pendaftaran/' . $studentId . '/' . $ktpIbuName;
+            log_message('info', 'KTP Ibu uploaded successfully: ' . $ktpIbuUrl);
+        } else {
+            throw new \Exception('File KTP Ibu tidak valid atau tidak dapat diupload.');
         }
         
         // Prepare data for insertion
@@ -148,6 +199,8 @@ class StudentModel extends Model
             'akta_url' => $aktaUrl,
             'kk_url' => $kkUrl,
             'ijazah_url' => $ijazahUrl,
+            'ktp_ayah' => $ktpAyahUrl,
+            'ktp_ibu' => $ktpIbuUrl,
             'tahun_ajaran_id' => $tahunAjaranId,
             'status' => 'calon',
             'created_at' => date('Y-m-d H:i:s')

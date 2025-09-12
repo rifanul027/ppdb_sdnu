@@ -46,167 +46,79 @@
         <?php endif; ?>
         
         
-        <form action="/daftar" method="post" enctype="multipart/form-data" class="space-y-8">
+    <form id="ppdb-form" action="/daftar/<?= session()->get('user_id') ?? 'unknown' ?>/store" method="post" enctype="multipart/form-data" class="space-y-8">
             <?= csrf_field() ?>
+            
             <!-- Data Pribadi -->
-            <div class="bg-gradient-to-br from-nu-cream via-white to-nu-cream border border-nu-green/20 rounded-xl p-6 shadow-lg">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="inline-flex justify-center items-center size-10 rounded-full border border-nu-green/30 bg-white text-nu-green shadow-sm">
-                        <i class="fas fa-user"></i>
-                    </span>
-                    <h3 class="text-xl font-bold text-nu-dark">Data Pribadi Siswa</h3>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Nama Lengkap <span class="text-red-500">*</span></label>
-                        <input type="text" name="nama_lengkap" value="<?= old('nama_lengkap') ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300">
-                    </div>
+            <?= form_section_header('Data Pribadi Siswa', 'fas fa-user') ?>
+                <?= form_grid_start(2) ?>
+                    <?= form_input_text('nama_lengkap', 'Nama Lengkap', ['required' => true]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Tahun Ajaran <span class="text-red-500">*</span></label>
-                        <select name="tahun_ajaran_id" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300">
-                            <option value="">Pilih Tahun Ajaran</option>
-                            <?php if (!empty($tahunAjaranList)): ?>
-                                <?php foreach ($tahunAjaranList as $tahun): ?>
-                                    <option value="<?= $tahun['id'] ?>" <?= old('tahun_ajaran_id') === $tahun['id'] ? 'selected' : '' ?>>
-                                        <?= $tahun['nama'] ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </select>
-                    </div>
+                    <?= form_input_select('tahun_ajaran_id', 'Tahun Ajaran', 
+                        !empty($tahunAjaranList) ? array_column($tahunAjaranList, 'nama', 'id') : [],
+                        ['required' => true, 'placeholder' => 'Pilih Tahun Ajaran']
+                    ) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Agama <span class="text-red-500">*</span></label>
-                        <select name="agama" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300">
-                            <option value="">Pilih Agama</option>
-                            <option value="Islam" <?= old('agama') === 'Islam' ? 'selected' : '' ?>>Islam</option>
-                            <option value="Kristen" <?= old('agama') === 'Kristen' ? 'selected' : '' ?>>Kristen</option>
-                            <option value="Katolik" <?= old('agama') === 'Katolik' ? 'selected' : '' ?>>Katolik</option>
-                            <option value="Hindu" <?= old('agama') === 'Hindu' ? 'selected' : '' ?>>Hindu</option>
-                            <option value="Buddha" <?= old('agama') === 'Buddha' ? 'selected' : '' ?>>Buddha</option>
-                            <option value="Konghucu" <?= old('agama') === 'Konghucu' ? 'selected' : '' ?>>Konghucu</option>
-                        </select>
-                    </div>
+                    <?= form_input_select('agama', 'Agama', get_agama_options(), ['required' => true]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Jenis Kelamin <span class="text-red-500">*</span></label>
-                        <select name="jenis_kelamin" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300">
-                            <option value="">Pilih Jenis Kelamin</option>
-                            <option value="L" <?= old('jenis_kelamin') === 'L' ? 'selected' : '' ?>>Laki-laki</option>
-                            <option value="P" <?= old('jenis_kelamin') === 'P' ? 'selected' : '' ?>>Perempuan</option>
-                        </select>
-                    </div>
+                    <?= form_input_select('jenis_kelamin', 'Jenis Kelamin', get_jenis_kelamin_options(), ['required' => true]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Tempat Lahir <span class="text-red-500">*</span></label>
-                        <input type="text" name="tempat_lahir" value="<?= old('tempat_lahir') ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300">
-                    </div>
+                    <?= form_input_text('tempat_lahir', 'Tempat Lahir', ['required' => true]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Tanggal Lahir <span class="text-red-500">*</span></label>
-                        <input type="date" name="tanggal_lahir" value="<?= old('tanggal_lahir') ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300">
-                    </div>
-                </div>
-            </div>
+                    <?= form_input_text('tanggal_lahir', 'Tanggal Lahir', ['required' => true, 'type' => 'date']) ?>
+                <?= form_grid_end() ?>
+            <?= form_section_footer() ?>
             
             <!-- Data Orang Tua -->
-            <div class="bg-gradient-to-br from-nu-cream via-white to-nu-cream border border-nu-green/20 rounded-xl p-6 shadow-lg">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="inline-flex justify-center items-center size-10 rounded-full border border-nu-green/30 bg-white text-nu-green shadow-sm">
-                        <i class="fas fa-users"></i>
-                    </span>
-                    <h3 class="text-xl font-bold text-nu-dark">Data Orang Tua</h3>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Nama Ayah <span class="text-red-500">*</span></label>
-                        <input type="text" name="nama_ayah" value="<?= old('nama_ayah') ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300">
-                    </div>
+            <?= form_section_header('Data Orang Tua', 'fas fa-users') ?>
+                <?= form_grid_start(2) ?>
+                    <?= form_input_text('nama_ayah', 'Nama Ayah', ['required' => true]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Nama Ibu <span class="text-red-500">*</span></label>
-                        <input type="text" name="nama_ibu" value="<?= old('nama_ibu') ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300">
-                    </div>
-                </div>
-            </div>
+                    <?= form_input_text('nama_ibu', 'Nama Ibu', ['required' => true]) ?>
+                <?= form_grid_end() ?>
+            <?= form_section_footer() ?>
             
             <!-- Alamat & Kontak -->
-            <div class="bg-gradient-to-br from-nu-cream via-white to-nu-cream border border-nu-green/20 rounded-xl p-6 shadow-lg">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="inline-flex justify-center items-center size-10 rounded-full border border-nu-green/30 bg-white text-nu-green shadow-sm">
-                        <i class="fas fa-map-marker-alt"></i>
-                    </span>
-                    <h3 class="text-xl font-bold text-nu-dark">Alamat & Kontak</h3>
-                </div>
-                
+            <?= form_section_header('Alamat & Kontak', 'fas fa-map-marker-alt') ?>
                 <div class="space-y-6">
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Alamat Lengkap <span class="text-red-500">*</span></label>
-                        <textarea name="alamat" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300"><?= old('alamat') ?></textarea>
-                    </div>
+                    <?= form_input_textarea('alamat', 'Alamat Lengkap', ['required' => true, 'rows' => 3]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Alamat Domisili <span class="text-red-500">*</span></label>
-                        <textarea name="domisili" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300"><?= old('domisili') ?></textarea>
-                        <p class="mt-1 text-sm text-gray-500">Alamat tempat tinggal saat ini</p>
-                    </div>
+                    <?= form_input_textarea('domisili', 'Alamat Domisili', [
+                        'required' => true, 
+                        'rows' => 3, 
+                        'help' => 'Alamat tempat tinggal saat ini'
+                    ]) ?>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-nu-dark font-semibold mb-2">Nomor Telepon <span class="text-red-500">*</span></label>
-                            <input type="tel" name="nomor_telepon" value="<?= old('nomor_telepon') ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300">
-                        </div>
+                    <?= form_grid_start(2) ?>
+                        <?= form_input_text('nomor_telepon', 'Nomor Telepon', ['required' => true, 'type' => 'tel']) ?>
                         
-                        <div>
-                            <label class="block text-nu-dark font-semibold mb-2">Asal TK/RA</label>
-                            <input type="text" name="asal_tk_ra" value="<?= old('asal_tk_ra') ?>" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300">
-                            <p class="mt-1 text-sm text-gray-500">Nama TK/RA asal (opsional)</p>
-                        </div>
-                    </div>
+                        <?= form_input_text('asal_tk_ra', 'Asal TK/RA', [
+                            'help' => 'Nama TK/RA asal (opsional)'
+                        ]) ?>
+                    <?= form_grid_end() ?>
                 </div>
-            </div>
+            <?= form_section_footer() ?>
             
             <!-- Dokumen -->
-            <div class="bg-gradient-to-br from-nu-cream via-white to-nu-cream border border-nu-green/20 rounded-xl p-6 shadow-lg">
-                <div class="flex items-center gap-3 mb-6">
-                    <span class="inline-flex justify-center items-center size-10 rounded-full border border-nu-green/30 bg-white text-nu-green shadow-sm">
-                        <i class="fas fa-file-upload"></i>
-                    </span>
-                    <h3 class="text-xl font-bold text-nu-dark">Upload Dokumen</h3>
-                </div>
-                
+            <?= form_section_header('Upload Dokumen', 'fas fa-file-upload') ?>
                 <div class="space-y-6">
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Akta Kelahiran <span class="text-red-500">*</span></label>
-                        <input type="file" name="akta" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-nu-green file:text-white hover:file:bg-nu-dark" accept=".pdf,.jpg,.jpeg,.png">
-                        <p class="mt-1 text-sm text-gray-500">Format: PDF, JPG, atau PNG (Maksimal 5MB)</p>
-                    </div>
+                    <?= form_input_file('akta', 'Akta Kelahiran', ['required' => true]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Kartu Keluarga <span class="text-red-500">*</span></label>
-                        <input type="file" name="kk" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-nu-green file:text-white hover:file:bg-nu-dark" accept=".pdf,.jpg,.jpeg,.png">
-                        <p class="mt-1 text-sm text-gray-500">Format: PDF, JPG, atau PNG (Maksimal 5MB)</p>
-                    </div>
+                    <?= form_input_file('kk', 'Kartu Keluarga', ['required' => true]) ?>
                     
-                    <div>
-                        <label class="block text-nu-dark font-semibold mb-2">Ijazah TK/RA</label>
-                        <input type="file" name="ijazah" class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-nu-green focus:border-transparent transition-all duration-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-nu-green file:text-white hover:file:bg-nu-dark" accept=".pdf,.jpg,.jpeg,.png">
-                        <p class="mt-1 text-sm text-gray-500">Upload jika ada (opsional) - Format: PDF, JPG, atau PNG (Maksimal 5MB)</p>
-                    </div>
+                    <?= form_input_file('ktp_ayah', 'KTP Ayah', ['required' => true]) ?>
+                    
+                    <?= form_input_file('ktp_ibu', 'KTP Ibu', ['required' => true]) ?>
+                    
+                    <?= form_input_file('ijazah', 'Ijazah TK/RA', [
+                        'required' => false,
+                        'help' => 'Upload jika ada (opsional) - Format: PDF, JPG, atau PNG (Maksimal 5MB)'
+                    ]) ?>
                 </div>
-            </div>
+            <?= form_section_footer() ?>
             
-            <div class="text-center">
-                <button type="submit" class="inline-flex justify-center items-center gap-x-3 text-center bg-gradient-to-r from-nu-green to-nu-dark hover:from-nu-dark hover:to-nu-green border border-transparent text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8">
-                    <i class="fas fa-paper-plane"></i>
-                    Kirim Pendaftaran
-                </button>
-            </div>
+            <?= form_submit_button('Kirim Pendaftaran') ?>
         </form>
     </div>
 </div>
-
 <?= $this->endSection() ?>

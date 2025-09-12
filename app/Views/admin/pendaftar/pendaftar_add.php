@@ -17,258 +17,134 @@
     </div>
 </div>
 
-<!-- Alert Messages -->
-<?php if (isset($validation)): ?>
-    <div class="alert alert-danger" role="alert">
-        <h5 class="alert-heading">
-            <i class="fas fa-exclamation-triangle"></i>
-            Terjadi kesalahan validasi
-        </h5>
-        <hr>
-        <?= $validation->listErrors() ?>
-    </div>
-<?php endif; ?>
-
-<?php if (session()->getFlashdata('error')): ?>
-    <div class="alert alert-danger" role="alert">
-        <i class="fas fa-exclamation-circle"></i>
-        <?= session()->getFlashdata('error') ?>
-    </div>
-<?php endif; ?>
-
-<!-- Form Tambah -->
-<form action="/admin/pendaftar/store" method="post" enctype="multipart/form-data" class="space-y-8">
-    <?= csrf_field() ?>
-    
-    <!-- Data Pribadi -->
-    <div class="content-card">
-        <div class="card-header">
-            <h3 class="card-title">
-                <i class="fas fa-user"></i>
-                Data Pribadi Siswa
-            </h3>
-        </div>
-        <div class="card-body">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">Nama Lengkap <span class="required">*</span></label>
-                    <input type="text" name="nama_lengkap" value="<?= old('nama_lengkap') ?>" 
-                           class="form-input" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Tahun Ajaran <span class="required">*</span></label>
-                    <select name="tahun_ajaran_id" class="form-input" required>
-                        <option value="">Pilih Tahun Ajaran</option>
-                        <?php if (!empty($tahunAjaranList)): ?>
-                            <?php foreach ($tahunAjaranList as $tahun): ?>
-                                <option value="<?= $tahun['id'] ?>" <?= old('tahun_ajaran_id') === $tahun['id'] ? 'selected' : '' ?>>
-                                    <?= $tahun['nama'] ?>
-                                </option>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Agama <span class="required">*</span></label>
-                    <select name="agama" class="form-input" required>
-                        <option value="">Pilih Agama</option>
-                        <option value="Islam" <?= old('agama') === 'Islam' ? 'selected' : '' ?>>Islam</option>
-                        <option value="Kristen" <?= old('agama') === 'Kristen' ? 'selected' : '' ?>>Kristen</option>
-                        <option value="Katolik" <?= old('agama') === 'Katolik' ? 'selected' : '' ?>>Katolik</option>
-                        <option value="Hindu" <?= old('agama') === 'Hindu' ? 'selected' : '' ?>>Hindu</option>
-                        <option value="Buddha" <?= old('agama') === 'Buddha' ? 'selected' : '' ?>>Buddha</option>
-                        <option value="Konghucu" <?= old('agama') === 'Konghucu' ? 'selected' : '' ?>>Konghucu</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Jenis Kelamin <span class="required">*</span></label>
-                    <select name="jenis_kelamin" class="form-input" required>
-                        <option value="">Pilih Jenis Kelamin</option>
-                        <option value="L" <?= old('jenis_kelamin') === 'L' ? 'selected' : '' ?>>Laki-laki</option>
-                        <option value="P" <?= old('jenis_kelamin') === 'P' ? 'selected' : '' ?>>Perempuan</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Tempat Lahir <span class="required">*</span></label>
-                    <input type="text" name="tempat_lahir" value="<?= old('tempat_lahir') ?>" 
-                           class="form-input" required>
-                </div>
-                
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Tanggal Lahir <span style="color: #ef4444;">*</span></label>
-                    <input type="date" name="tanggal_lahir" value="<?= old('tanggal_lahir') ?>" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" 
-                           required>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Data Orang Tua -->
-    <div class="content-card">
-        <div class="card-header">
-            <h3 class="card-title">
-                <i class="fas fa-users"></i>
-                Data Orang Tua
-            </h3>
-        </div>
-        <div class="card-body">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Nama Ayah <span style="color: #ef4444;">*</span></label>
-                    <input type="text" name="nama_ayah" value="<?= old('nama_ayah') ?>" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" 
-                           required>
-                </div>
-                
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Nama Ibu <span style="color: #ef4444;">*</span></label>
-                    <input type="text" name="nama_ibu" value="<?= old('nama_ibu') ?>" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" 
-                           required>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Alamat & Kontak -->
-    <div class="content-card">
-        <div class="card-header">
-            <h3 class="card-title">
-                <i class="fas fa-map-marker-alt"></i>
-                Alamat & Kontak
-            </h3>
-        </div>
-        <div class="card-body">
-            <div style="display: grid; gap: 1.5rem;">
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Alamat Lengkap <span style="color: #ef4444;">*</span></label>
-                    <textarea name="alamat" rows="3" 
-                              style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; resize: vertical;" 
-                              required><?= old('alamat') ?></textarea>
-                </div>
-                
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Alamat Domisili <span style="color: #ef4444;">*</span></label>
-                    <textarea name="domisili" rows="3" 
-                              style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem; resize: vertical;" 
-                              required><?= old('domisili') ?></textarea>
-                    <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #64748b;">Alamat tempat tinggal saat ini</p>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                    <div>
-                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Nomor Telepon <span style="color: #ef4444;">*</span></label>
-                        <input type="tel" name="nomor_telepon" value="<?= old('nomor_telepon') ?>" 
-                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" 
-                               required>
+<div class="max-w-4xl mx-auto">
+        <!-- Alert Messages -->
+        <?php if (isset($validation)): ?>
+            <div class="mb-8 p-4 border border-red-200 bg-red-50 rounded-xl">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-red-400"></i>
                     </div>
-                    
-                    <div>
-                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Asal TK/RA</label>
-                        <input type="text" name="asal_tk_ra" value="<?= old('asal_tk_ra') ?>" 
-                               style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;">
-                        <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #64748b;">Nama TK/RA asal (opsional)</p>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800">Terjadi kesalahan validasi:</h3>
+                        <div class="mt-2 text-sm text-red-700">
+                            <?= $validation->listErrors() ?>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- Data Akun User -->
-    <div class="content-card">
-        <div class="card-header">
-            <h3 class="card-title">
-                <i class="fas fa-user-cog"></i>
-                Data Akun User
-            </h3>
-        </div>
-        <div class="card-body">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Username <span style="color: #ef4444;">*</span></label>
-                    <input type="text" name="username" value="<?= old('username') ?>" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" 
-                           required>
-                    <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #64748b;">Username untuk login siswa</p>
-                </div>
-                
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Email <span style="color: #ef4444;">*</span></label>
-                    <input type="email" name="email" value="<?= old('email') ?>" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" 
-                           required>
-                    <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #64748b;">Email untuk login siswa</p>
+        <?php endif; ?>
+        
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="mb-8 p-4 border border-red-200 bg-red-50 rounded-xl">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-red-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h3 class="text-sm font-medium text-red-800"><?= session()->getFlashdata('error') ?></h3>
+                    </div>
                 </div>
             </div>
+        <?php endif; ?>
+        
+        <form action="/admin/pendaftar/store" method="post" enctype="multipart/form-data" class="space-y-8">
+            <?= csrf_field() ?>
             
-            <div style="margin-top: 1.5rem;">
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Password <span style="color: #ef4444;">*</span></label>
-                    <input type="password" name="password" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" 
-                           required>
-                    <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #64748b;">Password untuk login siswa (minimal 8 karakter)</p>
+            <!-- Data Pribadi -->
+            <?= form_section_header('Data Pribadi Siswa', 'fas fa-user') ?>
+                <?= form_grid_start(2) ?>
+                    <?= form_input_text('nama_lengkap', 'Nama Lengkap', ['required' => true]) ?>
+                    
+                    <?= form_input_select('tahun_ajaran_id', 'Tahun Ajaran', 
+                        !empty($tahunAjaranList) ? array_column($tahunAjaranList, 'nama', 'id') : [],
+                        ['required' => true, 'placeholder' => 'Pilih Tahun Ajaran']
+                    ) ?>
+                    
+                    <?= form_input_select('agama', 'Agama', get_agama_options(), ['required' => true]) ?>
+                    
+                    <?= form_input_select('jenis_kelamin', 'Jenis Kelamin', get_jenis_kelamin_options(), ['required' => true]) ?>
+                    
+                    <?= form_input_text('tempat_lahir', 'Tempat Lahir', ['required' => true]) ?>
+                    
+                    <?= form_input_text('tanggal_lahir', 'Tanggal Lahir', ['required' => true, 'type' => 'date']) ?>
+                <?= form_grid_end() ?>
+            <?= form_section_footer() ?>
+            
+            <!-- Data Orang Tua -->
+            <?= form_section_header('Data Orang Tua', 'fas fa-users') ?>
+                <?= form_grid_start(2) ?>
+                    <?= form_input_text('nama_ayah', 'Nama Ayah', ['required' => true]) ?>
+                    
+                    <?= form_input_text('nama_ibu', 'Nama Ibu', ['required' => true]) ?>
+                    
+                    <?= form_input_file('ktp_ayah', 'KTP Ayah', ['required' => true]) ?>
+                    
+                    <?= form_input_file('ktp_ibu', 'KTP Ibu', ['required' => true]) ?>
+                <?= form_grid_end() ?>
+            <?= form_section_footer() ?>
+            
+            <!-- Alamat & Kontak -->
+            <?= form_section_header('Alamat & Kontak', 'fas fa-map-marker-alt') ?>
+                <div class="space-y-6">
+                    <?= form_input_textarea('alamat', 'Alamat Lengkap', ['required' => true, 'rows' => 3]) ?>
+                    
+                    <?= form_input_textarea('domisili', 'Alamat Domisili', [
+                        'required' => true, 
+                        'rows' => 3, 
+                        'help' => 'Alamat tempat tinggal saat ini'
+                    ]) ?>
+                    
+                    <?= form_grid_start(2) ?>
+                        <?= form_input_text('nomor_telepon', 'Nomor Telepon', ['required' => true, 'type' => 'tel']) ?>
+                        
+                        <?= form_input_text('asal_tk_ra', 'Asal TK/RA', [
+                            'help' => 'Nama TK/RA asal (opsional)'
+                        ]) ?>
+                    <?= form_grid_end() ?>
                 </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Upload Dokumen -->
-    <div class="content-card">
-        <div class="card-header">
-            <h3 class="card-title">
-                <i class="fas fa-file-upload"></i>
-                Upload Dokumen
-            </h3>
-        </div>
-        <div class="card-body">
-            <div style="display: grid; gap: 1.5rem;">
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Akta Kelahiran <span style="color: #ef4444;">*</span></label>
-                    <input type="file" name="akta" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" 
-                           accept=".pdf,.jpg,.jpeg,.png" required>
-                    <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #64748b;">Format: PDF, JPG, atau PNG (Maksimal 5MB)</p>
-                </div>
+            <?= form_section_footer() ?>
+            
+            <!-- Data Akun User -->
+            <?= form_section_header('Data Akun User', 'fas fa-user-cog') ?>
+                <?= form_grid_start(2) ?>
+                    <?= form_input_text('username', 'Username', [
+                        'required' => true,
+                        'help' => 'Username untuk login siswa'
+                    ]) ?>
+                    
+                    <?= form_input_text('email', 'Email', [
+                        'type' => 'email',
+                        'required' => true,
+                        'help' => 'Email untuk login siswa'
+                    ]) ?>
+                <?= form_grid_end() ?>
                 
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Kartu Keluarga <span style="color: #ef4444;">*</span></label>
-                    <input type="file" name="kk" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" 
-                           accept=".pdf,.jpg,.jpeg,.png" required>
-                    <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #64748b;">Format: PDF, JPG, atau PNG (Maksimal 5MB)</p>
+                <?= form_input_password('password', 'Password', [
+                    'required' => true,
+                    'help' => 'Password untuk login siswa (minimal 8 karakter)',
+                    'toggle_id' => 'togglePassword'
+                ]) ?>
+            <?= form_section_footer() ?>
+            
+            <!-- Upload Dokumen -->
+            <?= form_section_header('Upload Dokumen', 'fas fa-file-upload') ?>
+                <div class="space-y-6">
+                    <?= form_input_file('akta', 'Akta Kelahiran', ['required' => true]) ?>
+                    
+                    <?= form_input_file('kk', 'Kartu Keluarga', ['required' => true]) ?>
+                    
+                    <?= form_input_file('ijazah', 'Ijazah TK/RA', [
+                        'required' => false,
+                        'help' => 'Upload jika ada (opsional) - Format: PDF, JPG, atau PNG (Maksimal 5MB)'
+                    ]) ?>
                 </div>
-                
-                <div>
-                    <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Ijazah TK/RA</label>
-                    <input type="file" name="ijazah" 
-                           style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;" 
-                           accept=".pdf,.jpg,.jpeg,.png">
-                    <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #64748b;">Upload jika ada (opsional) - Format: PDF, JPG, atau PNG (Maksimal 5MB)</p>
-                </div>
-            </div>
-        </div>
+            <?= form_section_footer() ?>
+            
+            <?= form_submit_button('Simpan Data Pendaftar', ['icon' => 'fas fa-save']) ?>
+        </form>
     </div>
-    
-    <!-- Submit Button -->
-    <div style="display: flex; gap: 1rem; justify-content: end;">
-        <a href="/admin/pendaftar" class="btn btn-secondary">
-            <i class="fas fa-times"></i>
-            Batal
-        </a>
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i>
-            Simpan Data
-        </button>
-    </div>
-</form>
-
-<!-- Modal Success -->
+</div><!-- Modal Success -->
 <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -327,7 +203,10 @@
                                     </tr>
                                     <tr>
                                         <td><strong>Email:</strong></td>
-                                        <td id="modal-email"></td>
+                            <?= form_submit_button('Simpan Data Pendaftar', [
+                                'icon' => 'fas fa-save',
+                                'class' => 'w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-lg font-semibold rounded-xl shadow-lg py-4 px-8 flex items-center justify-center gap-x-3'
+                            ]) ?>
                                     </tr>
                                     <tr>
                                         <td><strong>Password:</strong></td>
@@ -378,173 +257,6 @@ function redirectToPendaftar() {
 <?php endif; ?>
 </script>
 
-<style>
-/* Page Header Responsive */
-.page-header {
-    margin-bottom: 2rem;
-}
-
-.page-header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-}
-
-.page-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0;
-}
-
-.page-subtitle {
-    color: #64748b;
-    margin: 0;
-    font-size: 0.875rem;
-}
-
-.page-actions {
-    display: flex;
-    gap: 1rem;
-    flex-shrink: 0;
-}
-
-/* Form Responsive */
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-}
-
-.required {
-    color: #ef4444;
-}
-
-.form-input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.form-input:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.form-textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.btn-text {
-    margin-left: 0.5rem;
-}
-
-/* Alert Responsive */
-.alert {
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-}
-
-.alert-danger {
-    background-color: #fee2e2;
-    border: 1px solid #fca5a5;
-    color: #dc2626;
-}
-
-.alert-heading {
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-/* Mobile Styles */
-@media (max-width: 768px) {
-    .page-header-content {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 1rem;
-    }
-
-    .page-actions {
-        justify-content: center;
-    }
-
-    .btn-text {
-        display: none;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .form-input {
-        padding: 0.625rem;
-        font-size: 1rem;
-    }
-
-    .card-body {
-        padding: 1rem;
-    }
-
-    .card-header {
-        padding: 1rem 1rem 0;
-    }
-}
-
-/* Extra Small Mobile */
-@media (max-width: 480px) {
-    .page-title {
-        font-size: 1.25rem;
-    }
-
-    .btn {
-        padding: 0.625rem 1rem;
-        justify-content: center;
-    }
-
-    .form-input {
-        padding: 0.5rem;
-    }
-
-    .content-card {
-        margin-bottom: 1rem;
-    }
-
-    .alert {
-        padding: 0.75rem;
-        font-size: 0.875rem;
-    }
-}
-
-/* Print Styles */
-@media print {
-    .page-actions,
-    .btn {
-        display: none !important;
-    }
-    
-    .page-header {
-        margin-bottom: 1rem;
-    }
-}
-</style>
+<?= password_toggle_script('password', 'togglePassword', 'passwordEyeOpen', 'passwordEyeClosed') ?>
 
 <?= $this->endSection() ?>

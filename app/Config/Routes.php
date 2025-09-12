@@ -2,21 +2,17 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-/**
- * @var RouteCollection $routes
- */
 $routes->get('/', 'Home::index');
 
-// PPDB General Routes
 $routes->get('/ppdb', 'Ppdb::index');
 $routes->get('/ppdb/pengumuman', 'Ppdb::pengumuman');
-$routes->get('/daftar', 'Ppdb::daftar');
-$routes->post('/daftar', 'Ppdb::prosesDaftar');
+$routes->get('/daftar', 'PendaftaranSiswa::index');
+$routes->post('/daftar/(:segment)/store', 'PendaftaranSiswa::store/$1');
+$routes->get('/student-profile', 'Ppdb::studentProfile');
 $routes->get('/profile-siswa', 'Ppdb::studentProfile');
 $routes->match(['GET', 'POST'], '/edit-profile', 'Ppdb::editProfile');
 $routes->post('/upload-payment', 'Ppdb::uploadPayment');
 
-// Auth Routes (Guest only)
 $routes->group('', ['filter' => 'guest'], function($routes) {
     $routes->get('/login', 'Auth::login');
     $routes->post('/login', 'Auth::attemptLogin');
@@ -24,10 +20,8 @@ $routes->group('', ['filter' => 'guest'], function($routes) {
     $routes->post('/register', 'Auth::attemptRegister');
 });
 
-// Logout (Authenticated users only)
 $routes->get('/logout', 'Auth::logout', ['filter' => 'auth']);
 
-// User Profile Routes (Authenticated users only)
 $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->get('/profile', 'Auth::profile');
     $routes->post('/profile/update', 'Auth::updateProfile');
@@ -35,10 +29,8 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->post('/profile/upload-photo', 'Auth::uploadPhoto');
 });
 
-// Admin Routes (Admin only)
 $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->get('dashboard', 'AdminDashboard::index');
-    // pendaftar management
     $routes->get('pendaftar', 'AdminPendaftar::index');
     $routes->get('pendaftar/detail/(:segment)', 'AdminPendaftar::detail/$1');
     $routes->get('pendaftar/edit/(:segment)', 'AdminPendaftar::edit/$1');
@@ -47,40 +39,38 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->post('pendaftar/validate/(:segment)', 'AdminPendaftar::validateStudent/$1');
     $routes->get('pendaftar/tambah', 'AdminPendaftar::tambah');
     $routes->post('pendaftar/store', 'AdminPendaftar::store');
-    // daftar ulang management
+
     $routes->get('daftar-ulang', 'AdminDaftarUlang::index');
     $routes->get('daftar-ulang/detail/(:segment)', 'AdminDaftarUlang::detail/$1');
     $routes->post('daftar-ulang/konfirmasi-pembayaran', 'AdminDaftarUlang::konfirmasiPembayaran');
     $routes->post('daftar-ulang/validasi-pembayaran', 'AdminDaftarUlang::validasiPembayaran');
+
     $routes->get('pengumuman', 'AdminPengumuman::index');
     $routes->post('pengumuman/create', 'AdminPengumuman::create');
     $routes->get('pengumuman/detail/(:segment)', 'AdminPengumuman::detail/$1');
     $routes->post('pengumuman/update/(:segment)', 'AdminPengumuman::update/$1');
     $routes->post('pengumuman/toggle-active/(:segment)', 'AdminPengumuman::toggleActive/$1');
     $routes->post('pengumuman/delete/(:segment)', 'AdminPengumuman::delete/$1');
-    // rekap siswa management
+
     $routes->get('rekap-siswa', 'AdminRekapSiswa::index');
     $routes->get('rekap-siswa/data', 'AdminRekapSiswa::getStudentsData');
     $routes->get('rekap-siswa/summary', 'AdminRekapSiswa::getSummaryStats');
     $routes->get('rekap-siswa/export-excel', 'AdminRekapSiswa::exportExcel');
     $routes->get('rekap-siswa/export-pdf', 'AdminRekapSiswa::exportPdf');
-    // pengaturan and profile
+
     $routes->get('pengaturan', 'AdminSettings::index');
-    
-    // Pengaturan routes for tahun ajaran
+
     $routes->get('settings/getTahunAjaran', 'AdminSettings::getTahunAjaran');
     $routes->post('settings/storeTahunAjaran', 'AdminSettings::storeTahunAjaran');
     $routes->post('settings/updateTahunAjaran/(:segment)', 'AdminSettings::updateTahunAjaran/$1');
     $routes->delete('settings/deleteTahunAjaran/(:segment)', 'AdminSettings::deleteTahunAjaran/$1');
     $routes->post('settings/activateTahunAjaran/(:segment)', 'AdminSettings::activateTahunAjaran/$1');
-    
-    // Pengaturan routes for kategori
+
     $routes->get('settings/getKategori', 'AdminSettings::getKategori');
     $routes->post('settings/storeKategori', 'AdminSettings::storeKategori');
     $routes->post('settings/updateKategori/(:segment)', 'AdminSettings::updateKategori/$1');
     $routes->delete('settings/deleteKategori/(:segment)', 'AdminSettings::deleteKategori/$1');
     
-    // Pengaturan routes for gelombang pendaftaran
     $routes->get('settings/getGelombang', 'AdminSettings::getGelombang');
     $routes->post('settings/storeGelombang', 'AdminSettings::storeGelombang');
     $routes->post('settings/updateGelombang/(:segment)', 'AdminSettings::updateGelombang/$1');
@@ -88,29 +78,24 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     
     $routes->get('profile', 'Auth::profile');
     
-    // Rekap Siswa API routes
     $routes->get('students-data', 'Admin::getStudentsData');
     $routes->post('student/(:segment)/status', 'Admin::updateStudentStatus/$1');
     $routes->delete('student/(:segment)/delete', 'Admin::deleteStudent/$1');
     $routes->get('export-excel', 'Admin::exportExcel');
     $routes->get('export-pdf', 'Admin::exportPdf');
     
-    // PPDB Admin Routes (alternative routes for PPDB controller admin functions)
     $routes->delete('ppdb/student/(:segment)/delete', 'Ppdb::deleteStudent/$1');
     $routes->post('ppdb/student/(:segment)/status/(:segment)', 'Ppdb::updateStudentStatus/$1/$2');
     
-    // Profile management
     $routes->post('profile/update', 'Auth::updateProfile');
     $routes->post('profile/change-password', 'Auth::changePassword');
     $routes->post('profile/upload-photo', 'Auth::uploadPhoto');
 });
 
-// Default admin route redirect to dashboard
 $routes->get('admin', function() {
     return redirect()->to('/admin/dashboard');
 });
 
-// Error Routes (for manual testing or direct access)
 $routes->group('error', function($routes) {
     $routes->get('400', 'ErrorController::show400');
     $routes->get('401', 'ErrorController::show401');
@@ -124,7 +109,6 @@ $routes->group('error', function($routes) {
     $routes->get('account-not-activated', 'ErrorController::accountNotActivated');
 });
 
-// File Upload Access Routes
 $routes->get('writable/uploads/(:any)/(:any)', function($studentId, $filename) {
     $filePath = WRITEPATH . 'uploads/' . $studentId . '/' . $filename;
     
@@ -142,5 +126,4 @@ $routes->get('writable/uploads/(:any)/(:any)', function($studentId, $filename) {
     }
 });
 
-// Set custom 404 handler
 $routes->set404Override('ErrorController::show404');

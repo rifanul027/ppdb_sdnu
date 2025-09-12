@@ -1,95 +1,147 @@
 <?= $this->extend('admin/layout') ?>
 
+<?= $this->section('styles') ?>
+<style>
+    /* Table scroll styling */
+    #tableContainer {
+        scrollbar-width: auto;
+        scrollbar-color: #9ca3af #f3f4f6;
+    }
+    
+    #tableContainer::-webkit-scrollbar {
+        height: 12px;
+        background-color: #f3f4f6;
+    }
+    
+    #tableContainer::-webkit-scrollbar-thumb {
+        background-color: #9ca3af;
+        border-radius: 6px;
+        border: 2px solid #f3f4f6;
+    }
+    
+    #tableContainer::-webkit-scrollbar-thumb:hover {
+        background-color: #6b7280;
+    }
+    
+    #tableContainer::-webkit-scrollbar-track {
+        background-color: #f3f4f6;
+        border-radius: 6px;
+    }
+    
+    /* Force table to maintain minimum width */
+    #rekapSiswaTable {
+        border-collapse: collapse;
+        white-space: nowrap;
+    }
+    
+    #rekapSiswaTable th,
+    #rekapSiswaTable td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #tableContainer {
+            border-radius: 0;
+        }
+        
+        #rekapSiswaTable th,
+        #rekapSiswaTable td {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        #rekapSiswaTable th,
+        #rekapSiswaTable td {
+            padding: 0.375rem 0.5rem;
+            font-size: 0.7rem;
+        }
+    }
+</style>
+<?= $this->endsection() ?>
+
 <?= $this->section('content') ?>
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-    <div>
-        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;"><?= $pageTitle ?></h2>
-        <p style="color: #64748b;">Rekap data siswa yang sudah diterima dan pembayaran lunas</p>
+<div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-6">
+    <div class="flex-1">
+        <h2 class="text-2xl font-semibold text-gray-900 mb-2"><?= $pageTitle ?></h2>
+        <p class="text-gray-600">Rekap data siswa yang sudah diterima dan pembayaran lunas</p>
     </div>
-    <div style="display: flex; gap: 1rem;">
-        <button class="btn btn-secondary" onclick="exportPdf()">
+    <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+        <button class="btn btn-secondary flex items-center justify-center gap-2 w-full sm:w-auto" onclick="exportPdf()">
             <i class="fas fa-file-pdf"></i>
-            Export PDF
+            <span>Export PDF</span>
         </button>
-        <button class="btn btn-success" onclick="exportExcel()">
+        <button class="btn btn-success flex items-center justify-center gap-2 w-full sm:w-auto" onclick="exportExcel()">
             <i class="fas fa-file-excel"></i>
-            Export Excel
+            <span>Export Excel</span>
         </button>
-        <button class="btn btn-primary" onclick="refreshData()">
+        <button class="btn btn-primary flex items-center justify-center gap-2 w-full sm:w-auto" onclick="refreshData()">
             <i class="fas fa-sync"></i>
-            Refresh
+            <span>Refresh</span>
         </button>
     </div>
 </div>
 
 <!-- Statistics Cards -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;" id="statsContainer">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" id="statsContainer">
     <div class="content-card">
-        <div class="card-body" style="text-align: center;">
-            <div style="font-size: 2rem; font-weight: 700; color: #059669; margin-bottom: 0.5rem;" id="totalSiswa">
-                0
-            </div>
-            <div style="color: #64748b; font-size: 0.875rem;">Total Siswa</div>
+        <div class="card-body text-center">
+            <div class="text-3xl font-bold text-green-600 mb-2" id="totalSiswa">0</div>
+            <div class="text-gray-500 text-sm">Total Siswa</div>
         </div>
     </div>
     <div class="content-card">
-        <div class="card-body" style="text-align: center;">
-            <div style="font-size: 2rem; font-weight: 700; color: #3b82f6; margin-bottom: 0.5rem;" id="lakiLaki">
-                0
-            </div>
-            <div style="color: #64748b; font-size: 0.875rem;">Laki-laki</div>
+        <div class="card-body text-center">
+            <div class="text-3xl font-bold text-green-600 mb-2" id="lakiLaki">0</div>
+            <div class="text-gray-500 text-sm">Laki-laki</div>
         </div>
     </div>
     <div class="content-card">
-        <div class="card-body" style="text-align: center;">
-            <div style="font-size: 2rem; font-weight: 700; color: #ec4899; margin-bottom: 0.5rem;" id="perempuan">
-                0
-            </div>
-            <div style="color: #64748b; font-size: 0.875rem;">Perempuan</div>
-        </div>
-    </div>
-    <div class="content-card">
-        <div class="card-body" style="text-align: center;">
-            <div style="font-size: 2rem; font-weight: 700; color: #f59e0b; margin-bottom: 0.5rem;" id="denganBeasiswa">
-                0
-            </div>
-            <div style="color: #64748b; font-size: 0.875rem;">Dengan Beasiswa</div>
+        <div class="card-body text-center">
+            <div class="text-3xl font-bold text-pink-600 mb-2" id="perempuan">0</div>
+            <div class="text-gray-500 text-sm">Perempuan</div>
         </div>
     </div>
 </div>
 
 <!-- Filter Section -->
-<div class="content-card" style="margin-bottom: 2rem;">
+<div class="content-card mb-6">
     <div class="card-body">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: end;">
-            <div>
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Tahun Ajaran</label>
-                <select id="filterTahunAjaran" style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Tahun Ajaran</label>
+                <select id="filterTahunAjaran" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Semua Tahun Ajaran</option>
                     <?php foreach ($tahunAjaran as $tahun): ?>
                         <option value="<?= $tahun['id'] ?>" 
                                 <?= ($defaultTahunAjaran && $defaultTahunAjaran['id'] === $tahun['id']) ? 'selected' : '' ?>>
-                            <?= $tahun['nama'] ?> (<?= $tahun['tahun_mulai'] ?>/<?= $tahun['tahun_selesai'] ?>)
+                            <?= $tahun['nama'] ?> 
                         </option>
                     <?php endforeach; ?>
                 </select>
             </div>
             
-            <div>
-                <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Pencarian</label>
-                <input type="text" id="searchInput" placeholder="Cari nama siswa, NISN, atau nama orang tua..." 
-                       style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px;">
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Pencarian</label>
+                <input type="text" 
+                       id="searchInput" 
+                       placeholder="Cari nama siswa, NISN, atau nama orang tua..." 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
             </div>
             
-            <div style="display: flex; gap: 0.5rem;">
-                <button onclick="applyFilters()" class="btn btn-primary">
+            <div class="flex flex-col sm:flex-row gap-2 lg:items-end lg:justify-start">
+                <button onclick="applyFilters()" class="btn btn-primary flex items-center justify-center gap-2 w-full sm:w-auto">
                     <i class="fas fa-search"></i>
-                    Filter
+                    <span>Filter</span>
                 </button>
-                <button onclick="resetFilters()" class="btn btn-secondary">
+                <button onclick="resetFilters()" class="btn btn-secondary flex items-center justify-center gap-2 w-full sm:w-auto">
                     <i class="fas fa-times"></i>
-                    Reset
+                    <span>Reset</span>
                 </button>
             </div>
         </div>
@@ -98,15 +150,13 @@
 
 <!-- Data Table -->
 <div class="content-card">
-    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="card-header flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <h3 class="card-title">Data Rekap Siswa</h3>
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <div style="color: #64748b; font-size: 0.875rem;" id="totalInfo">
-                Total: 0 siswa
-            </div>
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <span style="font-size: 0.875rem; color: #64748b;">Per halaman:</span>
-                <select id="perPageSelect" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem;">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+            <div class="text-gray-500 text-sm" id="totalInfo">Total: 0 siswa</div>
+            <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-500">Per halaman:</span>
+                <select id="perPageSelect" class="px-2 py-1 border border-gray-300 rounded text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -115,38 +165,43 @@
             </div>
         </div>
     </div>
-    <div class="card-body" style="padding: 0;">
+    
+    <div class="card-body p-0">
         <!-- Loading State -->
-        <div id="loadingState" class="hidden" style="padding: 3rem; text-align: center; color: #64748b;">
-            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+        <div id="loadingState" class="hidden py-12 text-center text-gray-500">
+            <i class="fas fa-spinner fa-spin text-3xl mb-4"></i>
             <div>Memuat data...</div>
         </div>
 
-        <div class="table-container" id="tableContainer">
-            <table class="table" id="rekapSiswaTable">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>No. Registrasi</th>
-                        <th>NISN</th>
-                        <th>Nama Lengkap</th>
-                        <th>Jenis Kelamin</th>
-                        <th>Tempat, Tanggal Lahir</th>
-                        <th>Orang Tua</th>
-                        <th>Tahun Ajaran</th>
-                        <th>Beasiswa</th>
-                        <th>Tgl Diterima</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <!-- Data will be loaded here via AJAX -->
-                </tbody>
-            </table>
+        <!-- Table Wrapper with Scroll -->
+        <div class="w-full overflow-x-scroll overflow-y-visible border-b border-gray-200" 
+             id="tableContainer" 
+             style="max-width: 100%; -webkit-overflow-scrolling: touch;">
+            <div style="min-width: 1200px; width: 100%;">
+                <table class="w-full bg-white" id="rekapSiswaTable">
+                    <thead class="bg-gray-50 sticky top-0">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 60px;">No</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 140px;">No. Registrasi</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 120px;">NISN</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 180px;">Nama Lengkap</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 120px;">Jenis Kelamin</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 180px;">Tempat, Tanggal Lahir</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 160px;">Orang Tua</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 140px;">Tahun Ajaran</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 140px;">Tgl Diterima</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Data will be loaded here via AJAX -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     
     <!-- Pagination -->
-    <div class="card-footer" style="padding: 1rem;" id="paginationContainer">
+    <div class="card-footer px-4 py-3 bg-gray-50 border-t border-gray-200" id="paginationContainer">
         <!-- Pagination will be loaded here -->
     </div>
 </div>
@@ -255,7 +310,6 @@ function updateStatsDisplay(stats) {
     document.getElementById('totalSiswa').textContent = stats.total_siswa;
     document.getElementById('lakiLaki').textContent = stats.laki_laki;
     document.getElementById('perempuan').textContent = stats.perempuan;
-    document.getElementById('denganBeasiswa').textContent = stats.dengan_beasiswa;
 }
 
 // Render table
@@ -265,11 +319,13 @@ function renderTable(students) {
     if (students.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="10" style="text-align: center; padding: 3rem; color: #64748b;">
-                    <i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                    <div>Tidak ada data siswa yang ditemukan</div>
-                    <div style="font-size: 0.875rem; margin-top: 0.5rem;">
-                        Coba ubah filter atau kriteria pencarian
+                <td colspan="9" class="px-4 py-12 text-center text-gray-500">
+                    <div class="flex flex-col items-center justify-center">
+                        <i class="fas fa-users text-5xl mb-4 opacity-50"></i>
+                        <div class="text-lg font-medium">Tidak ada data siswa yang ditemukan</div>
+                        <div class="text-sm mt-2 text-gray-400">
+                            Coba ubah filter atau kriteria pencarian
+                        </div>
                     </div>
                 </td>
             </tr>
@@ -280,55 +336,41 @@ function renderTable(students) {
     const startNumber = (currentPage - 1) * currentPerPage;
     
     tbody.innerHTML = students.map((student, index) => `
-        <tr>
-            <td style="font-weight: 600; color: #64748b;">${startNumber + index + 1}</td>
-            <td>
-                <span style="font-family: monospace; font-weight: 600; color: #059669;">
+        <tr class="hover:bg-gray-50 transition-colors">
+            <td class="px-4 py-3 text-sm font-semibold text-gray-600" style="min-width: 60px;">${startNumber + index + 1}</td>
+            <td class="px-4 py-3" style="min-width: 140px;">
+                <span class="font-mono font-semibold text-green-600 text-sm">
                     ${escapeHtml(student.no_registrasi)}
                 </span>
             </td>
-            <td>
-                <span style="font-family: monospace; font-weight: 600; color: #3b82f6;">
+            <td class="px-4 py-3" style="min-width: 120px;">
+                <span class="font-mono font-semibold text-green-600 text-sm">
                     ${escapeHtml(student.nisn || '-')}
                 </span>
             </td>
-            <td>
-                <div style="font-weight: 600;">${escapeHtml(student.nama_lengkap)}</div>
+            <td class="px-4 py-3" style="min-width: 180px;">
+                <div class="font-semibold text-gray-900" title="${escapeHtml(student.nama_lengkap)}">${escapeHtml(student.nama_lengkap)}</div>
             </td>
-            <td>
-                <span class="badge ${student.jenis_kelamin === 'L' ? 'badge-primary' : 'badge-secondary'}">
+            <td class="px-4 py-3" style="min-width: 120px;">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${student.jenis_kelamin === 'L' ? 'bg-green-100 text-green-800' : 'bg-pink-100 text-pink-800'}">
                     ${student.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
                 </span>
             </td>
-            <td>
-                <div>${escapeHtml(student.tempat_lahir)}</div>
-                <div style="font-size: 0.875rem; color: #64748b;">
-                    ${student.tanggal_lahir_formatted}
-                </div>
+            <td class="px-4 py-3" style="min-width: 180px;">
+                <div class="text-sm font-medium text-gray-900" title="${escapeHtml(student.tempat_lahir)}">${escapeHtml(student.tempat_lahir)}</div>
+                <div class="text-xs text-gray-500">${student.tanggal_lahir_formatted}</div>
             </td>
-            <td>
-                <div style="font-weight: 500;">${escapeHtml(student.nama_ayah)}</div>
-                <div style="font-size: 0.875rem; color: #64748b;">
-                    ${escapeHtml(student.nama_ibu)}
-                </div>
+            <td class="px-4 py-3" style="min-width: 160px;">
+                <div class="text-sm font-medium text-gray-900" title="${escapeHtml(student.nama_ayah)}">${escapeHtml(student.nama_ayah)}</div>
+                <div class="text-xs text-gray-500" title="${escapeHtml(student.nama_ibu)}">${escapeHtml(student.nama_ibu)}</div>
             </td>
-            <td>
-                <div style="font-weight: 500;">${escapeHtml(student.tahun_ajaran_nama || '-')}</div>
-                <div style="font-size: 0.875rem; color: #64748b;">
-                    ${student.tahun_mulai}/${student.tahun_selesai}
-                </div>
+            <td class="px-4 py-3" style="min-width: 140px;">
+                <div class="text-sm font-medium text-gray-900" title="${escapeHtml(student.tahun_ajaran_nama || '-')}">${escapeHtml(student.tahun_ajaran_nama || '-')}</div>
+                <div class="text-xs text-gray-500">${student.tahun_mulai}/${student.tahun_selesai}</div>
             </td>
-            <td>
-                ${student.beasiswa_nama ? 
-                    `<span class="badge badge-warning">${escapeHtml(student.beasiswa_nama)}</span>` : 
-                    '<span style="color: #64748b; font-size: 0.875rem;">-</span>'
-                }
-            </td>
-            <td>
-                <div style="font-size: 0.875rem; font-weight: 500;">${student.accepted_at_formatted}</div>
-                <div style="font-size: 0.75rem; color: #64748b;">
-                    Bayar: ${student.pembayaran_accepted_formatted}
-                </div>
+            <td class="px-4 py-3" style="min-width: 140px;">
+                <div class="text-sm font-medium text-gray-900">${student.accepted_at_formatted}</div>
+                <div class="text-xs text-gray-500">Bayar: ${student.pembayaran_accepted_formatted}</div>
             </td>
         </tr>
     `).join('');
@@ -340,7 +382,7 @@ function renderPagination(pagination) {
     
     if (pagination.total_pages <= 1) {
         container.innerHTML = `
-            <div style="text-align: center; color: #64748b; font-size: 0.875rem;">
+            <div class="text-center text-gray-500 text-sm">
                 Menampilkan ${pagination.total} data
             </div>
         `;
@@ -351,18 +393,18 @@ function renderPagination(pagination) {
     const endItem = Math.min(pagination.page * pagination.per_page, pagination.total);
     
     let paginationHTML = `
-        <div style="display: flex; justify-content: between; align-items: center;">
-            <div style="color: #64748b; font-size: 0.875rem;">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div class="text-gray-500 text-sm text-center sm:text-left">
                 Menampilkan ${startItem} sampai ${endItem} dari ${pagination.total} data
             </div>
-            <div style="display: flex; gap: 0.25rem;">
+            <div class="flex justify-center flex-wrap gap-1">
     `;
     
     // Previous button
     if (pagination.page > 1) {
         paginationHTML += `
             <button onclick="changePage(${pagination.page - 1})" 
-                    class="btn btn-sm btn-secondary">
+                    class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
                 <i class="fas fa-chevron-left"></i>
             </button>
         `;
@@ -373,7 +415,7 @@ function renderPagination(pagination) {
         const isActive = i === pagination.page;
         paginationHTML += `
             <button onclick="changePage(${i})" 
-                    class="btn btn-sm ${isActive ? 'btn-primary' : 'btn-secondary'}">
+                    class="px-3 py-1 text-sm rounded transition-colors ${isActive ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}">
                 ${i}
             </button>
         `;
@@ -383,7 +425,7 @@ function renderPagination(pagination) {
     if (pagination.page < pagination.total_pages) {
         paginationHTML += `
             <button onclick="changePage(${pagination.page + 1})" 
-                    class="btn btn-sm btn-secondary">
+                    class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors">
                 <i class="fas fa-chevron-right"></i>
             </button>
         `;

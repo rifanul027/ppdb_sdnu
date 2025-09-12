@@ -9,7 +9,7 @@
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all duration-300 scale-95 modal-content">
             <!-- Modal Header -->
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 rounded-t-2xl">
+            <div class="bg-gradient-to-r from-green-600 to-indigo-600 px-6 py-4 rounded-t-2xl">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
                         <div class="bg-white bg-opacity-20 p-2 rounded-lg">
@@ -44,7 +44,7 @@
                     Batal
                 </button>
                 <button type="submit" form="form-<?= $type ?>" 
-                        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
+                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105">
                     <i class="fas fa-save mr-2"></i>
                     <span id="submit-text-<?= $type ?>">Simpan</span>
                 </button>

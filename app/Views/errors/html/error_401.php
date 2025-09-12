@@ -75,11 +75,11 @@
             <div class="animate-slide-up">
                 <!-- Error Icon -->
                 <div class="mb-8">
-                    <div class="mx-auto w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-6 animate-bounce-gentle">
-                        <i class="fas fa-user-lock text-4xl text-blue-600"></i>
+                    <div class="mx-auto w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-6 animate-bounce-gentle">
+                        <i class="fas fa-user-lock text-4xl text-green-600"></i>
                     </div>
-                    <h1 class="text-6xl font-bold text-blue-600">401</h1>
-                    <div class="w-24 h-1 bg-blue-500 mx-auto mt-4 rounded-full"></div>
+                    <h1 class="text-6xl font-bold text-green-600">401</h1>
+                    <div class="w-24 h-1 bg-green-500 mx-auto mt-4 rounded-full"></div>
                 </div>
                 
                 <!-- Error Message -->
@@ -91,8 +91,8 @@
                     </p>
                     
                     <?php if (ENVIRONMENT !== 'production' && isset($message)) : ?>
-                        <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                            <p class="text-sm text-blue-600 font-mono">
+                        <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <p class="text-sm text-green-600 font-mono">
                                 <?= nl2br(esc($message)) ?>
                             </p>
                         </div>
@@ -170,9 +170,9 @@
     
     <!-- Decorative Elements -->
     <div class="fixed top-0 left-0 w-full h-full pointer-events-none overflow-hidden z-0">
-        <div class="absolute top-10 left-10 w-20 h-20 bg-blue-300 opacity-10 rounded-full animate-float"></div>
+        <div class="absolute top-10 left-10 w-20 h-20 bg-green-300 opacity-10 rounded-full animate-float"></div>
         <div class="absolute top-1/4 right-20 w-16 h-16 bg-nu-green opacity-10 rounded-full animate-float" style="animation-delay: 2s;"></div>
-        <div class="absolute bottom-1/4 left-1/4 w-12 h-12 bg-blue-300 opacity-10 rounded-full animate-float" style="animation-delay: 4s;"></div>
+        <div class="absolute bottom-1/4 left-1/4 w-12 h-12 bg-green-300 opacity-10 rounded-full animate-float" style="animation-delay: 4s;"></div>
         <div class="absolute bottom-20 right-10 w-24 h-24 bg-nu-green opacity-10 rounded-full animate-float" style="animation-delay: 1s;"></div>
     </div>
 </body>

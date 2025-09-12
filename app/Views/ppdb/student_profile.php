@@ -168,7 +168,7 @@
                                 
                                 <?php if (!empty($student['kk_url'])): ?>
                                 <div class="text-center p-4 border border-gray-200 rounded-lg">
-                                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
                                         <i class="fas fa-file-pdf text-white"></i>
                                     </div>
                                     <h4 class="text-sm font-medium mb-2">Kartu Keluarga</h4>
@@ -230,8 +230,8 @@
                                         <?php endif; ?>
                                     </div>
                                 </div>
-                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                                    <p class="text-sm text-blue-700">
+                                <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                                    <p class="text-sm text-green-700">
                                         <i class="fas fa-info-circle mr-2"></i>
                                         Pembayaran sedang diverifikasi oleh admin.
                                     </p>

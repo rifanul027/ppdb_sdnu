@@ -17,8 +17,8 @@ function renderTahunAjaranCard(item) {
             <div class="flex justify-between items-start">
                 <div class="flex-1">
                     <div class="flex items-center space-x-3 mb-3">
-                        <div class="bg-blue-100 p-2 rounded-lg">
-                            <i class="fas fa-calendar-alt text-blue-600"></i>
+                        <div class="bg-green-100 p-2 rounded-lg">
+                            <i class="fas fa-calendar-alt text-green-600"></i>
                         </div>
                         <div>
                             <h4 class="text-lg font-semibold text-gray-900">${item.nama}</h4>
@@ -36,7 +36,7 @@ function renderTahunAjaranCard(item) {
                 </div>
                 <div class="flex flex-col space-y-2 ml-6">
                     <button onclick="editItem('tahun-ajaran', '${item.id}')" 
-                            class="bg-blue-50 hover:bg-blue-100 text-blue-600 p-2 rounded-lg transition-colors" title="Edit">
+                            class="bg-green-50 hover:bg-green-100 text-green-600 p-2 rounded-lg transition-colors" title="Edit">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button onclick="toggleStatus('tahun-ajaran', '${item.id}', ${item.is_active})" 
@@ -76,7 +76,7 @@ function renderKategoriCard(item) {
                 </div>
                 <div class="flex flex-col space-y-2 ml-6">
                     <button onclick="editItem('kategori', '${item.id}')" 
-                            class="bg-blue-50 hover:bg-blue-100 text-blue-600 p-2 rounded-lg transition-colors" title="Edit">
+                            class="bg-green-50 hover:bg-green-100 text-green-600 p-2 rounded-lg transition-colors" title="Edit">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button onclick="deleteItem('kategori', '${item.id}', '${item.nama_kategori}')" 
@@ -121,9 +121,9 @@ function renderGelombangCard(item) {
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4 mt-3">
-                        <div class="bg-blue-50 p-3 rounded-lg">
-                            <p class="text-xs text-blue-600 font-medium">Tanggal Mulai</p>
-                            <p class="text-sm font-semibold text-blue-800">${new Date(item.tanggal_mulai).toLocaleDateString('id-ID')}</p>
+                        <div class="bg-green-50 p-3 rounded-lg">
+                            <p class="text-xs text-green-600 font-medium">Tanggal Mulai</p>
+                            <p class="text-sm font-semibold text-green-800">${new Date(item.tanggal_mulai).toLocaleDateString('id-ID')}</p>
                         </div>
                         <div class="bg-red-50 p-3 rounded-lg">
                             <p class="text-xs text-red-600 font-medium">Tanggal Selesai</p>
@@ -133,7 +133,7 @@ function renderGelombangCard(item) {
                 </div>
                 <div class="flex flex-col space-y-2 ml-6">
                     <button onclick="editItem('gelombang', '${item.id}')" 
-                            class="bg-blue-50 hover:bg-blue-100 text-blue-600 p-2 rounded-lg transition-colors" title="Edit">
+                            class="bg-green-50 hover:bg-green-100 text-green-600 p-2 rounded-lg transition-colors" title="Edit">
                         <i class="fas fa-edit"></i>
                     </button>
                     <button onclick="deleteItem('gelombang', '${item.id}', '${item.nama}')" 

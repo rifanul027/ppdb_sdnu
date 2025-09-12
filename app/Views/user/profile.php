@@ -64,26 +64,6 @@
                         <span class="inline-block bg-nu-green text-white px-3 py-1 rounded-full text-xs font-medium">
                             <?= ucfirst($user['role'] ?? 'siswa') ?>
                         </span>
-                        
-                        <div class="mt-6 pt-6 border-t border-gray-200">
-                            <div class="grid grid-cols-2 gap-4 text-center">
-                                <div>
-                                    <div class="text-2xl font-bold text-nu-green"><?= date('d') ?></div>
-                                    <div class="text-xs text-gray-500">Login Hari Ini</div>
-                                </div>
-                                <div>
-                                    <div class="text-2xl font-bold text-nu-green"><?= date('M') ?></div>
-                                    <div class="text-xs text-gray-500">Bulan Aktif</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-6 pt-6 border-t border-gray-200">
-                            <p class="text-sm text-gray-500 mb-2">Member sejak</p>
-                            <p class="font-semibold text-gray-900">
-                                <?= isset($user['created_at']) ? date('d F Y', strtotime($user['created_at'])) : 'Tidak diketahui' ?>
-                            </p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -98,29 +78,27 @@
                     <div class="p-6">
                         <form method="POST" action="/profile/update" id="profileForm">
                             <?= csrf_field() ?>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
-                                    <input type="text" name="username" value="<?= $user['username'] ?? '' ?>" 
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nu-green focus:border-transparent" 
-                                           required>
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                                    <input type="email" name="email" value="<?= $user['email'] ?? '' ?>" 
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nu-green focus:border-transparent" 
-                                           required>
-                                </div>
-                            </div>
+                            <?= form_grid_start(2) ?>
+                                <?= form_input_text('username', 'Username', [
+                                    'value' => $user['username'] ?? '',
+                                    'required' => true,
+                                    'class' => 'focus:ring-nu-green focus:border-transparent'
+                                ]) ?>
+                                <?= form_input_text('email', 'Email', [
+                                    'type' => 'email',
+                                    'value' => $user['email'] ?? '',
+                                    'required' => true,
+                                    'class' => 'focus:ring-nu-green focus:border-transparent'
+                                ]) ?>
+                            <?= form_grid_end() ?>
                             
-                            <div class="mb-6">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
-                                <input type="text" value="<?= ucfirst($user['role'] ?? 'siswa') ?>" 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50" 
-                                       readonly>
-                            </div>
+                            <?= form_input_text('role', 'Role', [
+                                'value' => ucfirst($user['role'] ?? 'siswa'),
+                                'class' => 'focus:ring-nu-green focus:border-transparent bg-gray-50',
+                                'readonly' => true
+                            ]) ?>
                             
-                            <div class="flex justify-end space-x-3">
+                            <div class="flex justify-end space-x-3 mt-6">
                                 <button type="button" onclick="document.getElementById('profileForm').reset()" 
                                         class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
                                     Reset
@@ -142,40 +120,25 @@
                     <div class="p-6">
                         <form method="POST" action="/profile/change-password" id="passwordForm">
                             <?= csrf_field() ?>
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                                <div class="relative">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Password Lama</label>
-                                    <input type="password" name="current_password" id="currentPassword" 
-                                           class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nu-green focus:border-transparent" 
-                                           required>
-                                    <button type="button" onclick="togglePassword('currentPassword')" 
-                                            class="absolute right-3 top-9 text-gray-400 hover:text-gray-600">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
+                            <?= form_grid_start(3) ?>
+                                <?= form_input_password('current_password', 'Password Lama', [
+                                    'required' => true,
+                                    'class' => 'focus:ring-nu-green focus:border-transparent',
+                                    'toggle_id' => 'toggleCurrentPassword'
+                                ]) ?>
                                 
-                                <div class="relative">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
-                                    <input type="password" name="new_password" id="newPassword" 
-                                           class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nu-green focus:border-transparent" 
-                                           required>
-                                    <button type="button" onclick="togglePassword('newPassword')" 
-                                            class="absolute right-3 top-9 text-gray-400 hover:text-gray-600">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
+                                <?= form_input_password('new_password', 'Password Baru', [
+                                    'required' => true,
+                                    'class' => 'focus:ring-nu-green focus:border-transparent',
+                                    'toggle_id' => 'toggleNewPassword'
+                                ]) ?>
                                 
-                                <div class="relative">
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password</label>
-                                    <input type="password" name="confirm_password" id="confirmPassword" 
-                                           class="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nu-green focus:border-transparent" 
-                                           required>
-                                    <button type="button" onclick="togglePassword('confirmPassword')" 
-                                            class="absolute right-3 top-9 text-gray-400 hover:text-gray-600">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
-                            </div>
+                                <?= form_input_password('confirm_password', 'Konfirmasi', [
+                                    'required' => true,
+                                    'class' => 'focus:ring-nu-green focus:border-transparent',
+                                    'toggle_id' => 'toggleConfirmPassword'
+                                ]) ?>
+                            <?= form_grid_end() ?>
                             
                             <div id="passwordStrength" class="mb-4 hidden">
                                 <div class="text-sm text-gray-600 mb-2">Kekuatan Password:</div>
@@ -193,48 +156,6 @@
                                 </button>
                             </div>
                         </form>
-                    </div>
-                </div>
-
-                <!-- Account Activity -->
-                <div class="bg-white shadow-lg rounded-xl">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900">Aktivitas Akun</h3>
-                    </div>
-                    <div class="p-6">
-                        <div class="space-y-4 max-h-64 overflow-y-auto">
-                            <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                                <div class="w-10 h-10 bg-nu-green rounded-full flex items-center justify-center">
-                                    <i class="fas fa-sign-in-alt text-white text-sm"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="text-sm font-medium text-gray-900">Login terakhir</div>
-                                    <div class="text-xs text-gray-500"><?= date('d M Y, H:i') ?></div>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                                <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-user-edit text-white text-sm"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="text-sm font-medium text-gray-900">Profile diperbarui</div>
-                                    <div class="text-xs text-gray-500">2 hari yang lalu</div>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-center space-x-4 p-3 bg-gray-50 rounded-lg">
-                                <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                                    <i class="fas fa-user-plus text-white text-sm"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <div class="text-sm font-medium text-gray-900">Akun dibuat</div>
-                                    <div class="text-xs text-gray-500">
-                                        <?= isset($user['created_at']) ? date('d M Y', strtotime($user['created_at'])) : 'Tidak diketahui' ?>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -273,24 +194,8 @@ document.getElementById('photoInput').addEventListener('change', function(e) {
     }
 });
 
-// Toggle password visibility
-function togglePassword(inputId) {
-    const input = document.getElementById(inputId);
-    const icon = input.nextElementSibling.querySelector('i');
-    
-    if (input.type === 'password') {
-        input.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else {
-        input.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
-}
-
 // Password strength indicator
-document.getElementById('newPassword').addEventListener('input', function() {
+document.getElementById('new_password').addEventListener('input', function() {
     const password = this.value;
     const strengthContainer = document.getElementById('passwordStrength');
     const strengthBar = document.getElementById('strengthBar');
@@ -391,5 +296,9 @@ document.getElementById('passwordForm').addEventListener('submit', function(e) {
     }
 });
 </script>
+
+<?= password_toggle_script('current_password', 'toggleCurrentPassword', 'current_passwordEyeOpen', 'current_passwordEyeClosed') ?>
+<?= password_toggle_script('new_password', 'toggleNewPassword', 'new_passwordEyeOpen', 'new_passwordEyeClosed') ?>
+<?= password_toggle_script('confirm_password', 'toggleConfirmPassword', 'confirm_passwordEyeOpen', 'confirm_passwordEyeClosed') ?>
 
 <?= $this->endSection() ?>

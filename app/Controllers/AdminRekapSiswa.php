@@ -295,17 +295,12 @@ class AdminRekapSiswa extends BaseController
             $lakiLaki = $builder->where('students.jenis_kelamin', 'L')->countAllResults(false);
             $perempuan = $builder->where('students.jenis_kelamin', 'P')->countAllResults(false);
 
-            // Statistics by beasiswa
-            $denganBeasiswa = $builder->where('students.beasiswa_id IS NOT NULL')->countAllResults(false);
-
             return $this->response->setJSON([
                 'success' => true,
                 'data' => [
                     'total_siswa' => $totalSiswa,
                     'laki_laki' => $lakiLaki,
-                    'perempuan' => $perempuan,
-                    'dengan_beasiswa' => $denganBeasiswa,
-                    'tanpa_beasiswa' => $totalSiswa - $denganBeasiswa
+                    'perempuan' => $perempuan
                 ]
             ]);
 

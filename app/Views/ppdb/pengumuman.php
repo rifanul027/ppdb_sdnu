@@ -62,7 +62,7 @@ function generateFallbackImage($title) {
   <div class="max-w-4xl mx-auto">
     <div class="flex space-x-1 rounded-xl bg-gray-100 p-1" role="tablist">
       <button
-        class="flex-1 rounded-lg py-2.5 text-sm font-medium leading-5 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 bg-white text-nu-green shadow tab-active"
+        class="flex-1 rounded-lg py-2.5 text-sm font-medium leading-5 ring-white ring-opacity-60 ring-offset-2 ring-offset-green-400 focus:outline-none focus:ring-2 bg-white text-nu-green shadow tab-active"
         id="tab-pengumuman"
         onclick="switchTab('pengumuman')"
         role="tab"
@@ -72,7 +72,7 @@ function generateFallbackImage($title) {
         Pengumuman
       </button>
       <button
-        class="flex-1 rounded-lg py-2.5 text-sm font-medium leading-5 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 text-gray-500 hover:bg-white/[0.12] hover:text-white tab-inactive"
+        class="flex-1 rounded-lg py-2.5 text-sm font-medium leading-5 ring-white ring-opacity-60 ring-offset-2 ring-offset-green-400 focus:outline-none focus:ring-2 text-gray-500 hover:bg-white/[0.12] hover:text-white tab-inactive"
         id="tab-siswa"
         onclick="switchTab('siswa')"
         role="tab"

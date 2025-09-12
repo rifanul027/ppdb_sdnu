@@ -7,11 +7,11 @@
 
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
     <!-- Card Header -->
-    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
+    <div class="bg-gradient-to-r from-green-50 to-indigo-50 px-6 py-4 border-b border-gray-200">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="bg-blue-100 p-2 rounded-lg">
-                    <i class="fas <?= $icon ?? 'fa-list' ?> text-blue-600"></i>
+                <div class="bg-green-100 p-2 rounded-lg">
+                    <i class="fas <?= $icon ?? 'fa-list' ?> text-green-600"></i>
                 </div>
                 <div>
                     <h3 class="text-lg font-semibold text-gray-900"><?= $title ?></h3>
@@ -28,7 +28,7 @@
                 </div>
                 <!-- Add Button -->
                 <button onclick="showCreateModal('<?= $type ?>')" 
-                        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-sm">
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 shadow-sm">
                     <i class="fas fa-plus mr-2"></i>
                     Tambah <?= $buttonText ?>
                 </button>
@@ -41,7 +41,7 @@
         <!-- Loading State -->
         <div id="loading-<?= $type ?>" class="flex items-center justify-center py-12">
             <div class="text-center">
-                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
                 <p class="text-gray-500 text-sm mt-3">Memuat data...</p>
             </div>
         </div>
@@ -59,7 +59,7 @@
             <h3 class="text-lg font-medium text-gray-900 mb-2">Belum ada data</h3>
             <p class="text-gray-500 mb-6">Mulai dengan menambahkan <?= strtolower($title) ?> pertama</p>
             <button onclick="showCreateModal('<?= $type ?>')" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
                 <i class="fas fa-plus mr-2"></i>
                 Tambah <?= $buttonText ?>
             </button>

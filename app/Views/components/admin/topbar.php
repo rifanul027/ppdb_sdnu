@@ -18,8 +18,8 @@
             </div>
             <!-- User Dropdown -->
             <div class="relative">
-                <button id="user-menu-btn" class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 font-medium transition-colors duration-300">
-                    <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                <button id="user-menu-btn" class="flex items-center space-x-2 text-gray-700 hover:text-green-600 font-medium transition-colors duration-300">
+                    <div class="w-10 h-10 bg-green-600 rounded-full flex items-center justify-center">
                         <?php if (session()->get('avatar')): ?>
                             <img src="/uploads/avatars/<?= session()->get('avatar') ?>" alt="Avatar" class="w-full h-full rounded-full object-cover">
                         <?php else: ?>

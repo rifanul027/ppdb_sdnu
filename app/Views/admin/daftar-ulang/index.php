@@ -13,7 +13,7 @@
             <select id="filterTahunAjaran" class="form-control" style="width: auto;" onchange="applyFilters()">
                 <?php foreach ($tahunAjaranList as $ta): ?>
                     <option value="<?= $ta['tahun_mulai'] ?>" <?= $ta['tahun_mulai'] == $selectedYear ? 'selected' : '' ?>>
-                        <?= esc($ta['nama']) ?> (<?= $ta['tahun_mulai'] ?>)
+                        <?= esc($ta['nama']) ?>
                     </option>
                 <?php endforeach; ?>
             </select>

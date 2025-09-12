@@ -23,19 +23,19 @@
         <div class="card-header py-3">
             <ul class="nav nav-tabs card-header-tabs" id="settingsTabs" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="tahun-ajaran-tab" data-toggle="tab" href="#tahun-ajaran" 
+                    <a class="nav-link text-green-600 active" id="tahun-ajaran-tab" data-toggle="tab" href="#tahun-ajaran" 
                        role="tab" aria-controls="tahun-ajaran" aria-selected="true">
                         <i class="fas fa-calendar-alt mr-2"></i>Tahun Ajaran
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="kategori-tab" data-toggle="tab" href="#kategori" 
+                    <a class="nav-link text-green-600" id="kategori-tab" data-toggle="tab" href="#kategori" 
                        role="tab" aria-controls="kategori" aria-selected="false">
                         <i class="fas fa-tags mr-2"></i>Kategori
                     </a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" id="gelombang-tab" data-toggle="tab" href="#gelombang" 
+                    <a class="nav-link text-green-600" id="gelombang-tab" data-toggle="tab" href="#gelombang" 
                        role="tab" aria-controls="gelombang" aria-selected="false">
                         <i class="fas fa-wave-square mr-2"></i>Gelombang Pendaftaran
                     </a>

@@ -18,7 +18,7 @@ function renderTextInput($id, $label, $placeholder = '', $required = true, $type
                id="' . $id . '" 
                name="' . $id . '" 
                placeholder="' . $placeholder . '"
-               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                ' . $requiredAttr . '>
     </div>';
 }
@@ -37,7 +37,7 @@ function renderTextarea($id, $label, $placeholder = '', $required = false, $rows
                   name="' . $id . '" 
                   rows="' . $rows . '"
                   placeholder="' . $placeholder . '"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white resize-none"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white resize-none"
                   ' . $requiredAttr . '></textarea>
     </div>';
 }
@@ -58,7 +58,7 @@ function renderNumberInput($id, $label, $placeholder = '', $min = '', $max = '',
                id="' . $id . '" 
                name="' . $id . '" 
                placeholder="' . $placeholder . '"
-               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                ' . $requiredAttr . ' ' . $minAttr . ' ' . $maxAttr . '>
     </div>';
 }
@@ -76,7 +76,7 @@ function renderDateInput($id, $label, $required = true) {
         <input type="date" 
                id="' . $id . '" 
                name="' . $id . '"
-               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                ' . $requiredAttr . '>
     </div>';
 }
@@ -99,7 +99,7 @@ function renderCurrencyInput($id, $label, $placeholder = '', $required = true) {
                    id="' . $id . '" 
                    name="' . $id . '" 
                    placeholder="' . $placeholder . '"
-                   class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+                   class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 bg-gray-50 focus:bg-white"
                    onkeyup="formatCurrency(this)"
                    ' . $requiredAttr . '>
         </div>

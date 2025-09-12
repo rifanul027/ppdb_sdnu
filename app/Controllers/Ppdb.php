@@ -29,155 +29,6 @@ class Ppdb extends BaseController
         helper(['uuid', 'toast', 'form']);
     }
 
-    public function daftar()
-    {
-        // VISIBLE DEBUG - Remove after debugging
-        if (!headers_sent()) {
-            echo "<!-- DEBUG: Daftar method called -->\n";
-            echo "<!-- DEBUG: Request method: " . $this->request->getMethod() . " -->\n"; 
-        }
-        
-        // DEBUG: Log all incoming requests
-        log_message('debug', '=== DAFTAR METHOD START ===');
-        log_message('debug', 'Request method: ' . $this->request->getMethod());
-        log_message('debug', 'Session data: ' . json_encode(session()->get()));
-        
-        // Check if user is logged in
-        if (!session()->get('logged_in')) {
-            log_message('debug', 'User not logged in - redirecting to login');
-            return redirect()->to('/login');
-        }
-        
-        // Check if user already has student_id
-        if (session()->get('student_id')) {
-            log_message('debug', 'User already has student_id - redirecting to profile');
-            return redirect()->to('/profile-siswa');
-        }
-        
-        log_message('debug', 'GET request - showing form');
-        // GET request - show form
-        $tahunAjaranList = $this->tahunAjaranModel->where('is_active', 1)->findAll();
-        
-        $data = [
-            'title' => 'Pendaftaran Online - PPDB SDNU Pemanahan',
-            'tahunAjaranList' => $tahunAjaranList
-        ];
-        
-        return view('ppdb/daftar', $data);
-    }
-    
-    public function prosesDaftar()
-    {
-        // VISIBLE DEBUG
-        if (!headers_sent()) {
-            echo "<!-- DEBUG: prosesDaftar called -->\n";
-        }
-        
-        log_message('debug', '=== PROSES DAFTAR START ===');
-        
-        // Check if user is logged in
-        if (!session()->get('logged_in')) {
-            log_message('debug', 'User not logged in - redirecting to login');
-            return redirect()->to('/login');
-        }
-        
-        // Check if user already has student_id
-        if (session()->get('student_id')) {
-            log_message('debug', 'User already has student_id - redirecting to profile');
-            return redirect()->to('/profile-siswa');
-        }
-        
-        try {
-            // Debug incoming data
-            log_message('debug', 'Processing registration form submission');
-            log_message('debug', 'POST data: ' . json_encode($this->request->getPost()));
-            
-            // VISIBLE DEBUG - Show POST data
-            if (!headers_sent()) {
-                echo "<!-- DEBUG: POST data count: " . count($this->request->getPost()) . " -->\n";
-            }
-            
-            // Validate CSRF token
-            if (!$this->request->is('post')) {
-                throw new \Exception('Invalid request method');
-            }
-
-            // Debug: Log all POST data
-            log_message('debug', 'POST Data: ' . json_encode($this->request->getPost()));
-            log_message('debug', 'FILES Data: ' . json_encode($_FILES));
-
-            // Get selected tahun ajaran from form
-            $tahunAjaranId = $this->request->getPost('tahun_ajaran_id');
-            
-            if (empty($tahunAjaranId)) {
-                setErrorToast('Error Validasi', 'Tahun ajaran harus dipilih.');
-                return redirect()->back()->withInput();
-            }
-
-            $tahunAjaran = $this->tahunAjaranModel->find($tahunAjaranId);
-            if (!$tahunAjaran) {
-                log_message('error', 'Selected tahun ajaran not found: ' . $tahunAjaranId);
-                setErrorToast('Error Sistem', 'Tahun ajaran yang dipilih tidak valid.');
-                return redirect()->back()->withInput();
-            }
-            
-            log_message('info', 'Selected tahun ajaran found: ' . $tahunAjaran['id']);
-            
-            // Prepare form data for model
-            $formData = [
-                'post' => [
-                    'nama_lengkap' => $this->request->getPost('nama_lengkap'),
-                    'agama' => $this->request->getPost('agama'),
-                    'tempat_lahir' => $this->request->getPost('tempat_lahir'),
-                    'tanggal_lahir' => $this->request->getPost('tanggal_lahir'),
-                    'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
-                    'nama_ayah' => $this->request->getPost('nama_ayah'),
-                    'nama_ibu' => $this->request->getPost('nama_ibu'),
-                    'alamat' => $this->request->getPost('alamat'),
-                    'domisili' => $this->request->getPost('domisili'),
-                    'nomor_telepon' => $this->request->getPost('nomor_telepon'),
-                    'asal_tk_ra' => $this->request->getPost('asal_tk_ra')
-                ],
-                'files' => [
-                    'akta' => $this->request->getFile('akta'),
-                    'kk' => $this->request->getFile('kk'),
-                    'ijazah' => $this->request->getFile('ijazah')
-                ]
-            ];
-            
-            // Debug: log formData to file for inspection
-            log_message('debug', 'Processed Form Data: ' . json_encode($formData['post']));
-            
-            // Create student using model
-            $studentId = $this->studentModel->createStudent($formData, $tahunAjaran['id']);
-            
-            // Update user session with student_id
-            session()->set('student_id', $studentId);
-            
-            // Update user table with student_id if needed
-            $userId = session()->get('user_id');
-            if ($userId) {
-                $this->userModel->update($userId, ['student_id' => $studentId]);
-            }
-            
-            // Get registration number for success message
-            $student = $this->studentModel->find($studentId);
-            
-            setSuccessToast(
-                'Pendaftaran Berhasil!', 
-                'Selamat! Pendaftaran Anda berhasil dengan nomor registrasi: ' . $student['no_registrasi']
-            );
-            
-            return redirect()->to('/profile-siswa');
-            
-        } catch (\Exception $e) {
-            log_message('error', 'Registration error: ' . $e->getMessage());
-            log_message('error', 'Error trace: ' . $e->getTraceAsString());
-            setErrorToast('Terjadi Kesalahan', 'Error: ' . $e->getMessage());
-            return redirect()->back()->withInput();
-        }
-    }
-    
     public function studentProfile()
     {
         // Check if user is logged in
@@ -236,7 +87,7 @@ class Ppdb extends BaseController
         
         if (!$studentData) {
             setErrorToast('Data Tidak Ditemukan', 'Data siswa tidak ditemukan.');
-            return redirect()->to('/profile-siswa');
+            return redirect()->to('/student-profile');
         }
         
         $data = [
@@ -272,7 +123,7 @@ class Ppdb extends BaseController
             $this->studentModel->updateStudentProfile($studentId, $formData);
             
             setSuccessToast('Profil Diperbarui', 'Data profil Anda berhasil diperbarui.');
-            return redirect()->to('/profile-siswa');
+            return redirect()->to('/student-profile');
             
         } catch (\Exception $e) {
             log_message('error', 'Profile update error: ' . $e->getMessage());
@@ -294,7 +145,7 @@ class Ppdb extends BaseController
         }
         
         if ($this->request->getMethod() !== 'POST') {
-            return redirect()->to('/profile-siswa');
+            return redirect()->to('/student-profile');
         }
         
         try {
@@ -319,7 +170,7 @@ class Ppdb extends BaseController
             ]);
             
             setSuccessToast('Pembayaran Berhasil', 'Data pembayaran berhasil diupload. Silakan tunggu konfirmasi dari admin.');
-            return redirect()->to('/profile-siswa');
+            return redirect()->to('/student-profile');
             
         } catch (\Exception $e) {
             log_message('error', 'Payment upload error: ' . $e->getMessage());

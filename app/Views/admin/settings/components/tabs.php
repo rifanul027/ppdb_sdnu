@@ -12,8 +12,8 @@
                     class="tab-button active group py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200"
                     onclick="switchTab('tahun-ajaran')">
                 <div class="flex items-center space-x-2">
-                    <i class="fas fa-calendar-alt text-blue-600 group-hover:text-blue-700"></i>
-                    <span class="text-blue-600 group-hover:text-blue-700">Tahun Ajaran</span>
+                    <i class="fas fa-calendar-alt text-green-600 group-hover:text-green-700"></i>
+                    <span class="text-green-600 group-hover:text-green-700">Tahun Ajaran</span>
                 </div>
             </button>
             

@@ -104,12 +104,12 @@
                 </div>
                 
                 <!-- Additional Info -->
-                <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div class="mt-8 p-4 bg-green-50 border border-green-200 rounded-lg">
                     <div class="flex items-center justify-center mb-2">
-                        <i class="fas fa-info-circle text-blue-600 mr-2"></i>
-                        <p class="text-sm font-medium text-blue-800">Informasi</p>
+                        <i class="fas fa-info-circle text-green-600 mr-2"></i>
+                        <p class="text-sm font-medium text-green-800">Informasi</p>
                     </div>
-                    <p class="text-sm text-blue-700">
+                    <p class="text-sm text-green-700">
                         Jika masalah terus berlanjut, silakan hubungi administrator sistem 
                         atau coba akses kembali dalam beberapa menit.
                     </p>
