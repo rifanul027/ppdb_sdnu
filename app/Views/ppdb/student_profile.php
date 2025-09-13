@@ -66,10 +66,22 @@
                         </div>
                         
                         <div class="mt-6">
-                            <a href="/edit-profile" class="w-full inline-flex justify-center items-center gap-x-2 bg-nu-green text-white px-4 py-2 rounded-lg hover:bg-nu-dark transition-colors">
-                                <i class="fas fa-edit"></i>
-                                Edit Profil
-                            </a>
+                            <?php if (empty($student['accepted_at'])): ?>
+                                <span class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    Data belum divalidasi
+                                </span>
+                                <a href="/edit-profile" class="w-full inline-flex justify-center items-center gap-x-2 bg-nu-green text-white px-4 py-2 rounded-lg hover:bg-nu-dark transition-colors mt-4">
+                                    <i class="fas fa-edit"></i>
+                                    Edit Profil
+                                </a>
+                            <?php else: ?>
+                                <span class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-medium">
+                                    <i class="fas fa-check-circle mr-2"></i>
+                                    Data sudah divalidasi pada <?= date('d F Y', strtotime($student['accepted_at'])) ?>
+                                </span>
+                            <?php endif; ?>
+                            
                         </div>
                     </div>
                 </div>
@@ -191,6 +203,32 @@
                                     </a>
                                 </div>
                                 <?php endif; ?>
+                                
+                                <?php if (!empty($student['ktp_ayah'])): ?>
+                                <div class="text-center p-4 border border-gray-200 rounded-lg">
+                                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-file-pdf text-white"></i>
+                                    </div>
+                                    <h4 class="text-sm font-medium mb-2">KTP Ayah</h4>
+                                    <a href="<?= base_url($student['ktp_ayah']) ?>" target="_blank" 
+                                       class="text-nu-green hover:text-nu-dark text-sm">
+                                        <i class="fas fa-eye mr-1"></i>Lihat
+                                    </a>
+                                </div>
+                                <?php endif; ?>
+                               
+                                <?php if (!empty($student['ktp_ibu'])): ?>
+                                <div class="text-center p-4 border border-gray-200 rounded-lg">
+                                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-file-pdf text-white"></i>
+                                    </div>
+                                    <h4 class="text-sm font-medium mb-2">KTP Ibu</h4>
+                                    <a href="<?= base_url($student['ktp_ibu']) ?>" target="_blank" 
+                                       class="text-nu-green hover:text-nu-dark text-sm">
+                                        <i class="fas fa-eye mr-1"></i>Lihat
+                                    </a>
+                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -243,17 +281,60 @@
                                             <i class="fas fa-exclamation-triangle mr-2"></i>
                                             Belum ada data pembayaran. Silakan upload bukti pembayaran.
                                         </p>
-                                        <a href="/upload-payment" class="inline-flex items-center bg-nu-green text-white px-4 py-2 rounded-lg hover:bg-nu-dark transition-colors">
-                                            <i class="fas fa-upload mr-2"></i>Upload Bukti Pembayaran
-                                        </a>
+                                        <button type="button" id="openUploadModal" class="inline-flex items-center bg-nu-green text-white px-4 py-2 rounded-lg hover:bg-nu-dark transition-colors">
+                                                <i class="fas fa-upload mr-2"></i>Upload Bukti Pembayaran
+                                        </button>
+
+                                        <!-- Modal Upload Pembayaran -->
+                                        <div id="uploadPaymentModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                                            <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+                                                <button type="button" id="closeUploadModal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+                                                    <i class="fas fa-times fa-lg"></i>
+                                                </button>
+                                                <h3 class="text-lg font-semibold mb-4">Upload Bukti Pembayaran</h3>
+                                                <form action="/upload-payment" method="POST" enctype="multipart/form-data" class="space-y-4">
+                                                    <div>
+                                                        <label for="nama_pembayar" class="block text-sm font-medium text-gray-700 mb-1">Nama Pembayar</label>
+                                                        <input type="text" name="nama_pembayar" id="nama_pembayar" class="w-full border border-gray-300 rounded-lg px-3 py-2" required>
+                                                    </div>
+                                                    <div>
+                                                        <label for="metode" class="block text-sm font-medium text-gray-700 mb-1">Metode Pembayaran</label>
+                                                        <select name="metode" id="metode" class="w-full border border-gray-300 rounded-lg px-3 py-2" required>
+                                                            <option value="transfer">Transfer</option>
+                                                            <option value="cash">Cash</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label for="bukti_pembayaran" class="block text-sm font-medium text-gray-700 mb-1">Upload Bukti (PNG)</label>
+                                                        <input type="file" name="bukti_pembayaran" id="bukti_pembayaran" accept="image/png" class="w-full" required>
+                                                    </div>
+                                                    <div class="flex justify-end gap-2 pt-2">
+                                                        <button type="button" id="cancelUploadModal" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">Batal</button>
+                                                        <button type="submit" class="px-4 py-2 rounded-lg bg-nu-green text-white hover:bg-nu-dark">Upload</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <script>
+                                            // Modal logic
+                                            const openBtn = document.getElementById('openUploadModal');
+                                            const modal = document.getElementById('uploadPaymentModal');
+                                            const closeBtn = document.getElementById('closeUploadModal');
+                                            const cancelBtn = document.getElementById('cancelUploadModal');
+                                            openBtn.addEventListener('click', () => { modal.classList.remove('hidden'); });
+                                            closeBtn.addEventListener('click', () => { modal.classList.add('hidden'); });
+                                            cancelBtn.addEventListener('click', () => { modal.classList.add('hidden'); });
+                                        </script>
                                     </div>
                                     
                                     <div class="bg-gray-50 rounded-lg p-4">
                                         <h4 class="font-medium text-gray-900 mb-3">Informasi Pembayaran:</h4>
                                         <div class="text-sm space-y-1">
-                                            <p><strong>Biaya:</strong> Rp 250.000</p>
+                                            <p><strong>Biaya:</strong> Rp 350.000</p>
                                             <p><strong>Bank:</strong> BRI - 1234-5678-9012-3456</p>
                                             <p><strong>Atas Nama:</strong> SDNU Pemanahan</p>
+                                            <p><strong>Kegunaan:</strong> Baju seragam</p>
                                         </div>
                                     </div>
                                 <?php endif; ?>

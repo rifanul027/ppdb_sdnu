@@ -108,49 +108,53 @@ class AdminDaftarUlang extends BaseController
         if (!$this->request->isAJAX()) {
             return redirect()->back();
         }
-        
+
         $studentId = $this->request->getPost('student_id');
-        
+
         if (!$studentId) {
             return $this->response->setJSON([
                 'status' => 'error',
                 'message' => 'Student ID tidak valid'
             ])->setStatusCode(400);
         }
-        
+
         // Check if student exists and has payment
         $builder = $this->studentModel->db->table('students s');
         $builder->select('s.*, p.id as payment_id, p.accepted_at');
         $builder->join('pembayaran p', 's.bukti_pembayaran_id = p.id', 'inner');
         $builder->where('s.id', $studentId);
-        
+
         $siswa = $builder->get()->getRowArray();
-        
+
         if (!$siswa) {
             return $this->response->setJSON([
                 'status' => 'error',
                 'message' => 'Data siswa atau pembayaran tidak ditemukan'
             ])->setStatusCode(400);
         }
-        
+
         if ($siswa['accepted_at']) {
             return $this->response->setJSON([
                 'status' => 'error',
                 'message' => 'Pembayaran sudah divalidasi sebelumnya'
             ])->setStatusCode(400);
         }
-        
+
         try {
             // Update accepted_at di table pembayaran
             $this->pembayaranModel->update($siswa['payment_id'], [
                 'accepted_at' => date('Y-m-d H:i:s')
             ]);
-            
+            // Update status di table students menjadi 'siswa'
+            $this->studentModel->update($studentId, [
+                'status' => 'siswa'
+            ]);
+
             return $this->response->setJSON([
                 'status' => 'success',
-                'message' => 'Pembayaran berhasil divalidasi'
+                'message' => 'Pembayaran berhasil divalidasi dan status siswa diperbarui'
             ]);
-            
+
         } catch (\Exception $e) {
             return $this->response->setJSON([
                 'status' => 'error',
@@ -170,7 +174,7 @@ class AdminDaftarUlang extends BaseController
         $rules = [
             'student_id' => 'required',
             'nama_pembayar' => 'required|min_length[3]',
-            'metode' => 'required|in_list[Transfer Bank,Tunai,QRIS]',
+            'metode' => 'required|in_list[transfer,cash]',
             'bukti_pembayaran' => 'uploaded[bukti_pembayaran]|is_image[bukti_pembayaran]|max_size[bukti_pembayaran,2048]'
         ];
         

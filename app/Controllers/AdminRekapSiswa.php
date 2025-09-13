@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\StudentModel;
 use App\Models\TahunAjaranModel;
 use App\Models\PembayaranModel;
+use App\Models\KategoriModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class AdminRekapSiswa extends BaseController
@@ -18,35 +19,30 @@ class AdminRekapSiswa extends BaseController
         $this->studentModel = new StudentModel();
         $this->tahunAjaranModel = new TahunAjaranModel();
         $this->pembayaranModel = new PembayaranModel();
+        $this->kategoriModel = new KategoriModel();
     }
 
-    /**
-     * Halaman utama rekap siswa
-     */
     public function index()
     {
-        // Get data tahun ajaran untuk filter
         $tahunAjaran = $this->tahunAjaranModel
             ->where('deleted_at IS NULL')
             ->orderBy('tahun_mulai', 'DESC')
             ->findAll();
 
-        // Get tahun default (tahun ini)
         $currentYear = date('Y');
         $defaultTahunAjaran = $this->tahunAjaranModel->getCurrentTahunAjaran();
+        $kategori = $this->kategoriModel->findAll();
 
         $data = [
             'pageTitle' => 'Rekap Siswa',
             'tahunAjaran' => $tahunAjaran,
-            'defaultTahunAjaran' => $defaultTahunAjaran
+            'defaultTahunAjaran' => $defaultTahunAjaran,
+            'kategori' => $kategori
         ];
 
         return view('admin/rekap-siswa/rekap-siswa', $data);
     }
 
-    /**
-     * Get data siswa via AJAX untuk tabel
-     */
     public function getStudentsData()
     {
         if (!$this->request->isAJAX()) {
@@ -62,32 +58,26 @@ class AdminRekapSiswa extends BaseController
             $perPage = (int) $request->getGet('per_page') ?: 10;
             $offset = ($page - 1) * $perPage;
 
-            // Filter parameters
             $filters = [
                 'tahun_ajaran_id' => $request->getGet('tahun_ajaran_id'),
                 'search' => $request->getGet('search'),
             ];
 
-            // Build query dengan kondisi spesifik
             $builder = $this->getRekapStudentsQuery($filters);
             
-            // Get total count
             $totalData = $builder->countAllResults(false);
 
-            // Get paginated data
             $students = $builder->limit($perPage, $offset)
                 ->orderBy('pembayaran.accepted_at', 'ASC') // Terlama ke terbaru
                 ->get()
                 ->getResultArray();
 
-            // Format data untuk display
             foreach ($students as &$student) {
                 $student['tanggal_lahir_formatted'] = date('d/m/Y', strtotime($student['tanggal_lahir']));
                 $student['accepted_at_formatted'] = $student['accepted_at'] ? date('d/m/Y H:i', strtotime($student['accepted_at'])) : '-';
                 $student['pembayaran_accepted_formatted'] = $student['pembayaran_accepted_at'] ? date('d/m/Y H:i', strtotime($student['pembayaran_accepted_at'])) : '-';
             }
 
-            // Calculate pagination info
             $totalPages = ceil($totalData / $perPage);
 
             return $this->response->setJSON([
@@ -110,9 +100,6 @@ class AdminRekapSiswa extends BaseController
         }
     }
 
-    /**
-     * Build query untuk rekap siswa dengan kondisi khusus
-     */
     private function getRekapStudentsQuery($filters = [])
     {
         $builder = $this->studentModel->db->table('students')
@@ -134,7 +121,6 @@ class AdminRekapSiswa extends BaseController
             ->where('students.accepted_at IS NOT NULL') // Sudah diterima
             ->where('students.deleted_at IS NULL'); // Tidak dihapus
 
-        // Apply filters
         if (!empty($filters['tahun_ajaran_id'])) {
             $builder->where('students.tahun_ajaran_id', $filters['tahun_ajaran_id']);
         }
@@ -152,37 +138,28 @@ class AdminRekapSiswa extends BaseController
         return $builder;
     }
 
-    /**
-     * Export Excel
-     */
     public function exportExcel()
     {
         try {
             $request = $this->request;
             
-            // Filter parameters
             $filters = [
                 'tahun_ajaran_id' => $request->getGet('tahun_ajaran_id'),
                 'search' => $request->getGet('search'),
             ];
 
-            // Get all data
             $students = $this->getRekapStudentsQuery($filters)
                 ->orderBy('pembayaran.accepted_at', 'ASC')
                 ->get()
                 ->getResultArray();
 
-            // Generate CSV content
             $filename = 'rekap-siswa-' . date('Y-m-d') . '.csv';
             
-            // Set headers for download
             $this->response->setHeader('Content-Type', 'text/csv');
             $this->response->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
 
-            // CSV Header
             $csv = "No,No Registrasi,NISN,Nama Lengkap,Jenis Kelamin,Tempat Lahir,Tanggal Lahir,Agama,Nama Ayah,Nama Ibu,Alamat,Domisili,No Telepon,Asal TK/RA,Tahun Ajaran,Kategori,Pembayaran,Metode Pembayaran,Tanggal Diterima,Tanggal Pembayaran Diterima\n";
 
-            // CSV Data
             foreach ($students as $index => $student) {
                 $csv .= '"' . ($index + 1) . '",';
                 $csv .= '"' . ($student['no_registrasi'] ?? '') . '",';
@@ -214,27 +191,21 @@ class AdminRekapSiswa extends BaseController
         }
     }
 
-    /**
-     * Export PDF
-     */
     public function exportPdf()
     {
         try {
             $request = $this->request;
             
-            // Filter parameters
             $filters = [
                 'tahun_ajaran_id' => $request->getGet('tahun_ajaran_id'),
                 'search' => $request->getGet('search'),
             ];
 
-            // Get all data
             $students = $this->getRekapStudentsQuery($filters)
                 ->orderBy('pembayaran.accepted_at', 'ASC')
                 ->get()
                 ->getResultArray();
 
-            // Get tahun ajaran for title
             $tahunAjaran = null;
             if (!empty($filters['tahun_ajaran_id'])) {
                 $tahunAjaran = $this->tahunAjaranModel->find($filters['tahun_ajaran_id']);
@@ -247,10 +218,8 @@ class AdminRekapSiswa extends BaseController
                 'exportDate' => date('d/m/Y H:i')
             ];
 
-            // Generate PDF content using view
             $html = view('admin/rekap-siswa/pdf-export', $data);
 
-            // For now, we'll return HTML (you can integrate with a PDF library later)
             $filename = 'rekap-siswa-' . date('Y-m-d') . '.html';
             $this->response->setHeader('Content-Type', 'text/html');
             $this->response->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
@@ -263,9 +232,6 @@ class AdminRekapSiswa extends BaseController
         }
     }
 
-    /**
-     * Get summary statistics
-     */
     public function getSummaryStats()
     {
         if (!$this->request->isAJAX()) {
@@ -285,10 +251,8 @@ class AdminRekapSiswa extends BaseController
 
             $builder = $this->getRekapStudentsQuery($filters);
             
-            // Total siswa
             $totalSiswa = $builder->countAllResults(false);
 
-            // Statistics by gender
             $lakiLaki = $builder->where('students.jenis_kelamin', 'L')->countAllResults(false);
             $perempuan = $builder->where('students.jenis_kelamin', 'P')->countAllResults(false);
 

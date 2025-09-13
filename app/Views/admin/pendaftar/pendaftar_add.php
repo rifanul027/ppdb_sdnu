@@ -78,9 +78,6 @@
                     
                     <?= form_input_text('nama_ibu', 'Nama Ibu', ['required' => true]) ?>
                     
-                    <?= form_input_file('ktp_ayah', 'KTP Ayah', ['required' => true]) ?>
-                    
-                    <?= form_input_file('ktp_ibu', 'KTP Ibu', ['required' => true]) ?>
                 <?= form_grid_end() ?>
             <?= form_section_footer() ?>
             
@@ -127,12 +124,16 @@
                 ]) ?>
             <?= form_section_footer() ?>
             
-            <!-- Upload Dokumen -->
+            <!-- Dokumen -->
             <?= form_section_header('Upload Dokumen', 'fas fa-file-upload') ?>
                 <div class="space-y-6">
                     <?= form_input_file('akta', 'Akta Kelahiran', ['required' => true]) ?>
                     
                     <?= form_input_file('kk', 'Kartu Keluarga', ['required' => true]) ?>
+                    
+                    <?= form_input_file('ktp_ayah', 'KTP Ayah', ['required' => true]) ?>
+                    
+                    <?= form_input_file('ktp_ibu', 'KTP Ibu', ['required' => true]) ?>
                     
                     <?= form_input_file('ijazah', 'Ijazah TK/RA', [
                         'required' => false,

@@ -80,7 +80,7 @@
               Usia Calon Siswa
             </h4>
             <p class="mt-1 text-gray-600">
-              Berusia 6-7 tahun per 1 Juli 2025
+                Berusia 6-7 tahun per 1 Juli <?= date('Y') + 1 ?>
             </p>
           </div>
         </div>
@@ -173,10 +173,10 @@
           </span>
           <div class="grow">
             <h4 class="text-base font-semibold text-nu-dark">
-              Pas Foto
+              KTP Orang Tua/Wali
             </h4>
             <p class="mt-1 text-gray-600">
-              Pas foto berwarna ukuran 3x4 sebanyak 4 lembar
+              Fotocopy KTP orang tua/wali
             </p>
           </div>
         </div>
@@ -213,7 +213,7 @@
             </summary>
             <div class="mt-4 px-4">
               <p class="text-gray-600 leading-relaxed">
-                Pendaftaran PPDB SDNU Pemanahan dibuka mulai bulan Januari hingga Maret <?= date('Y') + 1 ?>. Pengumuman hasil seleksi akan diumumkan pada bulan April <?= date('Y') + 1 ?>.
+                Pengumuman pembukaan pendaftaran dapat dilihat di bagian pengumuman pada sistem PPDB SDNU.
               </p>
             </div>
           </details>
@@ -232,7 +232,7 @@
             </summary>
             <div class="mt-4 px-4">
               <p class="text-gray-600 leading-relaxed">
-                Biaya pendaftaran sebesar Rp 150.000. SPP bulanan untuk siswa baru tahun ajaran <?= date('Y') ?>/<?= date('Y') + 1 ?> sebesar Rp 200.000 per bulan. Tersedia program beasiswa untuk siswa berprestasi dan kurang mampu.
+                Biaya pendaftaran pada SDNU Pemanahan tidak dipungut biaya. SPP bulanan untuk siswa baru tahun ajaran <?= date('Y') ?>/<?= date('Y') + 1 ?> sebesar Rp 100.000 per bulan. Tersedia program beasiswa untuk siswa.
               </p>
             </div>
           </details>
@@ -270,7 +270,7 @@
             </summary>
             <div class="mt-4 px-4">
               <p class="text-gray-600 leading-relaxed">
-                SDNU Pemanahan memiliki fasilitas lengkap termasuk ruang kelas ber-AC, perpustakaan, laboratorium komputer, ruang UKS, mushola, kantin sehat, dan area bermain yang aman untuk siswa.
+                SDNU Pemanahan memiliki fasilitas seperti perpustakaan, ruang UKS, mushola, kantin, aula, dan ruang kelas yang nyaman untuk mendukung proses belajar siswa.
               </p>
             </div>
           </details>
@@ -289,7 +289,7 @@
             </summary>
             <div class="mt-4 px-4">
               <p class="text-gray-600 leading-relaxed">
-                Anda dapat menghubungi kami melalui WhatsApp di nomor 082223008689, datang langsung ke sekolah di Jl. Raya Pemanahan, atau melalui website resmi sekolah. Tim kami siap membantu dari Senin-Jumat pukul 07.00-15.00 WIB.
+                Anda dapat menghubungi kami melalui WhatsApp di nomor 082223008689, datang langsung ke sekolah di Jl. Raya Pemanahan, atau melalui website resmi sekolah. Tim kami siap membantu dari Senin-Jumat pukul 07.30 - 14.30 WIB.
               </p>
             </div>
           </details>

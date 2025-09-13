@@ -136,7 +136,37 @@
                     <?= form_grid_end() ?>
                 </div>
             <?= form_section_footer() ?>
-            
+
+            <!-- Dokumen -->
+            <?= form_section_header('Upload Dokumen', 'fas fa-file-upload') ?>
+                <div class="space-y-6">
+                    <?= form_input_file('akta', 'Akta Kelahiran', [
+                        'required' => true,
+                        'value' => $student['akta'] ?? ''
+                    ]) ?>
+                    
+                    <?= form_input_file('kk', 'Kartu Keluarga', [
+                        'required' => true,
+                        'value' => $student['kk'] ?? ''
+                    ]) ?>
+                    
+                    <?= form_input_file('ktp_ayah', 'KTP Ayah', [
+                        'required' => true,
+                        'value' => $student['ktp_ayah'] ?? ''
+                    ]) ?>
+                    
+                    <?= form_input_file('ktp_ibu', 'KTP Ibu', [
+                        'required' => true,
+                        'value' => $student['ktp_ibu'] ?? ''
+                    ]) ?>
+                    
+                    <?= form_input_file('ijazah', 'Ijazah TK/RA', [
+                        'required' => false,
+                        'value' => $student['ijazah'] ?? '',
+                        'help' => 'Upload jika ada (opsional) - Format: PDF, JPG, atau PNG (Maksimal 5MB)'
+                    ]) ?>
+                </div>
+            <?= form_section_footer() ?>
                 <?= form_submit_button('Simpan Perubahan', [
                     'icon' => 'fas fa-save',
                     'class' => 'w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white text-lg font-semibold rounded-xl shadow-lg py-4 px-8 flex items-center justify-center gap-x-3'

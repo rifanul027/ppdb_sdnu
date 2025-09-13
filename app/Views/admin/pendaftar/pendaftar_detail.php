@@ -176,16 +176,16 @@
             <?php if (!empty($student['nomor_telepon'])): ?>
             <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
                 <div style="display: flex; gap: 10px;">
-                    <button onclick="hubungiPerbaikanData('<?= esc($student['nomor_telepon']) ?>', '<?= esc($student['nama_lengkap']) ?>', '<?= esc($student['no_registrasi']) ?>')" 
-                            class="btn btn-warning" style="flex: 1; padding: 10px 12px; font-size: 14px;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 14px; margin-right: 6px;"></i>
-                        Perlu Perbaikan
-                    </button>
-                    <button onclick="hubungiValidasiSelesai('<?= esc($student['nomor_telepon']) ?>', '<?= esc($student['nama_lengkap']) ?>', '<?= esc($student['no_registrasi']) ?>')" 
-                            class="btn btn-success" style="flex: 1; padding: 10px 12px; font-size: 14px;">
-                        <i class="fas fa-check-circle" style="font-size: 14px; margin-right: 6px;"></i>
-                        Data Divalidasi
-                    </button>
+                    <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $student['nomor_telepon']) ?>?text=Halo%20<?= urlencode($student['nama_lengkap']) ?>%20(%23<?= urlencode($student['no_registrasi']) ?>),%20Mohon%20segera%20perbaiki%20data%20pendaftaran%20Anda%20di%20PPDB%20SD%20NU%20agar%20dapat%20diproses%20validasi%20data%20oleh%20admin.%20Terima%20kasih." 
+                        target="_blank" class="btn btn-whatsapp btn-warning" style="flex: 1; padding: 10px 12px; font-size: 14px;">
+                         <i class="fab fa-whatsapp" style="font-size: 16px; margin-right: 6px; color: #25D366;"></i>
+                         Perlu Perbaikan
+                    </a>
+                    <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $student['nomor_telepon']) ?>?text=Halo%20<?= urlencode($student['nama_lengkap']) ?>%20(%23<?= urlencode($student['no_registrasi']) ?>),%20Data%20pendaftaran%20Anda%20telah%20divalidasi%20dan%20disetujui.%20Silakan%20lanjutkan%20tahapan%20selanjutnya%20dengan%20mengupload%20bukti%20pembayaran%20di%20sistem%20PPDB%20SD%20NU%20untuk%20keperluan%20daftar%20ulang.%20Terima%20kasih%20telah%20mendaftar." 
+                        target="_blank" class="btn btn-whatsapp btn-success" style="flex: 1; padding: 10px 12px; font-size: 14px;">
+                         <i class="fab fa-whatsapp" style="font-size: 16px; margin-right: 6px; color: #25D366;"></i>
+                         Data Divalidasi & Upload Bukti Pembayaran
+                    </a>
                 </div>
             </div>
             <?php endif; ?>
@@ -324,7 +324,7 @@
                 <i class="fas fa-file-alt" style="font-size: 2rem; color: #64748b; margin-bottom: 0.5rem;"></i>
                 <div style="font-weight: 500; margin-bottom: 0.5rem;">Akta Kelahiran</div>
                 <?php if ($student['akta_url']): ?>
-                    <a href="/uploads/<?= esc($student['akta_url']) ?>" target="_blank" class="btn btn-secondary btn-sm">
+                    <a href="/<?= esc($student['akta_url']) ?>" target="_blank" class="btn btn-secondary btn-sm">
                         <i class="fas fa-eye"></i> Lihat
                     </a>
                 <?php else: ?>
@@ -336,7 +336,7 @@
                 <i class="fas fa-file-alt" style="font-size: 2rem; color: #64748b; margin-bottom: 0.5rem;"></i>
                 <div style="font-weight: 500; margin-bottom: 0.5rem;">Kartu Keluarga</div>
                 <?php if ($student['kk_url']): ?>
-                    <a href="/uploads/<?= esc($student['kk_url']) ?>" target="_blank" class="btn btn-secondary btn-sm">
+                    <a href="/<?= esc($student['kk_url']) ?>" target="_blank" class="btn btn-secondary btn-sm">
                         <i class="fas fa-eye"></i> Lihat
                     </a>
                 <?php else: ?>
@@ -348,7 +348,31 @@
                 <i class="fas fa-file-alt" style="font-size: 2rem; color: #64748b; margin-bottom: 0.5rem;"></i>
                 <div style="font-weight: 500; margin-bottom: 0.5rem;">Ijazah TK/RA</div>
                 <?php if ($student['ijazah_url']): ?>
-                    <a href="/uploads/<?= esc($student['ijazah_url']) ?>" target="_blank" class="btn btn-secondary btn-sm">
+                    <a href="/<?= esc($student['ijazah_url']) ?>" target="_blank" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-eye"></i> Lihat
+                    </a>
+                <?php else: ?>
+                    <span style="color: #64748b; font-size: 0.875rem;">Tidak ada file</span>
+                <?php endif; ?>
+            </div>
+            
+            <div style="text-align: center; padding: 1rem; border: 2px dashed #d1d5db; border-radius: 8px;">
+                <i class="fas fa-file-alt" style="font-size: 2rem; color: #64748b; margin-bottom: 0.5rem;"></i>
+                <div style="font-weight: 500; margin-bottom: 0.5rem;">KTP Ayah</div>
+                <?php if ($student['ktp_ayah']): ?>
+                    <a href="/<?= esc($student['ktp_ayah']) ?>" target="_blank" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-eye"></i> Lihat
+                    </a>
+                <?php else: ?>
+                    <span style="color: #64748b; font-size: 0.875rem;">Tidak ada file</span>
+                <?php endif; ?>
+            </div>
+            
+            <div style="text-align: center; padding: 1rem; border: 2px dashed #d1d5db; border-radius: 8px;">
+                <i class="fas fa-file-alt" style="font-size: 2rem; color: #64748b; margin-bottom: 0.5rem;"></i>
+                <div style="font-weight: 500; margin-bottom: 0.5rem;">KTP Ibu</div>
+                <?php if ($student['ktp_ibu']): ?>
+                    <a href="/<?= esc($student['ktp_ibu']) ?>" target="_blank" class="btn btn-secondary btn-sm">
                         <i class="fas fa-eye"></i> Lihat
                     </a>
                 <?php else: ?>
@@ -390,102 +414,7 @@ function validateStudent(id) {
     }
 }
 
-function hubungiPerbaikanData(nomorTelepon, namaLengkap, noRegistrasi) {
-    // Bersihkan nomor telepon (hapus karakter non-digit)
-    let cleanNumber = nomorTelepon.replace(/\D/g, '');
-    
-    // Tambahkan kode negara Indonesia jika belum ada
-    if (cleanNumber.startsWith('0')) {
-        cleanNumber = '62' + cleanNumber.substring(1);
-    } else if (!cleanNumber.startsWith('62')) {
-        cleanNumber = '62' + cleanNumber;
-    }
-    
-    // Template pesan untuk perbaikan data
-    const templatePesan = `Assalamu'alaikum Wr. Wb.
 
-Halo ${namaLengkap},
-
-Saya dari Admin PPDB SD Nahdlatul Ulama. Terkait pendaftaran Anda dengan nomor registrasi: *${noRegistrasi}*
-
-Setelah kami lakukan pengecekan, terdapat beberapa data yang perlu diperbaiki atau dilengkapi:
-
-1. _(Sebutkan data/dokumen yang perlu diperbaiki)_
-2. _(Contoh: Foto dokumen kurang jelas)_
-3. _(Contoh: Data alamat perlu dilengkapi)_
-
-Mohon untuk segera melakukan perbaikan melalui akun pendaftaran Anda dengan login di: 
-*${window.location.origin}*
-
-Batas waktu perbaikan: *3 hari kerja* dari sekarang.
-
-Jika mengalami kendala, silakan hubungi kami kembali.
-
-Terima kasih atas kerjasamanya.
-
-Wassalamu'alaikum Wr. Wb.
-
-*Admin PPDB SD Nahdlatul Ulama*`;
-
-    // Encode pesan untuk URL
-    const encodedMessage = encodeURIComponent(templatePesan);
-    
-    // Buka WhatsApp
-    const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodedMessage}`;
-    window.open(whatsappUrl, '_blank');
-}
-
-function hubungiValidasiSelesai(nomorTelepon, namaLengkap, noRegistrasi) {
-    // Bersihkan nomor telepon (hapus karakter non-digit)
-    let cleanNumber = nomorTelepon.replace(/\D/g, '');
-    
-    // Tambahkan kode negara Indonesia jika belum ada
-    if (cleanNumber.startsWith('0')) {
-        cleanNumber = '62' + cleanNumber.substring(1);
-    } else if (!cleanNumber.startsWith('62')) {
-        cleanNumber = '62' + cleanNumber;
-    }
-    
-    // Template pesan untuk validasi selesai
-    const templatePesan = `Assalamu'alaikum Wr. Wb.
-
-Selamat! ${namaLengkap}
-
-Kami dengan senang hati mengabarkan bahwa pendaftaran Anda dengan nomor registrasi *${noRegistrasi}* telah *BERHASIL DIVALIDASI* di SD Nahdlatul Ulama.
-
-📋 *LANGKAH SELANJUTNYA - DAFTAR ULANG:*
-
-1. *Waktu Daftar Ulang:*
-   _(Akan diinformasikan kemudian sesuai jadwal)_
-
-2. *Dokumen yang Perlu Dibawa:*
-   • Dokumen asli untuk verifikasi
-   • Fotocopy dokumen (2 rangkap)
-   • Pas foto terbaru 3x4 (4 lembar)
-   • Map plastik untuk berkas
-
-3. *Biaya Daftar Ulang:*
-   _(Sesuai ketentuan yang berlaku)_
-
-4. *Lokasi Daftar Ulang:*
-   SD Nahdlatul Ulama
-   _(Alamat lengkap akan diinformasikan)_
-
-*Informasi lengkap akan kami sampaikan melalui pengumuman resmi di website dan grup WhatsApp orangtua.*
-
-Selamat bergabung di keluarga besar SD Nahdlatul Ulama!
-
-Wassalamu'alaikum Wr. Wb.
-
-*Admin PPDB SD Nahdlatul Ulama*`;
-
-    // Encode pesan untuk URL
-    const encodedMessage = encodeURIComponent(templatePesan);
-    
-    // Buka WhatsApp
-    const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodedMessage}`;
-    window.open(whatsappUrl, '_blank');
-}
 </script>
 
 <?= $this->endSection() ?>

@@ -218,9 +218,9 @@
                         <label>Metode Pembayaran <span class="text-danger">*</span></label>
                         <select class="form-control" id="metode" name="metode" required>
                             <option value="">-- Pilih Metode Pembayaran --</option>
-                            <option value="Transfer Bank">Transfer Bank</option>
-                            <option value="Tunai">Tunai</option>
-                            <option value="QRIS">QRIS</option>
+                            <option value="transfer">Transfer Bank</option>
+                            <option value="cash">Tunai</option>
+                           
                         </select>
                     </div>
                     
@@ -327,7 +327,7 @@ function showDetailModal(studentId) {
                     `<a href="https://wa.me/62${siswa.nomor_telepon.replace(/^0/, '')}" 
                        target="_blank" 
                        class="btn btn-success">
-                        <i class="fab fa-whatsapp"></i> WhatsApp
+                        <i class="fab fa-whatsapp mr-2"></i> ${siswa.nomor_telepon}
                     </a>` : '';
                 
                 // Restore modal content
@@ -352,7 +352,7 @@ function showDetailModal(studentId) {
                             <table class="table table-borderless table-sm">
                                 <tr><td width="40%"><strong>Nama Ayah</strong></td><td>${siswa.nama_ayah || '-'}</td></tr>
                                 <tr><td><strong>Nama Ibu</strong></td><td>${siswa.nama_ibu || '-'}</td></tr>
-                                <tr><td><strong>No. Telepon</strong></td><td>${siswa.nomor_telepon || '-'} ${waButton}</td></tr>
+                                <tr><td><strong>No. Telepon</strong></td><td>${waButton}</td></tr>
                             </table>
                             
                             <h6 class="mt-3">Data Pendidikan</h6>

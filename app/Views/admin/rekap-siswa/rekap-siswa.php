@@ -1,86 +1,25 @@
 <?= $this->extend('admin/layout') ?>
 
 <?= $this->section('styles') ?>
-<style>
-    /* Table scroll styling */
-    #tableContainer {
-        scrollbar-width: auto;
-        scrollbar-color: #9ca3af #f3f4f6;
-    }
-    
-    #tableContainer::-webkit-scrollbar {
-        height: 12px;
-        background-color: #f3f4f6;
-    }
-    
-    #tableContainer::-webkit-scrollbar-thumb {
-        background-color: #9ca3af;
-        border-radius: 6px;
-        border: 2px solid #f3f4f6;
-    }
-    
-    #tableContainer::-webkit-scrollbar-thumb:hover {
-        background-color: #6b7280;
-    }
-    
-    #tableContainer::-webkit-scrollbar-track {
-        background-color: #f3f4f6;
-        border-radius: 6px;
-    }
-    
-    /* Force table to maintain minimum width */
-    #rekapSiswaTable {
-        border-collapse: collapse;
-        white-space: nowrap;
-    }
-    
-    #rekapSiswaTable th,
-    #rekapSiswaTable td {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        #tableContainer {
-            border-radius: 0;
-        }
-        
-        #rekapSiswaTable th,
-        #rekapSiswaTable td {
-            padding: 0.5rem 0.75rem;
-            font-size: 0.75rem;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        #rekapSiswaTable th,
-        #rekapSiswaTable td {
-            padding: 0.375rem 0.5rem;
-            font-size: 0.7rem;
-        }
-    }
-</style>
 <?= $this->endsection() ?>
 
 <?= $this->section('content') ?>
 
 <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-6">
     <div class="flex-1">
-        <h2 class="text-2xl font-semibold text-gray-900 mb-2"><?= $pageTitle ?></h2>
-        <p class="text-gray-600">Rekap data siswa yang sudah diterima dan pembayaran lunas</p>
+        <h2 class="text-xl sm:text-2xl font-semibold text-gray-900 mb-2"><?= $pageTitle ?></h2>
+        <p class="text-sm sm:text-base text-gray-600">Rekap data siswa yang sudah diterima dan pembayaran lunas</p>
     </div>
-    <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-        <button class="btn btn-secondary flex items-center justify-center gap-2 w-full sm:w-auto" onclick="exportPdf()">
+    <div class="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full lg:w-auto">
+        <button class="btn btn-secondary flex items-center justify-center gap-2 w-full sm:w-auto text-sm" onclick="exportPdf()">
             <i class="fas fa-file-pdf"></i>
             <span>Export PDF</span>
         </button>
-        <button class="btn btn-success flex items-center justify-center gap-2 w-full sm:w-auto" onclick="exportExcel()">
+        <button class="btn btn-success flex items-center justify-center gap-2 w-full sm:w-auto text-sm" onclick="exportExcel()">
             <i class="fas fa-file-excel"></i>
             <span>Export Excel</span>
         </button>
-        <button class="btn btn-primary flex items-center justify-center gap-2 w-full sm:w-auto" onclick="refreshData()">
+        <button class="btn btn-primary flex items-center justify-center gap-2 w-full sm:w-auto text-sm" onclick="refreshData()">
             <i class="fas fa-sync"></i>
             <span>Refresh</span>
         </button>
@@ -88,34 +27,34 @@
 </div>
 
 <!-- Statistics Cards -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" id="statsContainer">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6" id="statsContainer">
     <div class="content-card">
-        <div class="card-body text-center">
-            <div class="text-3xl font-bold text-green-600 mb-2" id="totalSiswa">0</div>
-            <div class="text-gray-500 text-sm">Total Siswa</div>
+        <div class="card-body text-center p-4">
+            <div class="text-2xl sm:text-3xl font-bold text-green-600 mb-2" id="totalSiswa">0</div>
+            <div class="text-gray-500 text-xs sm:text-sm">Total Siswa</div>
         </div>
     </div>
     <div class="content-card">
-        <div class="card-body text-center">
-            <div class="text-3xl font-bold text-green-600 mb-2" id="lakiLaki">0</div>
-            <div class="text-gray-500 text-sm">Laki-laki</div>
+        <div class="card-body text-center p-4">
+            <div class="text-2xl sm:text-3xl font-bold text-blue-600 mb-2" id="lakiLaki">0</div>
+            <div class="text-gray-500 text-xs sm:text-sm">Laki-laki</div>
         </div>
     </div>
     <div class="content-card">
-        <div class="card-body text-center">
-            <div class="text-3xl font-bold text-pink-600 mb-2" id="perempuan">0</div>
-            <div class="text-gray-500 text-sm">Perempuan</div>
+        <div class="card-body text-center p-4">
+            <div class="text-2xl sm:text-3xl font-bold text-pink-600 mb-2" id="perempuan">0</div>
+            <div class="text-gray-500 text-xs sm:text-sm">Perempuan</div>
         </div>
     </div>
 </div>
 
 <!-- Filter Section -->
 <div class="content-card mb-6">
-    <div class="card-body">
+    <div class="card-body p-4">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
             <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">Tahun Ajaran</label>
-                <select id="filterTahunAjaran" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                <select id="filterTahunAjaran" class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
                     <option value="">Semua Tahun Ajaran</option>
                     <?php foreach ($tahunAjaran as $tahun): ?>
                         <option value="<?= $tahun['id'] ?>" 
@@ -131,15 +70,15 @@
                 <input type="text" 
                        id="searchInput" 
                        placeholder="Cari nama siswa, NISN, atau nama orang tua..." 
-                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                       class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
             </div>
             
             <div class="flex flex-col sm:flex-row gap-2 lg:items-end lg:justify-start">
-                <button onclick="applyFilters()" class="btn btn-primary flex items-center justify-center gap-2 w-full sm:w-auto">
+                <button onclick="applyFilters()" class="btn btn-primary flex items-center justify-center gap-2 w-full sm:w-auto text-sm">
                     <i class="fas fa-search"></i>
                     <span>Filter</span>
                 </button>
-                <button onclick="resetFilters()" class="btn btn-secondary flex items-center justify-center gap-2 w-full sm:w-auto">
+                <button onclick="resetFilters()" class="btn btn-secondary flex items-center justify-center gap-2 w-full sm:w-auto text-sm">
                     <i class="fas fa-times"></i>
                     <span>Reset</span>
                 </button>
@@ -150,8 +89,8 @@
 
 <!-- Data Table -->
 <div class="content-card">
-    <div class="card-header flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        <h3 class="card-title">Data Rekap Siswa</h3>
+    <div class="card-header flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-4">
+        <h3 class="card-title text-lg font-semibold">Data Rekap Siswa</h3>
         <div class="flex flex-col sm:flex-row sm:items-center gap-4">
             <div class="text-gray-500 text-sm" id="totalInfo">Total: 0 siswa</div>
             <div class="flex items-center gap-2">
@@ -173,29 +112,30 @@
             <div>Memuat data...</div>
         </div>
 
-        <!-- Table Wrapper with Scroll -->
-        <div class="w-full overflow-x-scroll overflow-y-visible border-b border-gray-200" 
-             id="tableContainer" 
-             style="max-width: 100%; -webkit-overflow-scrolling: touch;">
-            <div style="min-width: 1200px; width: 100%;">
-                <table class="w-full bg-white" id="rekapSiswaTable">
-                    <thead class="bg-gray-50 sticky top-0">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 60px;">No</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 140px;">No. Registrasi</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 120px;">NISN</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 180px;">Nama Lengkap</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 120px;">Jenis Kelamin</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 180px;">Tempat, Tanggal Lahir</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 160px;">Orang Tua</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 140px;">Tahun Ajaran</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="min-width: 140px;">Tgl Diterima</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
-                        <!-- Data will be loaded here via AJAX -->
-                    </tbody>
-                </table>
+        <!-- Desktop Table -->
+        <div class="hidden md:block overflow-x-auto" id="tableContainer">
+            <table class="w-full bg-white" id="rekapSiswaTable">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TTL</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orang Tua</th>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
+                    <!-- Data will be loaded here via AJAX -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Cards -->
+        <div class="md:hidden" id="mobileContainer">
+            <div id="mobileCards" class="p-4 space-y-4">
+                <!-- Mobile cards will be loaded here via AJAX -->
             </div>
         </div>
     </div>
@@ -206,10 +146,48 @@
     </div>
 </div>
 
+<!-- Modal Kategori -->
+<div id="kategoriModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-md w-full max-h-96 overflow-y-auto">
+        <div class="p-4 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">Pilih Kategori</h3>
+                <button onclick="closeKategoriModal()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="p-4">
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 mb-2">Siswa: <span id="modalStudentName" class="font-semibold"></span></p>
+                <p class="text-sm text-gray-500">Kategori saat ini: <span id="modalCurrentKategori" class="font-medium"></span></p>
+            </div>
+            <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Pilih Kategori Baru</label>
+                <select id="kategoriSelect" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <option value="">Pilih Kategori</option>
+                    <?php foreach ($kategori as $kat): ?>
+                        <option value="<?= $kat['id'] ?>"><?= $kat['nama_kategori'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+        <div class="p-4 border-t border-gray-200 flex gap-2 justify-end">
+            <button onclick="closeKategoriModal()" class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">
+                Batal
+            </button>
+            <button onclick="updateKategori()" class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700">
+                Update
+            </button>
+        </div>
+    </div>
+</div>
+
 <script>
 let currentPage = 1;
 let currentPerPage = 10;
 let currentFilters = {};
+let currentStudentId = null;
 
 // Initialize page
 document.addEventListener('DOMContentLoaded', function() {
@@ -262,20 +240,21 @@ async function loadStudents() {
         
         if (result.success) {
             renderTable(result.data);
+            renderMobileCards(result.data);
             renderPagination(result.pagination);
             updateTotalInfo(result.pagination.total);
         } else {
-            // Show error and render empty state
             showError(result.message || 'Gagal memuat data');
-            renderTable([]); // Render empty table
-            renderPagination({ page: 1, total_pages: 1, total: 0, per_page: currentPerPage }); // Empty pagination
-            updateTotalInfo(0); // Update total info to 0
+            renderTable([]);
+            renderMobileCards([]);
+            renderPagination({ page: 1, total_pages: 1, total: 0, per_page: currentPerPage });
+            updateTotalInfo(0);
         }
     } catch (error) {
         showError('Terjadi kesalahan saat memuat data');
         console.error('Error loading students:', error);
-        // Reset UI to empty state on error
         renderTable([]);
+        renderMobileCards([]);
         renderPagination({ page: 1, total_pages: 1, total: 0, per_page: currentPerPage });
         updateTotalInfo(0);
     } finally {
@@ -312,14 +291,14 @@ function updateStatsDisplay(stats) {
     document.getElementById('perempuan').textContent = stats.perempuan;
 }
 
-// Render table
+// Render desktop table
 function renderTable(students) {
     const tbody = document.getElementById('tableBody');
     
     if (students.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="9" class="px-4 py-12 text-center text-gray-500">
+                <td colspan="7" class="px-4 py-12 text-center text-gray-500">
                     <div class="flex flex-col items-center justify-center">
                         <i class="fas fa-users text-5xl mb-4 opacity-50"></i>
                         <div class="text-lg font-medium">Tidak ada data siswa yang ditemukan</div>
@@ -337,42 +316,101 @@ function renderTable(students) {
     
     tbody.innerHTML = students.map((student, index) => `
         <tr class="hover:bg-gray-50 transition-colors">
-            <td class="px-4 py-3 text-sm font-semibold text-gray-600" style="min-width: 60px;">${startNumber + index + 1}</td>
-            <td class="px-4 py-3" style="min-width: 140px;">
-                <span class="font-mono font-semibold text-green-600 text-sm">
-                    ${escapeHtml(student.no_registrasi)}
+            <td class="px-4 py-3 text-sm font-semibold text-gray-600">${startNumber + index + 1}</td>
+            <td class="px-4 py-3">
+                <div class="font-semibold text-gray-900">${escapeHtml(student.nama_lengkap)}</div>
+                <div class="text-xs text-gray-500">NISN: ${escapeHtml(student.nisn || '-')}</div>
+            </td>
+            <td class="px-4 py-3">
+                <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                    ${escapeHtml(student.kategori_nama || 'Belum Ditentukan')}
                 </span>
             </td>
-            <td class="px-4 py-3" style="min-width: 120px;">
-                <span class="font-mono font-semibold text-green-600 text-sm">
-                    ${escapeHtml(student.nisn || '-')}
-                </span>
-            </td>
-            <td class="px-4 py-3" style="min-width: 180px;">
-                <div class="font-semibold text-gray-900" title="${escapeHtml(student.nama_lengkap)}">${escapeHtml(student.nama_lengkap)}</div>
-            </td>
-            <td class="px-4 py-3" style="min-width: 120px;">
-                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${student.jenis_kelamin === 'L' ? 'bg-green-100 text-green-800' : 'bg-pink-100 text-pink-800'}">
+            <td class="px-4 py-3">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${student.jenis_kelamin === 'L' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">
                     ${student.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
                 </span>
             </td>
-            <td class="px-4 py-3" style="min-width: 180px;">
-                <div class="text-sm font-medium text-gray-900" title="${escapeHtml(student.tempat_lahir)}">${escapeHtml(student.tempat_lahir)}</div>
+            <td class="px-4 py-3">
+                <div class="text-sm font-medium text-gray-900">${escapeHtml(student.tempat_lahir)}</div>
                 <div class="text-xs text-gray-500">${student.tanggal_lahir_formatted}</div>
             </td>
-            <td class="px-4 py-3" style="min-width: 160px;">
-                <div class="text-sm font-medium text-gray-900" title="${escapeHtml(student.nama_ayah)}">${escapeHtml(student.nama_ayah)}</div>
-                <div class="text-xs text-gray-500" title="${escapeHtml(student.nama_ibu)}">${escapeHtml(student.nama_ibu)}</div>
+            <td class="px-4 py-3">
+                <div class="text-sm font-medium text-gray-900">${escapeHtml(student.nama_ayah)}</div>
+                <div class="text-xs text-gray-500">${escapeHtml(student.nama_ibu)}</div>
             </td>
-            <td class="px-4 py-3" style="min-width: 140px;">
-                <div class="text-sm font-medium text-gray-900" title="${escapeHtml(student.tahun_ajaran_nama || '-')}">${escapeHtml(student.tahun_ajaran_nama || '-')}</div>
-                <div class="text-xs text-gray-500">${student.tahun_mulai}/${student.tahun_selesai}</div>
-            </td>
-            <td class="px-4 py-3" style="min-width: 140px;">
-                <div class="text-sm font-medium text-gray-900">${student.accepted_at_formatted}</div>
-                <div class="text-xs text-gray-500">Bayar: ${student.pembayaran_accepted_formatted}</div>
+            <td class="px-4 py-3">
+                <button onclick="openKategoriModal(${student.id}, '${escapeHtml(student.nama_lengkap)}', '${escapeHtml(student.kategori_nama || 'Belum Ditentukan')}', ${student.kategori_id || 'null'})" 
+                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 transition-colors">
+                    <i class="fas fa-edit mr-1"></i>
+                    Kategori
+                </button>
             </td>
         </tr>
+    `).join('');
+}
+
+// Render mobile cards
+function renderMobileCards(students) {
+    const container = document.getElementById('mobileCards');
+    
+    if (students.length === 0) {
+        container.innerHTML = `
+            <div class="text-center text-gray-500 py-12">
+                <i class="fas fa-users text-5xl mb-4 opacity-50"></i>
+                <div class="text-lg font-medium">Tidak ada data siswa yang ditemukan</div>
+                <div class="text-sm mt-2 text-gray-400">
+                    Coba ubah filter atau kriteria pencarian
+                </div>
+            </div>
+        `;
+        return;
+    }
+    
+    const startNumber = (currentPage - 1) * currentPerPage;
+    
+    container.innerHTML = students.map((student, index) => `
+        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+            <div class="flex items-start justify-between mb-3">
+                <div class="flex-1">
+                    <div class="font-semibold text-gray-900 text-lg">${startNumber + index + 1}. ${escapeHtml(student.nama_lengkap)}</div>
+                    <div class="text-xs text-gray-500 mt-1">NISN: ${escapeHtml(student.nisn || '-')}</div>
+                </div>
+                <button onclick="openKategoriModal(${student.id}, '${escapeHtml(student.nama_lengkap)}', '${escapeHtml(student.kategori_nama || 'Belum Ditentukan')}', ${student.kategori_id || 'null'})" 
+                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 transition-colors">
+                    <i class="fas fa-edit mr-1"></i>
+                    Kategori
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div>
+                    <span class="text-gray-500">Kategori:</span>
+                    <div class="mt-1">
+                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                            ${escapeHtml(student.kategori_nama || 'Belum Ditentukan')}
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-gray-500">Gender:</span>
+                    <div class="mt-1">
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${student.jenis_kelamin === 'L' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">
+                            ${student.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
+                        </span>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-gray-500">TTL:</span>
+                    <div class="font-medium text-gray-900">${escapeHtml(student.tempat_lahir)}, ${student.tanggal_lahir_formatted}</div>
+                </div>
+                <div>
+                    <span class="text-gray-500">Orang Tua:</span>
+                    <div class="font-medium text-gray-900">${escapeHtml(student.nama_ayah)}</div>
+                    <div class="text-xs text-gray-500">${escapeHtml(student.nama_ibu)}</div>
+                </div>
+            </div>
+        </div>
     `).join('');
 }
 
@@ -439,6 +477,59 @@ function renderPagination(pagination) {
     container.innerHTML = paginationHTML;
 }
 
+// Modal functions
+function openKategoriModal(studentId, studentName, currentKategori, currentKategoriId) {
+    currentStudentId = studentId;
+    document.getElementById('modalStudentName').textContent = studentName;
+    document.getElementById('modalCurrentKategori').textContent = currentKategori;
+    document.getElementById('kategoriSelect').value = currentKategoriId || '';
+    document.getElementById('kategoriModal').classList.remove('hidden');
+}
+
+function closeKategoriModal() {
+    document.getElementById('kategoriModal').classList.add('hidden');
+    currentStudentId = null;
+}
+
+async function updateKategori() {
+    if (!currentStudentId) return;
+    
+    const kategoriId = document.getElementById('kategoriSelect').value;
+    
+    if (!kategoriId) {
+        alert('Silakan pilih kategori terlebih dahulu');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`<?= base_url('admin/rekap-siswa/update-kategori') ?>`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+                student_id: currentStudentId,
+                kategori_id: kategoriId
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert('Kategori berhasil diupdate');
+            closeKategoriModal();
+            loadStudents();
+            loadSummaryStats();
+        } else {
+            alert('Gagal update kategori: ' + result.message);
+        }
+    } catch (error) {
+        alert('Terjadi kesalahan saat update kategori');
+        console.error('Error updating kategori:', error);
+    }
+}
+
 // Apply filters
 function applyFilters() {
     currentFilters = {};
@@ -449,7 +540,7 @@ function applyFilters() {
     if (tahunAjaran) currentFilters.tahun_ajaran_id = tahunAjaran;
     if (search) currentFilters.search = search;
     
-    currentPage = 1; // Reset to first page
+    currentPage = 1;
     loadStudents();
     loadSummaryStats();
 }
@@ -478,13 +569,16 @@ function changePage(page) {
 function showLoading(show) {
     const loadingState = document.getElementById('loadingState');
     const tableContainer = document.getElementById('tableContainer');
+    const mobileContainer = document.getElementById('mobileContainer');
     
     if (show) {
         loadingState.classList.remove('hidden');
         tableContainer.classList.add('hidden');
+        mobileContainer.classList.add('hidden');
     } else {
         loadingState.classList.add('hidden');
         tableContainer.classList.remove('hidden');
+        mobileContainer.classList.remove('hidden');
     }
 }
 
@@ -500,6 +594,7 @@ function showError(message) {
 
 // Escape HTML
 function escapeHtml(text) {
+    if (text === null || text === undefined) return '';
     const map = {
         '&': '&amp;',
         '<': '&lt;',
@@ -527,6 +622,13 @@ function refreshData() {
     loadStudents();
     loadSummaryStats();
 }
+
+// Close modal when clicking outside
+document.getElementById('kategoriModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeKategoriModal();
+    }
+});
 </script>
 
 <?= $this->endsection() ?>
