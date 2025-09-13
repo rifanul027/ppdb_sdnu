@@ -201,59 +201,68 @@
                             <h3 class="text-lg font-semibold text-gray-900">Status Pembayaran</h3>
                         </div>
                         <div class="p-6">
-                            <?php if (isset($payment) && $payment): ?>
-                                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                                    <div class="flex items-center mb-3">
-                                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
-                                        <h4 class="font-semibold text-green-800">Pembayaran Sudah Diupload</h4>
+                            <?php if (isset($student['accepted_at']) && !empty($student['accepted_at'])): ?>
+                                <?php if (isset($payment) && $payment): ?>
+                                    <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                                        <div class="flex items-center mb-3">
+                                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                            <h4 class="font-semibold text-green-800">Pembayaran Sudah Diupload</h4>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <div class="flex justify-between">
+                                                <span class="text-sm text-gray-600">Nama Pembayar:</span>
+                                                <span class="text-sm font-medium"><?= esc($payment['nama'] ?? '-') ?></span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-sm text-gray-600">Metode:</span>
+                                                <span class="text-sm font-medium"><?= ucfirst($payment['metode'] ?? '-') ?></span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-sm text-gray-600">Upload:</span>
+                                                <span class="text-sm font-medium"><?= date('d M Y', strtotime($payment['created_at'])) ?></span>
+                                            </div>
+                                            <?php if (!empty($payment['bukti_url'])): ?>
+                                            <div class="pt-2">
+                                                <a href="<?= base_url($payment['bukti_url']) ?>" target="_blank" 
+                                                   class="inline-flex items-center text-nu-green hover:text-nu-dark">
+                                                    <i class="fas fa-file-pdf mr-2"></i>Lihat Bukti Pembayaran
+                                                </a>
+                                            </div>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
-                                    <div class="space-y-2">
-                                        <div class="flex justify-between">
-                                            <span class="text-sm text-gray-600">Nama Pembayar:</span>
-                                            <span class="text-sm font-medium"><?= esc($payment['nama'] ?? '-') ?></span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-sm text-gray-600">Metode:</span>
-                                            <span class="text-sm font-medium"><?= ucfirst($payment['metode'] ?? '-') ?></span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span class="text-sm text-gray-600">Upload:</span>
-                                            <span class="text-sm font-medium"><?= date('d M Y', strtotime($payment['created_at'])) ?></span>
-                                        </div>
-                                        <?php if (!empty($payment['bukti_url'])): ?>
-                                        <div class="pt-2">
-                                            <a href="<?= base_url($payment['bukti_url']) ?>" target="_blank" 
-                                               class="inline-flex items-center text-nu-green hover:text-nu-dark">
-                                                <i class="fas fa-file-pdf mr-2"></i>Lihat Bukti Pembayaran
-                                            </a>
-                                        </div>
-                                        <?php endif; ?>
+                                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                                        <p class="text-sm text-green-700">
+                                            <i class="fas fa-info-circle mr-2"></i>
+                                            Pembayaran sedang diverifikasi oleh admin.
+                                        </p>
                                     </div>
-                                </div>
-                                <div class="bg-green-50 border border-green-200 rounded-lg p-3">
-                                    <p class="text-sm text-green-700">
-                                        <i class="fas fa-info-circle mr-2"></i>
-                                        Pembayaran sedang diverifikasi oleh admin.
-                                    </p>
-                                </div>
+                                <?php else: ?>
+                                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+                                        <p class="text-yellow-700 mb-4">
+                                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                                            Belum ada data pembayaran. Silakan upload bukti pembayaran.
+                                        </p>
+                                        <a href="/upload-payment" class="inline-flex items-center bg-nu-green text-white px-4 py-2 rounded-lg hover:bg-nu-dark transition-colors">
+                                            <i class="fas fa-upload mr-2"></i>Upload Bukti Pembayaran
+                                        </a>
+                                    </div>
+                                    
+                                    <div class="bg-gray-50 rounded-lg p-4">
+                                        <h4 class="font-medium text-gray-900 mb-3">Informasi Pembayaran:</h4>
+                                        <div class="text-sm space-y-1">
+                                            <p><strong>Biaya:</strong> Rp 250.000</p>
+                                            <p><strong>Bank:</strong> BRI - 1234-5678-9012-3456</p>
+                                            <p><strong>Atas Nama:</strong> SDNU Pemanahan</p>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
                             <?php else: ?>
-                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
-                                    <p class="text-yellow-700 mb-4">
-                                        <i class="fas fa-exclamation-triangle mr-2"></i>
-                                        Belum ada data pembayaran. Silakan upload bukti pembayaran.
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                    <p class="text-blue-700">
+                                        <i class="fas fa-info-circle mr-2"></i>
+                                        Data pendaftaran sedang diproses validasi oleh admin.
                                     </p>
-                                    <a href="/upload-payment" class="inline-flex items-center bg-nu-green text-white px-4 py-2 rounded-lg hover:bg-nu-dark transition-colors">
-                                        <i class="fas fa-upload mr-2"></i>Upload Bukti Pembayaran
-                                    </a>
-                                </div>
-                                
-                                <div class="bg-gray-50 rounded-lg p-4">
-                                    <h4 class="font-medium text-gray-900 mb-3">Informasi Pembayaran:</h4>
-                                    <div class="text-sm space-y-1">
-                                        <p><strong>Biaya:</strong> Rp 250.000</p>
-                                        <p><strong>Bank:</strong> BRI - 1234-5678-9012-3456</p>
-                                        <p><strong>Atas Nama:</strong> SDNU Pemanahan</p>
-                                    </div>
                                 </div>
                             <?php endif; ?>
                         </div>

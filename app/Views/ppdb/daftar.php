@@ -1,8 +1,6 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<!-- Removed PHP redirect from view - handled by controller now -->
-
 <!-- Hero Section -->
 <div class="relative overflow-hidden bg-gradient-to-br from-nu-cream via-white to-nu-cream">
     <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
@@ -44,9 +42,13 @@
                 </div>
             </div>
         <?php endif; ?>
+
+        <?php
+        // Get user ID from session, fallback to 'unknown' if not set
+        $userId = session()->get('user_id') ?? 'unknown';
+        ?>
         
-        
-    <form id="ppdb-form" action="/daftar/<?= session()->get('user_id') ?? 'unknown' ?>/store" method="post" enctype="multipart/form-data" class="space-y-8">
+        <form method="POST" id="ppdb-form" action="<?= base_url('daftar') ?>" enctype="multipart/form-data" class="space-y-8" novalidate>
             <?= csrf_field() ?>
             
             <!-- Data Pribadi -->
@@ -117,8 +119,24 @@
                 </div>
             <?= form_section_footer() ?>
             
-            <?= form_submit_button('Kirim Pendaftaran') ?>
+            <!-- Submit Button with Loading State -->
+            <button type="submit" id="submit-btn" class="inline-flex justify-center items-center gap-x-3 text-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 border border-transparent text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8 disabled:opacity-50 disabled:cursor-not-allowed">
+                <i class="fas fa-paper-plane" id="submit-icon"></i>
+                <span id="submit-text">Kirim Pendaftaran</span>
+            </button>
+            <div class="text-center">
+            </div>
         </form>
     </div>
 </div>
+
+<!-- Loading Overlay -->
+<div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white p-6 rounded-xl shadow-xl text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
+        <p class="text-gray-700 font-medium">Sedang memproses pendaftaran...</p>
+        <p class="text-sm text-gray-500 mt-1">Mohon tunggu, jangan tutup halaman ini</p>
+    </div>
+</div>
+
 <?= $this->endSection() ?>

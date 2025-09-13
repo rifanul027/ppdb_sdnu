@@ -123,7 +123,7 @@
                         'readonly' => true
                     ]) ?>
                     
-                    <div class="flex flex-col sm:flex-row justify-end gap-3">
+                    <div class="flex flex-col sm:flex-row justify-end gap-3 mt-6">
                         <button type="button" onclick="document.getElementById('profileForm').reset()" 
                                 class="px-6 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors">
                             Reset
@@ -158,7 +158,7 @@
                             'toggle_id' => 'toggleNewPassword'
                         ]) ?>
                         
-                        <?= form_input_password('confirm_password', 'Konfirmasi Password', [
+                        <?= form_input_password('confirm_password', 'Konfirmasi', [
                             'required' => true,
                             'class' => 'text-sm',
                             'toggle_id' => 'toggleConfirmPassword'

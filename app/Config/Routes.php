@@ -7,7 +7,7 @@ $routes->get('/', 'Home::index');
 $routes->get('/ppdb', 'Ppdb::index');
 $routes->get('/ppdb/pengumuman', 'Ppdb::pengumuman');
 $routes->get('/daftar', 'PendaftaranSiswa::index');
-$routes->post('/daftar/(:segment)/store', 'PendaftaranSiswa::store/$1');
+$routes->post('/daftar', 'PendaftaranSiswa::store');
 $routes->get('/student-profile', 'Ppdb::studentProfile');
 $routes->get('/profile-siswa', 'Ppdb::studentProfile');
 $routes->match(['GET', 'POST'], '/edit-profile', 'Ppdb::editProfile');

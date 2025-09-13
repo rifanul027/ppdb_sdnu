@@ -113,7 +113,9 @@
                 <span class="btn-text">Kembali</span>
             </a>
             <?php if (!$student['accepted_at']): ?>
-            <button onclick="validateStudent(<?= $student['id'] ?>)" class="btn btn-success" id="validateBtn">
+            <button onclick="validateStudent('<?= $student['id'] ?>')" 
+                    class="btn btn-success" 
+                    id="validateBtn-<?= $student['id'] ?>">
                 <i class="fas fa-check"></i>
                 <span class="btn-text">Validasi Data</span>
             </button>
@@ -360,16 +362,13 @@
 <script>
 function validateStudent(id) {
     if (confirm('Apakah Anda yakin data pendaftar ini sudah valid dan ingin disetujui?')) {
-        const validateBtn = document.getElementById('validateBtn');
+        const validateBtn = document.getElementById('validateBtn-' + id);
         validateBtn.disabled = true;
         validateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memvalidasi...';
         
         fetch('/admin/pendaftar/validate/' + id, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            }
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
         })
         .then(response => response.json())
         .then(data => {

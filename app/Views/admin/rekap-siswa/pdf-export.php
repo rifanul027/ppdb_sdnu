@@ -147,10 +147,7 @@
                 <div class="label">Perempuan</div>
                 <div class="value"><?= count(array_filter($students, function($s) { return $s['jenis_kelamin'] === 'P'; })) ?></div>
             </div>
-            <div class="info-item">
-                <div class="label">Dengan Beasiswa</div>
-                <div class="value"><?= count(array_filter($students, function($s) { return !empty($s['beasiswa_nama']); })) ?></div>
-            </div>
+            
         </div>
     </div>
 
@@ -176,7 +173,6 @@
                 <th width="12%">Tempat, Tgl Lahir</th>
                 <th width="15%">Orang Tua</th>
                 <th width="10%">Tahun Ajaran</th>
-                <th width="8%">Beasiswa</th>
                 <th width="8%">Tgl Diterima</th>
             </tr>
         </thead>
@@ -211,13 +207,7 @@
                             <?= htmlspecialchars($student['tahun_ajaran_nama'] ?? '-') ?><br>
                             <small><?= $student['tahun_mulai'] ?? '' ?>/<?= $student['tahun_selesai'] ?? '' ?></small>
                         </td>
-                        <td class="text-center">
-                            <?php if (!empty($student['beasiswa_nama'])): ?>
-                                <span class="badge badge-warning"><?= htmlspecialchars($student['beasiswa_nama']) ?></span>
-                            <?php else: ?>
-                                <span style="color: #999;">-</span>
-                            <?php endif; ?>
-                        </td>
+                        
                         <td class="text-center">
                             <?php if (!empty($student['accepted_at'])): ?>
                                 <?= date('d/m/Y', strtotime($student['accepted_at'])) ?><br>
@@ -255,7 +245,6 @@
                                 <th width="12%">Tempat, Tgl Lahir</th>
                                 <th width="15%">Orang Tua</th>
                                 <th width="10%">Tahun Ajaran</th>
-                                <th width="8%">Beasiswa</th>
                                 <th width="8%">Tgl Diterima</th>
                             </tr>
                         </thead>

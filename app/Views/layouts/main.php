@@ -196,37 +196,6 @@
             });
         });
         
-        document.addEventListener('DOMContentLoaded', function() {
-            const buttons = document.querySelectorAll('button[type="submit"], .btn-submit');
-            buttons.forEach(button => {
-                button.addEventListener('click', function() {
-                    if (!this.disabled) {
-                        const originalText = this.innerHTML;
-                        this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Memproses...';
-                        this.disabled = true;
-                        
-                        setTimeout(() => {
-                            this.innerHTML = originalText;
-                            this.disabled = false;
-                        }, 3000);
-                    }
-                });
-            });
-            
-            const inputs = document.querySelectorAll('input, textarea, select');
-            inputs.forEach(input => {
-                input.addEventListener('blur', function() {
-                    if (this.checkValidity()) {
-                        this.classList.add('border-nu-green', 'focus:border-nu-green');
-                        this.classList.remove('border-red-500', 'focus:border-red-500');
-                    } else {
-                        this.classList.add('border-red-500', 'focus:border-red-500');
-                        this.classList.remove('border-nu-green', 'focus:border-nu-green');
-                    }
-                });
-            });
-        });
-        
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'

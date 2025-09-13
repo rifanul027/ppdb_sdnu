@@ -125,11 +125,9 @@ class AdminRekapSiswa extends BaseController
                 pembayaran.nama as pembayaran_nama,
                 pembayaran.metode as pembayaran_metode,
                 pembayaran.accepted_at as pembayaran_accepted_at,
-                beasiswa.nama as beasiswa_nama
             ')
             ->join('tahun_ajaran', 'students.tahun_ajaran_id = tahun_ajaran.id', 'left')
             ->join('pembayaran', 'students.bukti_pembayaran_id = pembayaran.id', 'inner')
-            ->join('beasiswa', 'students.beasiswa_id = beasiswa.id', 'left')
             ->where('students.bukti_pembayaran_id IS NOT NULL') // Bukti pembayaran tidak null
             ->where('pembayaran.accepted_at IS NOT NULL') // Pembayaran sudah diterima
             ->where('students.status', 'siswa') // Status siswa
@@ -182,7 +180,7 @@ class AdminRekapSiswa extends BaseController
             $this->response->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
 
             // CSV Header
-            $csv = "No,No Registrasi,NISN,Nama Lengkap,Jenis Kelamin,Tempat Lahir,Tanggal Lahir,Agama,Nama Ayah,Nama Ibu,Alamat,Domisili,No Telepon,Asal TK/RA,Tahun Ajaran,Beasiswa,Pembayaran,Metode Pembayaran,Tanggal Diterima,Tanggal Pembayaran Diterima\n";
+            $csv = "No,No Registrasi,NISN,Nama Lengkap,Jenis Kelamin,Tempat Lahir,Tanggal Lahir,Agama,Nama Ayah,Nama Ibu,Alamat,Domisili,No Telepon,Asal TK/RA,Tahun Ajaran,Kategori,Pembayaran,Metode Pembayaran,Tanggal Diterima,Tanggal Pembayaran Diterima\n";
 
             // CSV Data
             foreach ($students as $index => $student) {
@@ -201,7 +199,6 @@ class AdminRekapSiswa extends BaseController
                 $csv .= '"' . ($student['nomor_telepon'] ?? '') . '",';
                 $csv .= '"' . ($student['asal_tk_ra'] ?? '') . '",';
                 $csv .= '"' . ($student['tahun_ajaran_nama'] ?? '') . '",';
-                $csv .= '"' . ($student['beasiswa_nama'] ?? '') . '",';
                 $csv .= '"' . ($student['pembayaran_nama'] ?? '') . '",';
                 $csv .= '"' . ($student['pembayaran_metode'] ?? '') . '",';
                 $csv .= '"' . ($student['accepted_at'] ? date('d/m/Y H:i', strtotime($student['accepted_at'])) : '') . '",';
