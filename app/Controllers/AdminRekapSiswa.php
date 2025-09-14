@@ -20,10 +20,10 @@ class AdminRekapSiswa extends BaseController
         $this->tahunAjaranModel = new TahunAjaranModel();
         $this->pembayaranModel = new PembayaranModel();
         $this->kategoriModel = new KategoriModel();
+        helper(['uuid', 'toast', 'form']);
     }
 
-    public function index()
-    {
+    public function index() {
         $tahunAjaran = $this->tahunAjaranModel
             ->where('deleted_at IS NULL')
             ->orderBy('tahun_mulai', 'DESC')
@@ -43,8 +43,7 @@ class AdminRekapSiswa extends BaseController
         return view('admin/rekap-siswa/rekap-siswa', $data);
     }
 
-    public function getStudentsData()
-    {
+    public function getStudentsData() {
         if (!$this->request->isAJAX()) {
             return $this->response->setStatusCode(403)->setJSON([
                 'success' => false,
@@ -100,8 +99,7 @@ class AdminRekapSiswa extends BaseController
         }
     }
 
-    private function getRekapStudentsQuery($filters = [])
-    {
+    private function getRekapStudentsQuery($filters = []) {
         $builder = $this->studentModel->db->table('students')
             ->select('
                 students.*,
@@ -138,8 +136,7 @@ class AdminRekapSiswa extends BaseController
         return $builder;
     }
 
-    public function exportExcel()
-    {
+    public function exportExcel() {
         try {
             $request = $this->request;
             
@@ -191,8 +188,7 @@ class AdminRekapSiswa extends BaseController
         }
     }
 
-    public function exportPdf()
-    {
+    public function exportPdf() {
         try {
             $request = $this->request;
             
@@ -232,8 +228,7 @@ class AdminRekapSiswa extends BaseController
         }
     }
 
-    public function getSummaryStats()
-    {
+    public function getSummaryStats() {
         if (!$this->request->isAJAX()) {
             return $this->response->setStatusCode(403)->setJSON([
                 'success' => false,
@@ -271,6 +266,43 @@ class AdminRekapSiswa extends BaseController
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ]);
+        }
+    }
+
+    public function addKategoriToStudent()
+    {
+        if (!$this->request->isAJAX()) {
+            setErrorToast('Error', 'Invalid request');
+            return;
+        }
+
+        try {
+            $studentId = $this->request->getPost('student_id');
+            $kategoriId = $this->request->getPost('kategori_id');
+
+            if (!$studentId || !$kategoriId) {
+                setErrorToast('Error', 'Data tidak lengkap');
+                return;
+            }
+
+            $student = $this->studentModel->find($studentId);
+            if (!$student) {
+                setErrorToast('Error', 'Data siswa tidak ditemukan');
+                return;
+            }
+
+            $this->studentModel->update($studentId, [
+                'kategori_id' => $kategoriId
+            ]);
+
+            setSuccessToast(
+            'Berhasil',
+            'Kategori berhasil ditambahkan ke siswa'
+            );
+        } catch (\Exception $e) {
+            log_message('error', 'Error in addKategoriToStudent: ' . $e->getMessage());
+            setErrorToast('Error', 'Gagal menambahkan kategori: ' . $e->getMessage());
+
         }
     }
 }

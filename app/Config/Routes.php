@@ -5,7 +5,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 
 $routes->get('/ppdb', 'Ppdb::index');
-$routes->get('/ppdb/pengumuman', 'Ppdb::pengumuman');
+$routes->get('/ppdb/pengumuman', 'PengumumanSiswa::index');
 $routes->get('/daftar', 'PendaftaranSiswa::index');
 $routes->post('/daftar', 'PendaftaranSiswa::store');
 $routes->get('/student-profile', 'Ppdb::studentProfile');
@@ -57,6 +57,7 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->get('rekap-siswa/summary', 'AdminRekapSiswa::getSummaryStats');
     $routes->get('rekap-siswa/export-excel', 'AdminRekapSiswa::exportExcel');
     $routes->get('rekap-siswa/export-pdf', 'AdminRekapSiswa::exportPdf');
+    $routes->post('rekap-siswa/update-kategori', 'AdminRekapSiswa::updateKategori');
 
     $routes->get('pengaturan', 'AdminSettings::index');
 

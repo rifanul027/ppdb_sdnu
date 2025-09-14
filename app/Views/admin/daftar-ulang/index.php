@@ -144,7 +144,7 @@
                                 <button onclick="showPembayaranModal('<?= $s['id'] ?>', '<?= esc($s['nama_lengkap']) ?>')" 
                                         class="btn btn-primary" 
                                         style="padding: 0.5rem; font-size: 0.75rem;"
-                                        title="Konfirmasi Pembayaran">
+                                        title="Upload Pembayaran">
                                     <i class="fas fa-money-bill"></i>
                                 </button>
                                 <?php else: ?>
@@ -196,7 +196,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Konfirmasi Pembayaran</h5>
+                <h5 class="modal-title">Upload Bukti Pembayaran</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <form id="pembayaranForm" enctype="multipart/form-data">
@@ -242,7 +242,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary" id="submitPembayaran">
-                        <i class="fas fa-check"></i> Konfirmasi Pembayaran
+                        <i class="fas fa-check"></i> Upload Pembayaran
                     </button>
                 </div>
             </form>

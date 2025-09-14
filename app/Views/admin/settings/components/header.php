@@ -1,8 +1,3 @@
-<?php
-/**
- * Admin Settings Header Component
- */
-?>
 
 <div class="bg-white shadow-sm border-b">
     <div class="px-6 py-4">

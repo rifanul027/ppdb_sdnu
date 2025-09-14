@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\StudentModel;
 use App\Models\TahunAjaranModel;
 use App\Models\PembayaranModel;
+use App\Models\KategoriModel;
 use App\Models\UserModel;
 use App\Libraries\UuidService;
 
@@ -25,24 +26,22 @@ class Ppdb extends BaseController
         $this->studentModel = new StudentModel();
         $this->tahunAjaranModel = new TahunAjaranModel();
         $this->pembayaranModel = new PembayaranModel();
+        $this->kategoriModel = new KategoriModel();
         $this->userModel = new UserModel();
         helper(['uuid', 'toast', 'form']);
     }
 
-    public function studentProfile()
-    {
+    public function studentProfile() {
         // Check if user is logged in
         if (!session()->get('logged_in')) {
             return redirect()->to('/login');
         }
         
-        // Check if user has student_id
         if (!session()->get('student_id')) {
             setWarningToast('Akses Ditolak', 'Anda harus mendaftar terlebih dahulu untuk mengakses profil siswa.');
             return redirect()->to('/daftar');
         }
         
-        // Get student data
         $studentData = $this->studentModel->find(session()->get('student_id'));
         
         if (!$studentData) {
@@ -56,17 +55,22 @@ class Ppdb extends BaseController
             $paymentData = $this->pembayaranModel->find($studentData['bukti_pembayaran_id']);
         }
         
+        $kategoriData = null;
+        if (!empty($studentData['kategori_id'])) {
+            $kategoriData = $this->kategoriModel->find($studentData['kategori_id']);
+        }
+        
         $data = [
             'title' => 'Profil Siswa - ' . $studentData['nama_lengkap'],
             'student' => $studentData,
-            'payment' => $paymentData
+            'payment' => $paymentData,
+            'kategori' => $kategoriData
         ];
         
         return view('ppdb/student_profile', $data);
     }
     
-    public function editProfile()
-    {
+    public function editProfile() {
         // Check if user is logged in
         if (!session()->get('logged_in')) {
             return redirect()->to('/login');
@@ -98,8 +102,7 @@ class Ppdb extends BaseController
         return view('ppdb/edit_profile', $data);
     }
     
-    private function updateProfile()
-    {
+    private function updateProfile() {
         $studentId = session()->get('student_id');
         
         try {
@@ -132,8 +135,7 @@ class Ppdb extends BaseController
         }
     }
     
-    public function uploadPayment()
-    {
+    public function uploadPayment() {
         // Check if user is logged in
         if (!session()->get('logged_in')) {
             return redirect()->to('/login');
@@ -179,94 +181,15 @@ class Ppdb extends BaseController
         }
     }
     
-    public function pengumuman()
-    {
-        $pengumumanModel = new \App\Models\PengumumanModel();
-        
-        // Get active pengumuman
-        $pengumumanList = $pengumumanModel->getActivePengumuman();
-        
-        // Process each pengumuman to handle images
-        foreach ($pengumumanList as &$pengumuman) {
-            if (!empty($pengumuman['image_url'])) {
-                // Check if it's already a full URL or needs to be converted from file path
-                if (!filter_var($pengumuman['image_url'], FILTER_VALIDATE_URL)) {
-                    // If it's a file path, convert to URL
-                    if (file_exists(ROOTPATH . 'public/' . $pengumuman['image_url'])) {
-                        $pengumuman['image_url'] = base_url($pengumuman['image_url']);
-                    } else {
-                        // File doesn't exist, use mockup
-                        $pengumuman['image_url'] = $this->generateMockupImage($pengumuman['nama']);
-                    }
-                }
-            } else {
-                // No image specified, use mockup
-                $pengumuman['image_url'] = $this->generateMockupImage($pengumuman['nama']);
-            }
-            
-            // Add a flag to indicate if this is a mockup
-            $pengumuman['is_mockup'] = strpos($pengumuman['image_url'], 'via.placeholder.com') !== false;
-        }
-        
-        // Get all tahun ajaran for filter
-        $tahunAjaranList = $this->tahunAjaranModel->orderBy('tahun_mulai', 'DESC')->findAll();
-        
-        // Get default tahun ajaran (current year)
-        $currentYear = date('Y');
-        $defaultTahunAjaran = $this->tahunAjaranModel->where('tahun_mulai', $currentYear)->first();
-        
-        // Get selected tahun ajaran from query parameter or use default
-        $selectedTahunAjaranId = $this->request->getGet('tahun_ajaran') ?? ($defaultTahunAjaran['id'] ?? null);
-        
-        // Build filter for students
-        $filters = ['status' => 'siswa'];
-        if ($selectedTahunAjaranId) {
-            $filters['tahun_ajaran_id'] = $selectedTahunAjaranId;
-        }
-        
-        // Get students with status 'siswa' filtered by tahun ajaran and ordered by payment ID
-        $siswaData = $this->studentModel->getStudentsWithRelations($filters)
-            ->orderBy('students.bukti_pembayaran_id', 'ASC')
-            ->get()
-            ->getResultArray();
-        
-        // Add row numbers for display
-        foreach ($siswaData as $index => &$siswa) {
-            $siswa['row_number'] = $index + 1;
-        }
-        
+    public function pengumuman() {
         $data = [
-            'title' => 'Pengumuman PPDB - SDNU Pemanahan',
-            'pengumuman' => $pengumumanList,
-            'siswa_list' => $siswaData,
-            'tahun_ajaran_list' => $tahunAjaranList,
-            'selected_tahun_ajaran' => $selectedTahunAjaranId,
-            'default_tahun_ajaran' => $defaultTahunAjaran,
+            'title' => 'Pengumuman PPDB - SDNU Pemanahan'
         ];
         
         return view('ppdb/pengumuman', $data);
     }
-    
-    /**
-     * Generate mockup image URL for pengumuman
-     */
-    private function generateMockupImage($title)
-    {
-        // Create a clean title for the mockup
-        $cleanTitle = urlencode(substr($title, 0, 50));
-        
-        // Use placeholder.com service with SDNU colors
-        $mockupUrl = "https://via.placeholder.com/400x250/48BB78/FFFFFF?text=" . $cleanTitle;
-        
-        return $mockupUrl;
-    }
 
-    /**
-     * Delete student data (for admin use)
-     * This method can be called from admin controller
-     */
-    public function deleteStudent($studentId = null)
-    {
+    public function deleteStudent($studentId = null) {
         // Check if user is admin or has permission
         if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
             setErrorToast('Akses Ditolak', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -292,11 +215,7 @@ class Ppdb extends BaseController
         return redirect()->back();
     }
 
-    /**
-     * Update student status (for admin use)
-     */
-    public function updateStudentStatus($studentId = null, $status = null)
-    {
+    public function updateStudentStatus($studentId = null, $status = null) {
         // Check if user is admin or has permission
         if (!session()->get('logged_in') || session()->get('role') !== 'admin') {
             setErrorToast('Akses Ditolak', 'Anda tidak memiliki izin untuk mengakses halaman ini.');
@@ -329,16 +248,14 @@ class Ppdb extends BaseController
         return redirect()->back();
     }
     
-    public function login()
-    {
+    public function login() {
         $data = [
             'title' => 'login PPDB- SDNU Pemanahan'
         ];
         
         return view('ppdb/login', $data);
     }
-    public function register()
-    {
+    public function register() {
         $data = [
             'title' => 'register PPDB- SDNU Pemanahan'
         ];

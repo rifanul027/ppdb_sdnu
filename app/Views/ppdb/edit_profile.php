@@ -44,6 +44,14 @@
         <?php endif; ?>
         
         <form action="/edit-profile" method="post" class="space-y-8">
+
+            <pre><?php print_r([
+                'akta_url'   => $student['akta_url'],
+                'kk_url'     => $student['kk_url'],
+                'ijazah_url' => $student['ijazah_url'],
+                'ktp_ayah'   => $student['ktp_ayah'],
+                'ktp_ibu'    => $student['ktp_ibu'],
+            ]); ?></pre>
             <!-- Data Pribadi -->
             <?= form_section_header('Data Pribadi Siswa', 'fas fa-user') ?>
                 
@@ -129,7 +137,37 @@
                     <?= form_grid_end() ?>
                 </div>
             <?= form_section_footer() ?>
-            
+
+            <!-- Dokumen -->
+            <?= form_section_header('Dokumen', 'fas fa-file-upload') ?>
+
+            <div class="space-y-6">
+                <?= form_input_file('akta_url', 'Akta Lahir', [
+                    'value' => $student['akta_url'],
+                    'required' => true
+                ]) ?>
+
+                <?= form_input_file('kk_url', 'Kartu Keluarga', [
+                    'value' => $student['kk_url'],
+                    'required' => true
+                ]) ?>
+
+                <?= form_input_file('ijazah_url', 'Ijazah', [
+                    'value' => $student['ijazah_url'],
+                    'required' => true
+                ]) ?>
+
+                <?= form_input_file('ktp_ayah', 'KTP Ayah', [
+                    'value' => $student['ktp_ayah'],
+                    'required' => true
+                ]) ?>
+
+                <?= form_input_file('ktp_ibu', 'KTP Ibu', [
+                    'value' => $student['ktp_ibu'],
+                    'required' => true
+                ]) ?>
+            </div>
+
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 <button type="submit" class="inline-flex justify-center items-center gap-x-3 text-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 border border-transparent text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8">

@@ -270,10 +270,17 @@
                                         </div>
                                     </div>
                                     <div class="bg-green-50 border border-green-200 rounded-lg p-3">
-                                        <p class="text-sm text-green-700">
-                                            <i class="fas fa-info-circle mr-2"></i>
-                                            Pembayaran sedang diverifikasi oleh admin.
-                                        </p>
+                                        <?php if (empty($payment['accepted_at'])): ?>
+                                            <p class="text-sm text-yellow-700">
+                                                <i class="fas fa-info-circle mr-2"></i>
+                                                Pembayaran sedang diverifikasi oleh admin.
+                                            </p>
+                                        <?php else: ?>
+                                            <p class="text-sm text-green-700">
+                                                <i class="fas fa-check-circle mr-2"></i>
+                                                Pembayaran sudah diverifikasi oleh admin pada <?= date('d F Y', strtotime($payment['accepted_at'])) ?>.
+                                            </p>
+                                        <?php endif; ?>
                                     </div>
                                 <?php else: ?>
                                     <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
@@ -348,7 +355,42 @@
                             <?php endif; ?>
                         </div>
                     </div>
-                </div>
+
+                    <div class="bg-white shadow-lg rounded-xl">
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-900">Kategori Siswa</h3>
+                        </div>
+                        <div class="p-6">
+                            <?php if (!empty($student['kategori_id']) && !empty($kategori)): ?>
+                                <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                    <div class="flex items-center mb-3">
+                                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                        <h4 class="font-semibold text-green-800">Kategori Siswa Ditetapkan</h4>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div class="md:col-span-1">
+                                            <label class="block text-sm font-bold text-gray-700 mb-1">Nama Kategori</label>
+                                            <p class="text-muted"><?= esc($kategori['nama_kategori'] ?? '-') ?></p>
+                                            <label class="block text-sm font-bold text-gray-700 mt-4 mb-1">SPP</label>
+                                            <p class="text-muted">Rp <?= number_format($kategori['spp'] ?? 0, 0, ',', '.') ?></p>
+                                        </div>
+                                        <div class="md:col-span-2">
+                                            <label class="block text-sm font-bold text-gray-700 mb-1">Catatan</label>
+                                            <p class="text-muted"><?= esc($kategori['catatan'] ?? '-') ?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                    <p class="text-blue-700">
+                                        <i class="fas fa-info-circle mr-2"></i>
+                                        Kategori siswa sedang diproses oleh admin.
+                                    </p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
             <?php else: ?>
                 <!-- Error State -->
                 <div class="lg:col-span-3">
