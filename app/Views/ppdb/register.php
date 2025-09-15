@@ -44,19 +44,6 @@
             'required' => true
         ]) ?>
 
-        <!-- Tempat & Tanggal Lahir (side by side) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <?= form_input_simple('birth_place', 'Tempat Lahir', [
-              'placeholder' => 'Kabupaten/Kota',
-              'required' => true
-          ]) ?>
-          
-          <?= form_input_simple('dob', 'Tanggal Lahir', [
-              'type' => 'date',
-              'required' => true
-          ]) ?>
-        </div>
-
         <!-- Email -->
         <?= form_input_simple('email', 'Email', [
             'type' => 'email',
@@ -65,19 +52,19 @@
         ]) ?>
 
         <!-- Username & Password (side by side) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
           <?= form_input_simple('username', 'Username', [
               'placeholder' => 'username',
               'required' => true
           ]) ?>
 
-          <div>
+          <div class="flex flex-col h-full justify-end">
             <?= form_input_password('password', 'Password', [
-                'placeholder' => 'Minimal 8 karakter',
-                'required' => true,
-                'toggle_id' => 'toggleRegisterPassword',
-                'eye_open_id' => 'registerEyeOpen',
-                'eye_closed_id' => 'registerEyeClosed'
+          'placeholder' => 'Minimal 8 karakter',
+          'required' => true,
+          'toggle_id' => 'toggleRegisterPassword',
+          'eye_open_id' => 'registerEyeOpen',
+          'eye_closed_id' => 'registerEyeClosed'
             ]) ?>
           </div>
         </div>

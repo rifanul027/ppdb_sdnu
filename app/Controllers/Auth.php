@@ -96,8 +96,6 @@ class Auth extends BaseController
     {
         $rules = [
             'full_name' => 'required|min_length[3]|max_length[100]',
-            'birth_place' => 'required|min_length[3]|max_length[50]',
-            'dob' => 'required|valid_date',
             'email' => 'required|valid_email|is_unique[users.email]',
             'username' => 'required|min_length[3]|max_length[50]|is_unique[users.username]',
             'password' => 'required|min_length[8]'
@@ -108,15 +106,6 @@ class Auth extends BaseController
                 'required' => 'Nama lengkap harus diisi',
                 'min_length' => 'Nama lengkap minimal 3 karakter',
                 'max_length' => 'Nama lengkap maksimal 100 karakter'
-            ],
-            'birth_place' => [
-                'required' => 'Tempat lahir harus diisi',
-                'min_length' => 'Tempat lahir minimal 3 karakter',
-                'max_length' => 'Tempat lahir maksimal 50 karakter'
-            ],
-            'dob' => [
-                'required' => 'Tanggal lahir harus diisi',
-                'valid_date' => 'Format tanggal tidak valid'
             ],
             'email' => [
                 'required' => 'Email harus diisi',
@@ -139,16 +128,14 @@ class Auth extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Data untuk user
         $userData = [
             'username' => $this->request->getPost('username'),
             'email' => $this->request->getPost('email'),
             'password' => $this->request->getPost('password'),
-            'role' => 'siswa' // Default role untuk registrasi publik
+            'role' => 'siswa'
         ];
 
         try {
-            // Insert user
             if ($this->userModel->insert($userData)) {
                 return redirect()->to('/login')->with('success', 'Registrasi berhasil! Silakan login.');
             } else {

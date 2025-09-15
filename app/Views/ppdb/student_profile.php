@@ -65,7 +65,7 @@
                             </p>
                         </div>
                         
-                        <div class="mt-6">
+                        <div class="mt-6 text-center">
                             <?php if (empty($student['accepted_at'])): ?>
                                 <span class="inline-block bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">
                                     <i class="fas fa-info-circle mr-2"></i>
@@ -83,7 +83,22 @@
                             <?php endif; ?>
                             
                         </div>
+
                     </div>
+
+                    <div class="mt-6 bg-white shadow-lg rounded-xl p-6">
+                        <div class="bg-nu-green/10 border border-nu-green rounded-lg p-4 text-center">
+                            <p class="text-sm text-gray-700 mb-2">
+                                Butuh bantuan? Hubungi admin melalui WhatsApp.
+                            </p>
+                            <a href="https://wa.me/6282223008689" target="_blank"
+                            class="inline-flex text-muted items-center gap-x-2 bg-nu-green text-white px-4 py-2 rounded-lg hover:bg-nu-dark transition-colors">
+                                <i class="fab fa-whatsapp"></i>
+                                CS PPDB SDNU
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
                 
                 <!-- Main Content -->

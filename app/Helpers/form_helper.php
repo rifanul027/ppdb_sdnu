@@ -127,14 +127,6 @@ if (!function_exists('form_input_select')) {
 }
 
 if (!function_exists('form_input_file')) {
-    /**
-     * Generate file input field with consistent styling
-     * 
-     * @param string $name Field name
-     * @param string $label Field label
-     * @param array $options Additional options (required, accept, max_size, etc.)
-     * @return string
-     */
     function form_input_file($name, $label, $options = [])
     {
         $required = isset($options['required']) && $options['required'] ? true : false;
@@ -142,25 +134,44 @@ if (!function_exists('form_input_file')) {
         $maxSize = $options['max_size'] ?? '5MB';
         $helpText = $options['help'] ?? 'Format: PDF, JPG, atau PNG (Maksimal ' . $maxSize . ')';
         $class = $options['class'] ?? '';
-        
-        $baseClass = 'w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-600 file:text-white hover:file:bg-green-700';
+        $oldFile = $options['value'] ?? null; // <- ini yang kita pakai
+
+        $baseClass = 'w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none 
+                      focus:ring-2 focus:ring-green-500 transition-all duration-300 
+                      file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 
+                      file:text-sm file:font-medium file:bg-green-600 file:text-white 
+                      hover:file:bg-green-700';
         $inputClass = $class ? $baseClass . ' ' . $class : $baseClass;
-        
+
         $html = '<div>';
         $html .= '<label class="block text-gray-700 font-semibold mb-2">' . $label;
         if ($required) {
             $html .= ' <span class="text-red-500">*</span>';
         }
         $html .= '</label>';
+
+        // tampilkan preview kalau ada value
+        if ($oldFile) {
+            $html .= '<p class="mb-2 text-sm text-blue-600">
+                         <a href="' . base_url('uploads/' . $oldFile) . '" target="_blank" class="underline">
+                             Lihat file lama
+                         </a>
+                      </p>';
+            $html .= '<input type="hidden" name="' . $name . '_old" value="' . esc($oldFile) . '">';
+        }
+
+        // input file baru
         $html .= '<input type="file" name="' . $name . '" class="' . $inputClass . '" accept="' . $accept . '">';
+
         if ($helpText) {
             $html .= '<p class="mt-1 text-sm text-gray-500">' . $helpText . '</p>';
         }
         $html .= '</div>';
-        
+
         return $html;
     }
 }
+
 
 if (!function_exists('form_section_header')) {
     /**
@@ -313,11 +324,11 @@ if (!function_exists('form_input_password')) {
         $eyeOpenId = $options['eye_open_id'] ?? $name . 'EyeOpen';
         $eyeClosedId = $options['eye_closed_id'] ?? $name . 'EyeClosed';
         
-        $baseClass = 'w-full border border-gray-300 rounded-lg px-4 py-3 pr-12 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300';
+        $baseClass = 'w-full border border-gray-300 rounded-lg px-4 py-2 pr-12 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all duration-300';
         $inputClass = $class ? $baseClass . ' ' . $class : $baseClass;
         
         $html = '<div>';
-        $html .= '<label for="' . $name . '" class="block text-gray-700 font-semibold mb-2">' . $label;
+        $html .= '<label for="' . $name . '" class="block text-gray-700 font-semibold mb-1">' . $label;
         if ($required) {
             $html .= ' <span class="text-red-500">*</span>';
         }

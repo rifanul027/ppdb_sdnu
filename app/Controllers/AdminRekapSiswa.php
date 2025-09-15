@@ -110,9 +110,11 @@ class AdminRekapSiswa extends BaseController
                 pembayaran.nama as pembayaran_nama,
                 pembayaran.metode as pembayaran_metode,
                 pembayaran.accepted_at as pembayaran_accepted_at,
+                kategori.nama_kategori as kategori_nama
             ')
             ->join('tahun_ajaran', 'students.tahun_ajaran_id = tahun_ajaran.id', 'left')
             ->join('pembayaran', 'students.bukti_pembayaran_id = pembayaran.id', 'inner')
+            ->join('kategori', 'students.kategori_id = kategori.id', 'left')
             ->where('students.bukti_pembayaran_id IS NOT NULL') // Bukti pembayaran tidak null
             ->where('pembayaran.accepted_at IS NOT NULL') // Pembayaran sudah diterima
             ->where('students.status', 'siswa') // Status siswa
@@ -173,6 +175,7 @@ class AdminRekapSiswa extends BaseController
                 $csv .= '"' . ($student['nomor_telepon'] ?? '') . '",';
                 $csv .= '"' . ($student['asal_tk_ra'] ?? '') . '",';
                 $csv .= '"' . ($student['tahun_ajaran_nama'] ?? '') . '",';
+                $csv .= '"' . ($student['kategori_nama'] ?? 'Belum Ditentukan') . '",';
                 $csv .= '"' . ($student['pembayaran_nama'] ?? '') . '",';
                 $csv .= '"' . ($student['pembayaran_metode'] ?? '') . '",';
                 $csv .= '"' . ($student['accepted_at'] ? date('d/m/Y H:i', strtotime($student['accepted_at'])) : '') . '",';
@@ -269,40 +272,93 @@ class AdminRekapSiswa extends BaseController
         }
     }
 
-    public function addKategoriToStudent()
-    {
+    public function addKategoriToStudent() {
         if (!$this->request->isAJAX()) {
-            setErrorToast('Error', 'Invalid request');
-            return;
+            return $this->response->setStatusCode(403)->setJSON([
+                'success' => false,
+                'message' => 'Invalid request'
+            ]);
         }
 
         try {
-            $studentId = $this->request->getPost('student_id');
+            $studentId  = $this->request->getPost('student_id');
             $kategoriId = $this->request->getPost('kategori_id');
 
             if (!$studentId || !$kategoriId) {
-                setErrorToast('Error', 'Data tidak lengkap');
-                return;
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Data tidak lengkap'
+                ]);
             }
 
             $student = $this->studentModel->find($studentId);
             if (!$student) {
-                setErrorToast('Error', 'Data siswa tidak ditemukan');
-                return;
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Data siswa tidak ditemukan'
+                ]);
             }
 
             $this->studentModel->update($studentId, [
                 'kategori_id' => $kategoriId
             ]);
 
-            setSuccessToast(
-            'Berhasil',
-            'Kategori berhasil ditambahkan ke siswa'
-            );
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Kategori berhasil ditambahkan ke siswa'
+            ]);
+
         } catch (\Exception $e) {
             log_message('error', 'Error in addKategoriToStudent: ' . $e->getMessage());
-            setErrorToast('Error', 'Gagal menambahkan kategori: ' . $e->getMessage());
+            return $this->response->setStatusCode(500)->setJSON([
+                'success' => false,
+                'message' => 'Gagal menambahkan kategori: ' . $e->getMessage()
+            ]);
+        }
+    }
 
+    public function updateKategori($studentId) {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setStatusCode(403)->setJSON([
+                'success' => false,
+                'message' => 'Invalid request'
+            ]);
+        }
+
+        try {
+            $json = $this->request->getJSON(true);
+            $kategoriId = $json['kategori_id'] ?? null;
+
+            if (!$studentId || !$kategoriId) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Data tidak lengkap'
+                ]);
+            }
+
+            $student = $this->studentModel->find($studentId);
+            if (!$student) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Data siswa tidak ditemukan'
+                ]);
+            }
+
+            $this->studentModel->update($studentId, [
+                'kategori_id' => $kategoriId
+            ]);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Kategori berhasil diupdate'
+            ]);
+
+        } catch (\Exception $e) {
+            log_message('error', 'Error in updateKategori: ' . $e->getMessage());
+            return $this->response->setStatusCode(500)->setJSON([
+                'success' => false,
+                'message' => 'Gagal update kategori: ' . $e->getMessage()
+            ]);
         }
     }
 }

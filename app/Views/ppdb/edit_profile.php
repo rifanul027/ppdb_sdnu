@@ -61,12 +61,11 @@
                         'required' => true
                     ]) ?>
                     
-                    <?= form_input_text('nisn', 'NISN', [
-                        'value' => $student['nisn'],
-                        'help' => '10 digit nomor NISN (opsional)',
-                        'class' => 'pattern="\d{10}" maxlength="10"'
-                    ]) ?>
-                    
+                    <?= form_input_select('tahun_ajaran_id', 'Tahun Ajaran', 
+                        !empty($tahunAjaranList) ? array_column($tahunAjaranList, 'nama', 'id') : [],
+                        ['required' => true, 'placeholder' => 'Pilih Tahun Ajaran']
+                    ) ?>
+
                     <?= form_input_select('agama', 'Agama', get_agama_options(), [
                         'value' => $student['agama'],
                         'required' => true
@@ -169,7 +168,7 @@
             </div>
 
             <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <div class="mt-6  flex-col sm:flex-row gap-4 justify-center">
                 <button type="submit" class="inline-flex justify-center items-center gap-x-3 text-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 border border-transparent text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 py-4 px-8">
                     <i class="fas fa-save"></i>
                     Simpan Perubahan

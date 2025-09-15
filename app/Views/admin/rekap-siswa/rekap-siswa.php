@@ -1,8 +1,5 @@
 <?= $this->extend('admin/layout') ?>
 
-<?= $this->section('styles') ?>
-<?= $this->endsection() ?>
-
 <?= $this->section('content') ?>
 
 <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4 mb-6">
@@ -19,14 +16,9 @@
             <i class="fas fa-file-excel"></i>
             <span>Export Excel</span>
         </button>
-        <button class="btn btn-primary flex items-center justify-center gap-2 w-full sm:w-auto text-sm" onclick="refreshData()">
-            <i class="fas fa-sync"></i>
-            <span>Refresh</span>
-        </button>
     </div>
 </div>
 
-<!-- Statistics Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6" id="statsContainer">
     <div class="content-card">
         <div class="card-body text-center p-4">
@@ -48,7 +40,6 @@
     </div>
 </div>
 
-<!-- Filter Section -->
 <div class="content-card mb-6">
     <div class="card-body p-4">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -87,7 +78,6 @@
     </div>
 </div>
 
-<!-- Data Table -->
 <div class="content-card">
     <div class="card-header flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-4">
         <h3 class="card-title text-lg font-semibold">Data Rekap Siswa</h3>
@@ -106,14 +96,12 @@
     </div>
     
     <div class="card-body p-0">
-        <!-- Loading State -->
         <div id="loadingState" class="hidden py-12 text-center text-gray-500">
             <i class="fas fa-spinner fa-spin text-3xl mb-4"></i>
             <div>Memuat data...</div>
         </div>
 
-        <!-- Desktop Table -->
-        <div class="hidden md:block overflow-x-auto" id="tableContainer">
+        <div class="overflow-x-auto" id="tableContainer">
             <table class="w-full bg-white" id="rekapSiswaTable">
                 <thead class="bg-gray-50">
                     <tr>
@@ -127,27 +115,16 @@
                     </tr>
                 </thead>
                 <tbody id="tableBody" class="bg-white divide-y divide-gray-200">
-                    <!-- Data will be loaded here via AJAX -->
                 </tbody>
             </table>
         </div>
-
-        <!-- Mobile Cards -->
-        <div class="md:hidden" id="mobileContainer">
-            <div id="mobileCards" class="p-4 space-y-4">
-                <!-- Mobile cards will be loaded here via AJAX -->
-            </div>
-        </div>
     </div>
     
-    <!-- Pagination -->
     <div class="card-footer px-4 py-3 bg-gray-50 border-t border-gray-200" id="paginationContainer">
-        <!-- Pagination will be loaded here -->
     </div>
 </div>
 
-<!-- Modal Kategori -->
-<div id="kategoriModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+<div id="kategoriModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-lg max-w-md w-full max-h-96 overflow-y-auto">
         <div class="p-4 border-b border-gray-200">
             <div class="flex items-center justify-between">
@@ -189,9 +166,7 @@ let currentPerPage = 10;
 let currentFilters = {};
 let currentStudentId = null;
 
-// Initialize page
 document.addEventListener('DOMContentLoaded', function() {
-    // Set default filter if available
     <?php if ($defaultTahunAjaran): ?>
     currentFilters.tahun_ajaran_id = '<?= $defaultTahunAjaran['id'] ?>';
     <?php endif; ?>
@@ -199,13 +174,11 @@ document.addEventListener('DOMContentLoaded', function() {
     loadStudents();
     loadSummaryStats();
     
-    // Setup event listeners
     document.getElementById('perPageSelect').addEventListener('change', handlePerPageChange);
     document.getElementById('searchInput').addEventListener('input', debounce(applyFilters, 500));
     document.getElementById('filterTahunAjaran').addEventListener('change', applyFilters);
 });
 
-// Debounce function
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -218,7 +191,6 @@ function debounce(func, wait) {
     };
 }
 
-// Load students data
 async function loadStudents() {
     showLoading(true);
     
@@ -240,13 +212,11 @@ async function loadStudents() {
         
         if (result.success) {
             renderTable(result.data);
-            renderMobileCards(result.data);
             renderPagination(result.pagination);
             updateTotalInfo(result.pagination.total);
         } else {
             showError(result.message || 'Gagal memuat data');
             renderTable([]);
-            renderMobileCards([]);
             renderPagination({ page: 1, total_pages: 1, total: 0, per_page: currentPerPage });
             updateTotalInfo(0);
         }
@@ -254,7 +224,6 @@ async function loadStudents() {
         showError('Terjadi kesalahan saat memuat data');
         console.error('Error loading students:', error);
         renderTable([]);
-        renderMobileCards([]);
         renderPagination({ page: 1, total_pages: 1, total: 0, per_page: currentPerPage });
         updateTotalInfo(0);
     } finally {
@@ -262,7 +231,6 @@ async function loadStudents() {
     }
 }
 
-// Load summary statistics
 async function loadSummaryStats() {
     try {
         const params = new URLSearchParams(currentFilters);
@@ -284,14 +252,12 @@ async function loadSummaryStats() {
     }
 }
 
-// Update statistics display
 function updateStatsDisplay(stats) {
     document.getElementById('totalSiswa').textContent = stats.total_siswa;
     document.getElementById('lakiLaki').textContent = stats.laki_laki;
     document.getElementById('perempuan').textContent = stats.perempuan;
 }
 
-// Render desktop table
 function renderTable(students) {
     const tbody = document.getElementById('tableBody');
     
@@ -340,81 +306,29 @@ function renderTable(students) {
                 <div class="text-xs text-gray-500">${escapeHtml(student.nama_ibu)}</div>
             </td>
             <td class="px-4 py-3">
-                <button onclick="openKategoriModal(${student.id}, '${escapeHtml(student.nama_lengkap)}', '${escapeHtml(student.kategori_nama || 'Belum Ditentukan')}', ${student.kategori_id || 'null'})" 
-                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 transition-colors">
+                <button data-student-id="${student.id}" 
+                        data-student-name="${escapeHtml(student.nama_lengkap)}" 
+                        data-current-kategori="${escapeHtml(student.kategori_nama || 'Belum Ditentukan')}"
+                        class="kategori-btn inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 transition-colors">
                     <i class="fas fa-edit mr-1"></i>
                     Kategori
                 </button>
             </td>
         </tr>
     `).join('');
+    
+    // Add event listeners to kategori buttons
+    const kategoriButtons = tbody.querySelectorAll('.kategori-btn');
+    kategoriButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const studentId = this.getAttribute('data-student-id');
+            const studentName = this.getAttribute('data-student-name');
+            const currentKategori = this.getAttribute('data-current-kategori');
+            openKategoriModal(studentId, studentName, currentKategori);
+        });
+    });
 }
 
-// Render mobile cards
-function renderMobileCards(students) {
-    const container = document.getElementById('mobileCards');
-    
-    if (students.length === 0) {
-        container.innerHTML = `
-            <div class="text-center text-gray-500 py-12">
-                <i class="fas fa-users text-5xl mb-4 opacity-50"></i>
-                <div class="text-lg font-medium">Tidak ada data siswa yang ditemukan</div>
-                <div class="text-sm mt-2 text-gray-400">
-                    Coba ubah filter atau kriteria pencarian
-                </div>
-            </div>
-        `;
-        return;
-    }
-    
-    const startNumber = (currentPage - 1) * currentPerPage;
-    
-    container.innerHTML = students.map((student, index) => `
-        <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-            <div class="flex items-start justify-between mb-3">
-                <div class="flex-1">
-                    <div class="font-semibold text-gray-900 text-lg">${startNumber + index + 1}. ${escapeHtml(student.nama_lengkap)}</div>
-                    <div class="text-xs text-gray-500 mt-1">NISN: ${escapeHtml(student.nisn || '-')}</div>
-                </div>
-                <button onclick="openKategoriModal(${student.id}, '${escapeHtml(student.nama_lengkap)}', '${escapeHtml(student.kategori_nama || 'Belum Ditentukan')}', ${student.kategori_id || 'null'})" 
-                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 transition-colors">
-                    <i class="fas fa-edit mr-1"></i>
-                    Kategori
-                </button>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-3 text-sm">
-                <div>
-                    <span class="text-gray-500">Kategori:</span>
-                    <div class="mt-1">
-                        <span class="inline-flex px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                            ${escapeHtml(student.kategori_nama || 'Belum Ditentukan')}
-                        </span>
-                    </div>
-                </div>
-                <div>
-                    <span class="text-gray-500">Gender:</span>
-                    <div class="mt-1">
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${student.jenis_kelamin === 'L' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'}">
-                            ${student.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan'}
-                        </span>
-                    </div>
-                </div>
-                <div>
-                    <span class="text-gray-500">TTL:</span>
-                    <div class="font-medium text-gray-900">${escapeHtml(student.tempat_lahir)}, ${student.tanggal_lahir_formatted}</div>
-                </div>
-                <div>
-                    <span class="text-gray-500">Orang Tua:</span>
-                    <div class="font-medium text-gray-900">${escapeHtml(student.nama_ayah)}</div>
-                    <div class="text-xs text-gray-500">${escapeHtml(student.nama_ibu)}</div>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Render pagination
 function renderPagination(pagination) {
     const container = document.getElementById('paginationContainer');
     
@@ -438,7 +352,6 @@ function renderPagination(pagination) {
             <div class="flex justify-center flex-wrap gap-1">
     `;
     
-    // Previous button
     if (pagination.page > 1) {
         paginationHTML += `
             <button onclick="changePage(${pagination.page - 1})" 
@@ -448,7 +361,6 @@ function renderPagination(pagination) {
         `;
     }
     
-    // Page numbers
     for (let i = Math.max(1, pagination.page - 2); i <= Math.min(pagination.total_pages, pagination.page + 2); i++) {
         const isActive = i === pagination.page;
         paginationHTML += `
@@ -459,7 +371,6 @@ function renderPagination(pagination) {
         `;
     }
     
-    // Next button
     if (pagination.page < pagination.total_pages) {
         paginationHTML += `
             <button onclick="changePage(${pagination.page + 1})" 
@@ -469,20 +380,14 @@ function renderPagination(pagination) {
         `;
     }
     
-    paginationHTML += `
-            </div>
-        </div>
-    `;
-    
+    paginationHTML += `</div></div>`;
     container.innerHTML = paginationHTML;
 }
 
-// Modal functions
-function openKategoriModal(studentId, studentName, currentKategori, currentKategoriId) {
+async function openKategoriModal(studentId, studentName, currentKategori) {
     currentStudentId = studentId;
     document.getElementById('modalStudentName').textContent = studentName;
     document.getElementById('modalCurrentKategori').textContent = currentKategori;
-    document.getElementById('kategoriSelect').value = currentKategoriId || '';
     document.getElementById('kategoriModal').classList.remove('hidden');
 }
 
@@ -502,14 +407,13 @@ async function updateKategori() {
     }
     
     try {
-        const response = await fetch(`<?= base_url('admin/rekap-siswa/update-kategori') ?>`, {
+        const response = await fetch(`<?= base_url('admin/rekap-siswa/update-kategori') ?>/${currentStudentId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             },
             body: JSON.stringify({
-                student_id: currentStudentId,
                 kategori_id: kategoriId
             })
         });
@@ -530,7 +434,6 @@ async function updateKategori() {
     }
 }
 
-// Apply filters
 function applyFilters() {
     currentFilters = {};
     
@@ -545,54 +448,44 @@ function applyFilters() {
     loadSummaryStats();
 }
 
-// Reset filters
 function resetFilters() {
     document.getElementById('filterTahunAjaran').value = '<?= $defaultTahunAjaran ? $defaultTahunAjaran['id'] : '' ?>';
     document.getElementById('searchInput').value = '';
     applyFilters();
 }
 
-// Handle per page change
 function handlePerPageChange(e) {
     currentPerPage = parseInt(e.target.value);
     currentPage = 1;
     loadStudents();
 }
 
-// Change page
 function changePage(page) {
     currentPage = page;
     loadStudents();
 }
 
-// Show loading state
 function showLoading(show) {
     const loadingState = document.getElementById('loadingState');
     const tableContainer = document.getElementById('tableContainer');
-    const mobileContainer = document.getElementById('mobileContainer');
     
     if (show) {
         loadingState.classList.remove('hidden');
         tableContainer.classList.add('hidden');
-        mobileContainer.classList.add('hidden');
     } else {
         loadingState.classList.add('hidden');
         tableContainer.classList.remove('hidden');
-        mobileContainer.classList.remove('hidden');
     }
 }
 
-// Update total info
 function updateTotalInfo(total) {
     document.getElementById('totalInfo').textContent = `Total: ${total} siswa`;
 }
 
-// Show error message
 function showError(message) {
     alert('Error: ' + message);
 }
 
-// Escape HTML
 function escapeHtml(text) {
     if (text === null || text === undefined) return '';
     const map = {
@@ -605,25 +498,16 @@ function escapeHtml(text) {
     return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-// Export Excel
 function exportExcel() {
     const params = new URLSearchParams(currentFilters);
     window.open(`<?= base_url('admin/rekap-siswa/export-excel') ?>?${params}`, '_blank');
 }
 
-// Export PDF
 function exportPdf() {
     const params = new URLSearchParams(currentFilters);
     window.open(`<?= base_url('admin/rekap-siswa/export-pdf') ?>?${params}`, '_blank');
 }
 
-// Refresh data
-function refreshData() {
-    loadStudents();
-    loadSummaryStats();
-}
-
-// Close modal when clicking outside
 document.getElementById('kategoriModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeKategoriModal();
