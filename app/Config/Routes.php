@@ -6,12 +6,18 @@ $routes->get('/', 'Home::index');
 
 $routes->get('/ppdb', 'Ppdb::index');
 $routes->get('/ppdb/pengumuman', 'PengumumanSiswa::index');
-$routes->get('/daftar', 'PendaftaranSiswa::index');
-$routes->post('/daftar', 'PendaftaranSiswa::store');
+// $routes->get('/daftar', 'PendaftaranSiswa::index');
+// $routes->post('/daftar', 'PendaftaranSiswa::store');
 $routes->get('/student-profile', 'Ppdb::studentProfile');
 $routes->get('/profile-siswa', 'Ppdb::studentProfile');
 $routes->match(['GET', 'POST'], '/edit-profile', 'Ppdb::editProfile');
 $routes->post('/upload-payment', 'Ppdb::uploadPayment');
+$routes->get('/pendaftaran-belum-dibuka', 'Ppdb::PendaftaranBelumDibuka');
+
+$routes->group('daftar', ['filter' => 'cekGelombang'], function($routes) {
+    $routes->get('/', 'PendaftaranSiswa::index');
+    $routes->post('/', 'PendaftaranSiswa::store');
+});
 
 $routes->group('', ['filter' => 'guest'], function($routes) {
     $routes->get('/login', 'Auth::login');

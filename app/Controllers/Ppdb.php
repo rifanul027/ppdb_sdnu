@@ -6,6 +6,7 @@ use App\Models\StudentModel;
 use App\Models\TahunAjaranModel;
 use App\Models\PembayaranModel;
 use App\Models\KategoriModel;
+use App\Models\GelombangPendaftaranModel;
 use App\Models\UserModel;
 use App\Libraries\UuidService;
 
@@ -15,10 +16,24 @@ class Ppdb extends BaseController
     protected $tahunAjaranModel;
     protected $pembayaranModel;
     protected $userModel;
+    protected $gelombangModel;
     
     public function index()
     {
-         return view('ppdb/info');
+         // Fetch gelombang data for info page
+         $currentGelombang = null;
+         $allGelombang = [];
+         if (isset($this->gelombangModel)) {
+             $currentGelombang = $this->gelombangModel->getCurrentGelombang();
+             $allGelombang = $this->gelombangModel->orderBy('tanggal_mulai', 'ASC')->findAll();
+         }
+
+         $data = [
+             'currentGelombang' => $currentGelombang,
+             'allGelombang' => $allGelombang,
+         ];
+
+         return view('ppdb/info', $data);
     }
 
     public function __construct()
@@ -27,6 +42,7 @@ class Ppdb extends BaseController
         $this->tahunAjaranModel = new TahunAjaranModel();
         $this->pembayaranModel = new PembayaranModel();
         $this->kategoriModel = new KategoriModel();
+        $this->gelombangModel = new GelombangPendaftaranModel();
         $this->userModel = new UserModel();
         helper(['uuid', 'toast', 'form']);
     }
@@ -83,7 +99,10 @@ class Ppdb extends BaseController
         
         // Handle POST request (form submission)
         if ($this->request->getMethod() === 'POST') {
-            return $this->updateProfile();
+            // return $this->updateProfile(); //di error kan dulu
+
+            setErrorToast('Gagal Memperbarui Data', 'Hubungi admin untuk memperbarui data.');
+            return redirect()->to('/student-profile');
         }
         
         // Get student data for edit form
@@ -260,5 +279,11 @@ class Ppdb extends BaseController
             'title' => 'register PPDB- SDNU Pemanahan'
         ];
         return view('ppdb/register');
+    }
+    public function PendaftaranBelumDibuka() {
+        $data = [
+            'title' => 'Pendaftaran Belum Dibuka - SDNU Pemanahan'
+        ];
+        return view('ppdb/blocked', $data);
     }
 }

@@ -186,6 +186,8 @@
     <!-- End Col -->
   </div>
   <!-- End Grid -->
+  <!-- Gelombang Component -->
+  <?= $this->include('components/Gelombang', ['currentGelombang' => $currentGelombang ?? null, 'allGelombang' => $allGelombang ?? []]) ?>
 
   <!-- FAQ Section -->
   <div class="mt-16">

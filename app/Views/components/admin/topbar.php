@@ -4,7 +4,7 @@
             <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Toggle Menu">
                 <i class="fas fa-bars"></i>
             </button>
-            <h1 class="page-title"><?= $pageTitle ?? 'Dashboard' ?></h1>
+            <!-- <h1 class="page-title"><?= $pageTitle ?? 'Dashboard' ?></h1> -->
         </div>
         
         <div class="user-menu">

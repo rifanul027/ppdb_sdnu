@@ -45,13 +45,6 @@
         
         <form action="/edit-profile" method="post" class="space-y-8">
 
-            <pre><?php print_r([
-                'akta_url'   => $student['akta_url'],
-                'kk_url'     => $student['kk_url'],
-                'ijazah_url' => $student['ijazah_url'],
-                'ktp_ayah'   => $student['ktp_ayah'],
-                'ktp_ibu'    => $student['ktp_ibu'],
-            ]); ?></pre>
             <!-- Data Pribadi -->
             <?= form_section_header('Data Pribadi Siswa', 'fas fa-user') ?>
                 
