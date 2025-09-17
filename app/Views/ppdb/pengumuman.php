@@ -192,7 +192,7 @@
       </div>
 
       <!-- Filter -->
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+      <!-- <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div class="flex items-center gap-2">
             <i class="fas fa-filter text-green-600"></i>
@@ -212,7 +212,7 @@
             <?php endif; ?>
           </select>
         </div>
-      </div>
+      </div> -->
 
       <?php if (!empty($siswa_list) && is_array($siswa_list)): ?>
         <!-- Stats -->

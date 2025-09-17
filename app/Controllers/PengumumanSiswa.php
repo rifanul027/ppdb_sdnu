@@ -20,33 +20,40 @@ class PengumumanSiswa extends BaseController
         $this->pengumumanModel = new PengumumanModel();
     }
     
-    public function index() {
-        $pengumuman = $this->pengumumanModel->getActivePengumuman();
+    public function index()  {
+    // Ambil pengumuman aktif
+    $pengumuman = $this->pengumumanModel->getActivePengumuman();
 
-        $tahun_ajaran_list = $this->tahunAjaranModel->findAll();
+    // Ambil semua tahun ajaran
+    $tahunAjaranList = $this->tahunAjaranModel->findAll();
 
-        // Ambil tahun ajaran aktif sebagai default jika tidak ada filter
-        $selected_tahun_ajaran = $this->request->getGet('tahun_ajaran');
-        if (!$selected_tahun_ajaran) {
-            $activeTahunAjaran = $this->tahunAjaranModel->getActive();
-            $selected_tahun_ajaran = $activeTahunAjaran ? $activeTahunAjaran['id'] : null;
-        }
+    // Ambil tahun ajaran berdasarkan tahun sekarang
+    $currentYear = date('Y');
+    $tahunAjaranNow = $this->tahunAjaranModel
+        ->where('tahun_mulai', $currentYear)
+        ->first();
 
-        $siswaQuery = $this->studentModel->where('status', 'siswa')->where('deleted_at', null);
-        if ($selected_tahun_ajaran) {
-            $siswaQuery->where('tahun_ajaran_id', $selected_tahun_ajaran);
-        }
-        $siswa_list = $siswaQuery->findAll();
+    $selectedTahunAjaran = $tahunAjaranNow['id'] ?? null;
 
-        $data = [
-            'title' => 'Pengumuman PPDB - SDNU Pemanahan',
-            'pengumuman' => $pengumuman,
-            'tahun_ajaran_list' => $tahun_ajaran_list,
-            'selected_tahun_ajaran' => $selected_tahun_ajaran,
-            'siswa_list' => $siswa_list,
-        ];
+    // Ambil daftar siswa berdasarkan tahun ajaran sekarang
+    $siswaQuery = $this->studentModel
+        ->where('status', 'siswa')
+        ->where('deleted_at IS NULL', null, false);
 
-        return view('ppdb/pengumuman', $data);
+    if ($selectedTahunAjaran) {
+        $siswaQuery->where('tahun_ajaran_id', $selectedTahunAjaran);
     }
-    
+
+    $siswaList = $siswaQuery->findAll();
+
+    $data = [
+        'title'                => 'Pengumuman PPDB - SDNU Pemanahan',
+        'pengumuman'           => $pengumuman,
+        'tahun_ajaran_list'    => $tahunAjaranList,
+        'selected_tahun_ajaran'=> $selectedTahunAjaran,
+        'siswa_list'           => $siswaList,
+    ];
+
+    return view('ppdb/pengumuman', $data);
+    }
 }
