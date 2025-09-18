@@ -101,7 +101,7 @@ class Ppdb extends BaseController
         if ($this->request->getMethod() === 'POST') {
             // return $this->updateProfile(); //di error kan dulu
 
-            setErrorToast('Gagal Memperbarui Data', 'Hubungi admin untuk memperbarui data.');
+            setErrorToast('Gagal Memperbarui Data', 'Data siswa gagal untuk diperbarui.');
             return redirect()->to('/student-profile');
         }
         

@@ -64,6 +64,8 @@ $routes->group('admin', ['filter' => 'admin'], function($routes) {
     $routes->get('rekap-siswa/export-excel', 'AdminRekapSiswa::exportExcel');
     $routes->get('rekap-siswa/export-pdf', 'AdminRekapSiswa::exportPdf');
     $routes->post('rekap-siswa/update-kategori/(:segment)', 'AdminRekapSiswa::updateKategori/$1');
+    $routes->get('rekap-siswa/detail/(:segment)', 'AdminRekapSiswa::edit/$1');
+    $routes->post('rekap-siswa/update/(:segment)', 'AdminRekapSiswa::update/$1');
 
     $routes->get('pengaturan', 'AdminSettings::index');
 

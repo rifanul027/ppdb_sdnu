@@ -252,7 +252,7 @@ class AdminRekapSiswa extends BaseController
             $totalSiswa = $builder->countAllResults(false);
 
             $lakiLaki = $builder->where('students.jenis_kelamin', 'L')->countAllResults(false);
-            $perempuan = $builder->where('students.jenis_kelamin', 'P')->countAllResults(false);
+            $perempuan = $totalSiswa - $lakiLaki;
 
             return $this->response->setJSON([
                 'success' => true,
@@ -359,6 +359,66 @@ class AdminRekapSiswa extends BaseController
                 'success' => false,
                 'message' => 'Gagal update kategori: ' . $e->getMessage()
             ]);
+        }
+    }
+
+    public function edit($id)
+    {
+        $student = $this->studentModel
+            ->where('id', $id)
+            ->where('deleted_at', null)
+            ->first();
+
+        if (!$student) {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Data pendaftar tidak ditemukan');
+        }
+
+        // Get tahun ajaran list
+        $tahunAjaranList = $this->tahunAjaranModel
+            ->where('deleted_at', null)
+            ->findAll();
+
+        $data = [
+            'title' => 'Edit Pendaftar',
+            'pageTitle' => 'Edit Pendaftar',
+            'student' => $student,
+            'tahunAjaranList' => $tahunAjaranList
+        ];
+
+        return view('admin/rekap-siswa/student', $data);
+    }
+
+    public function update($id)
+    {
+        $student = $this->studentModel
+            ->where('id', $id)
+            ->where('deleted_at', null)
+            ->first();
+
+        if (!$student) {
+            return redirect()->back()->with('error', 'Data pendaftar tidak ditemukan');
+        }
+
+        $data = [
+            'nama_lengkap' => $this->request->getPost('nama_lengkap'),
+            'tahun_ajaran_id' => $this->request->getPost('tahun_ajaran_id'),
+            'agama' => $this->request->getPost('agama'),
+            'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
+            'tempat_lahir' => $this->request->getPost('tempat_lahir'),
+            'tanggal_lahir' => $this->request->getPost('tanggal_lahir'),
+            'nama_ayah' => $this->request->getPost('nama_ayah'),
+            'nama_ibu' => $this->request->getPost('nama_ibu'),
+            'alamat' => $this->request->getPost('alamat'),
+            'domisili' => $this->request->getPost('domisili'),
+            'nomor_telepon' => $this->request->getPost('nomor_telepon'),
+            'asal_tk_ra' => $this->request->getPost('asal_tk_ra'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        if ($this->studentModel->update($id, $data)) {
+            return redirect()->to('/admin/rekap-siswa')->with('success', 'Data pendaftar berhasil diupdate');
+        } else {
+            return redirect()->back()->with('error', 'Gagal mengupdate data pendaftar');
         }
     }
 }

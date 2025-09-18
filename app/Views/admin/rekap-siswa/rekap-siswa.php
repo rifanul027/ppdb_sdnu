@@ -256,6 +256,7 @@ function updateStatsDisplay(stats) {
     document.getElementById('totalSiswa').textContent = stats.total_siswa;
     document.getElementById('lakiLaki').textContent = stats.laki_laki;
     document.getElementById('perempuan').textContent = stats.perempuan;
+
 }
 
 function renderTable(students) {
@@ -310,9 +311,13 @@ function renderTable(students) {
                         data-student-name="${escapeHtml(student.nama_lengkap)}" 
                         data-current-kategori="${escapeHtml(student.kategori_nama || 'Belum Ditentukan')}"
                         class="kategori-btn inline-flex items-center px-2 py-1 text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 transition-colors">
-                    <i class="fas fa-edit mr-1"></i>
+                    <i class="fas fa-plus mr-1"></i>
                     Kategori
                 </button>
+                <a href="/admin/rekap-siswa/detail/${student.id}" 
+                    class="btn btn-secondary" style="padding: 0.5rem; font-size: 0.75rem;"title="Lihat Detail">
+                    <i class="fas fa-eye"></i>
+                </a>
             </td>
         </tr>
     `).join('');
