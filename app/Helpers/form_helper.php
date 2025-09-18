@@ -153,7 +153,7 @@ if (!function_exists('form_input_file')) {
         // tampilkan preview kalau ada value
         if ($oldFile) {
             $html .= '<p class="mb-2 text-sm text-blue-600">
-                         <a href="' . base_url('uploads/' . $oldFile) . '" target="_blank" class="underline">
+                         <a href="' . base_url($oldFile) . '" target="_blank" class="underline">
                              Lihat file lama
                          </a>
                       </p>';

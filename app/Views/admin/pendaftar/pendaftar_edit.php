@@ -142,12 +142,12 @@
                 <div class="space-y-6">
                     <?= form_input_file('akta', 'Akta Kelahiran', [
                         'required' => true,
-                        'value' => $student['akta'] ?? ''
+                        'value' => $student['akta_url'] ?? ''
                     ]) ?>
                     
                     <?= form_input_file('kk', 'Kartu Keluarga', [
                         'required' => true,
-                        'value' => $student['kk'] ?? ''
+                        'value' => $student['kk_url'] ?? ''
                     ]) ?>
                     
                     <?= form_input_file('ktp_ayah', 'KTP Ayah', [
@@ -162,7 +162,7 @@
                     
                     <?= form_input_file('ijazah', 'Ijazah TK/RA', [
                         'required' => false,
-                        'value' => $student['ijazah'] ?? '',
+                        'value' => $student['ijazah_url'] ?? '',
                         'help' => 'Upload jika ada (opsional) - Format: PDF, JPG, atau PNG (Maksimal 5MB)'
                     ]) ?>
                 </div>

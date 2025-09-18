@@ -141,12 +141,16 @@
                                 </a>
                                 <?php endif; ?>
                                 <?php if ($s['bukti_pembayaran_id'] == null): ?>
-                                <button onclick="showPembayaranModal('<?= $s['id'] ?>', '<?= esc($s['nama_lengkap']) ?>')" 
+                                    <button 
+                                        onclick="showPembayaranModal(
+                                            '<?= $s['id'] ?>', 
+                                            <?= htmlspecialchars(json_encode($s['nama_lengkap']), ENT_QUOTES, 'UTF-8') ?>
+                                        )" 
                                         class="btn btn-primary" 
                                         style="padding: 0.5rem; font-size: 0.75rem;"
                                         title="Upload Pembayaran">
-                                    <i class="fas fa-money-bill"></i>
-                                </button>
+                                        <i class="fas fa-money-bill"></i>
+                                    </button>
                                 <?php else: ?>
                                 <button class="btn btn-success" 
                                         style="padding: 0.5rem; font-size: 0.75rem;"
